@@ -1,0 +1,81 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
+use Tests\TestCase;
+
+class {{ class }} extends TestCase
+{
+
+    /** test */
+    public function user_can_view_any_()
+    {
+        $response = $this->get(
+            '/api/',
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+
+    /** test */
+    public function user_can_view_()
+    {
+        $id = 1;
+
+        $response = $this->get(
+            '/api/auth/register/' . $id,
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+
+    /** test */
+    public function user_can_create_()
+    {
+        $data = [];
+
+        $response = $this->post(
+            '/api/auth/register',
+            $data,
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+
+    /** test */
+    public function user_can_update_()
+    {
+        $data = [];
+
+        $response = $this->put(
+            '/api/auth/register',
+            $data,
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+
+    /** test */
+    public function user_can_delete_()
+    {
+        $id = 1;
+
+        $response = $this->delete(
+            '/api/auth/register/' . $id,
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+}

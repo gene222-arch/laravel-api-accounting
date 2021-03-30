@@ -1,0 +1,19 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\FromView;
+
+class {{ class }} implements FromView
+{
+    use Exportable;
+
+    public function view(): View
+    {
+        return view('test', [
+            'data' => 'data'
+        ]);
+    }
+}
