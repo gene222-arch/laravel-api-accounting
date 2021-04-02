@@ -15,7 +15,10 @@ trait CategoryServices
      */
     public function getAllCategories (): Collection
     {
-        return Category::all(['id', 'name', 'hex_code']);
+        return Category::all([
+            'id', 
+            ...(new Category())->getFillable()
+        ]);
     }
     
     /**
@@ -26,7 +29,10 @@ trait CategoryServices
      */
     public function getCategoryById (int $id): Category|null
     {
-        return Category::select('id', 'name', 'hex_code')
+        return Category::select(
+            'id', 
+            ...(new Category())->getFillable()
+        )
             ->where('id', $id)
             ->first();
     }

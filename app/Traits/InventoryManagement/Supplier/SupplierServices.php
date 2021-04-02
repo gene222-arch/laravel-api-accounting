@@ -15,7 +15,7 @@ trait SupplierServices
      */
     public function getAllSuppliers (): Collection
     {
-        return Supplier::all((new Supplier())->getFillable());
+        return Supplier::all(['id', ...(new Supplier())->getFillable()]);
     }
     
     /**
@@ -28,7 +28,7 @@ trait SupplierServices
     {
         $supplier = new Supplier;
 
-        return $supplier->select(...$supplier->getFillable())
+        return $supplier->select('id', ...$supplier->getFillable())
             ->where('id', $id)
             ->first();
     }

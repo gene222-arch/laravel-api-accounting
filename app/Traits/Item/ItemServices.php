@@ -41,16 +41,7 @@ trait ItemServices
     {
         return Item::select(
             'id',
-            'category_id',
-            'sku',
-            'barcode',
-            'name',
-            'description',
-            'price',
-            'cost',
-            'sold_by',
-            'is_for_sale',
-            'image'
+            ...(new Item())->getFillable()
         )
         ->where('id', $id)
         ->first();

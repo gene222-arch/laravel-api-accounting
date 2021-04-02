@@ -15,7 +15,10 @@ trait TaxServices
      */
     public function getAllTaxes (): Collection
     {
-        return Tax::all(['id', 'name', 'rate', 'type', 'enabled']);
+        return Tax::all([
+            'id', 
+            ...(new Tax())->getFillable()
+        ]);
     }
         
     /**
@@ -26,7 +29,7 @@ trait TaxServices
      */
     public function getTaxById (int $id): Tax|null
     {
-        return Tax::select('id', 'name', 'rate', 'type', 'enabled')->where('id', $id)->first();
+        return Tax::select('id', ...(new Tax())->getFillable())->where('id', $id)->first();
     }
 
     /**
