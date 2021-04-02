@@ -22,6 +22,7 @@ class CreateStocksTable extends Migration
             $table->unsignedBigInteger('stock_in')->default(0);
             $table->unsignedBigInteger('stock_out')->default(0);
             $table->unsignedBigInteger('bad_stock')->default(0);    
+            $table->unsignedBigInteger('minimum_stock')->default(0);    
             $table->timestamps();
 
             $table->foreign('item_id')
