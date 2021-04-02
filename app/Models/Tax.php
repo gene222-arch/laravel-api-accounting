@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Traits\Item\TaxServices;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tax extends Model
 {
@@ -20,4 +21,15 @@ class Tax extends Model
         'rate',
         'type'
     ];
+
+        
+    /**
+     * Define an inverse many-to-many relationship with Item class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function items(): BelongsToMany
+    {
+        return $this->belongsToMany(Item::class);
+    }
 }
