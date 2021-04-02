@@ -44,4 +44,16 @@ class BaseRequest extends FormRequest
         }
     }
 
+    /**
+     * Customize the error message
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'id.exists' => 'The selected :attribute does not exist.'
+        ];
+    }
+
 }
