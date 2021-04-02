@@ -90,6 +90,7 @@ class TaxController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param DeleteRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(DeleteRequest $request)

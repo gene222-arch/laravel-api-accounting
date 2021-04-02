@@ -93,6 +93,7 @@ class CategoriesController extends Controller
     /**
      * Remove the specified or multiple resource from storage.
      *
+     * @param DeleteRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(DeleteRequest $request)
