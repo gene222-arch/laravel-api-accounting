@@ -67,12 +67,10 @@ class ItemsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_update_item()
     {
         $data = [
@@ -107,9 +105,7 @@ class ItemsControllerTest extends TestCase
             $data,
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
-        
+ 
         $this->assertResponse($response);
     }
 
