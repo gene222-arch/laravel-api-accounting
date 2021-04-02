@@ -26,6 +26,7 @@ class UpdateRequest extends BaseRequest
             'item.soldBy' => ['required', 'string', 'in:each,weight'],
             'item.isForSale' => ['required', 'boolean'],
             'item.image' => ['nullable', 'string'],
+            'item.taxes.*' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
 
             'trackStock' => ['required', 'boolean'],
 
@@ -54,6 +55,8 @@ class UpdateRequest extends BaseRequest
             'item.cost' => 'cost',
             'item.soldBy' => 'sold by',
             'item.isForSale' => 'is for sale',
+            'item.image' => 'image',
+            'item.taxes' => 'taxes',
 
             'stock.supplierId' => 'supplier id',
             'stock.warehouseId' => 'warehouse id',
@@ -72,6 +75,7 @@ class UpdateRequest extends BaseRequest
         return [
             'item.id.exists' => 'The selected :attribute does not exist.',
             'item.categoryId.exists' => 'The selected :attribute does not exist.',
+            'item.taxes' => 'The selected :attribute does not exist.',
             'stock.id.exists' => 'The selected :attribute does not exist.',
             'stock.supplierId.exists' => 'The selected :attribute does not exist.',
             'stock.warehouseId.exists' => 'The selected :attribute does not exist.',

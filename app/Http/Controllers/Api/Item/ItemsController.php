@@ -81,13 +81,15 @@ class ItemsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->item->updateItem(
+        $result = $this->item->updateItem(
             $request->item,
             $request->stock,
             $request->trackStock
         );
 
-        return $this->success(null, 'Item updated successfully.');
+        return $result !== true 
+            ? $this->error(null, $result, 500)
+            : $this->success(null, 'Item updated successfully.');
     }
 
     /**

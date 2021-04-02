@@ -9,7 +9,7 @@ use Tests\TestCase;
 class AuthControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_view_authenticated_user()
     {
         $response = $this->get(

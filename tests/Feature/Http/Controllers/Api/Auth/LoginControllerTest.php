@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LoginControllerTest extends TestCase
 {
-    /** @test */
+    /** test */
     public function user_can_login()
     {
         $data = [

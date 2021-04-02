@@ -24,6 +24,7 @@ class StoreRequest extends BaseRequest
             'item.soldBy' => ['required', 'string', 'in:each,weight'],
             'item.isForSale' => ['required', 'boolean'],
             'item.image' => ['nullable', 'string'],
+            'item.taxes.*' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
 
             'trackStock' => ['required', 'boolean'],
 
@@ -51,11 +52,13 @@ class StoreRequest extends BaseRequest
             'item.cost' => 'cost',
             'item.soldBy' => 'sold by',
             'item.isForSale' => 'is for sale',
+            'item.image' => 'image',
+            'item.taxes' => 'taxes',
 
             'stock.supplierId' => 'supplier id',
             'stock.warehouseId' => 'warehouse id',
             'stock.inStock' => 'in stock',
-            'stock.minimumStock' => 'minimum stock'
+            'stock.minimumStock' => 'minimum stock',
         ];
     }
 
@@ -68,6 +71,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'item.categoryId.exists' => 'The selected :attribute does not exist.',
+            'item.taxes.exists' => 'The selected :attribute does not exist.',
             'stock.supplierId.exists' => 'The selected :attribute does not exist.',
             'stock.warehouseId.exists' => 'The selected :attribute does not exist.',
         ];

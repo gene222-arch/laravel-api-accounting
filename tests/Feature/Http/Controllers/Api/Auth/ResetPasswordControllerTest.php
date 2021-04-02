@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class ResetPasswordControllerTest extends TestCase
 {
-    /** @test */
+    /** test */
     public function user_can_reset_password()
     {
         $data = [

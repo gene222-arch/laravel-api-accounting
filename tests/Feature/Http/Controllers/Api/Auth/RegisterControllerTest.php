@@ -9,7 +9,7 @@ use Tests\TestCase;
 class RegisterControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_register()
     {
         $data = [

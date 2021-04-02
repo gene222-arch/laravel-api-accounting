@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class ForgotPasswordControllerTest extends TestCase
 {
-    /** @test */
+    /** test */
     public function user_can_request_forgot_password_via_email()
     {
         $data = [

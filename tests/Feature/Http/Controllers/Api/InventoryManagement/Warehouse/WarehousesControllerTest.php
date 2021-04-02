@@ -33,7 +33,7 @@ class WarehousesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_create_warehouse()
     {
         $data = [
@@ -74,7 +74,7 @@ class WarehousesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_delete_warehouses()
     {
         $data = [

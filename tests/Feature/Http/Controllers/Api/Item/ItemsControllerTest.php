@@ -49,12 +49,14 @@ class ItemsControllerTest extends TestCase
                 'cost' => 10.00,
                 'soldBy' => 'each',
                 'isForSale' => true,
-                'image' => ''
+                'image' => '',
+                'taxes' => []
             ],
             'stock' => [
                 'supplierId' => 1,
                 'warehouseId' => 1,
                 'inStock' => 1,
+                'minimumStock' => 10,
             ],
             'trackStock' => false,
         ];
@@ -70,12 +72,12 @@ class ItemsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_update_item()
     {
         $data = [
             'item' => [
-                'id' => 4,
+                'id' => 1,
                 'categoryId' => 1,
                 'sku' => 'AAAAAAAA',
                 'barcode' => 'AAA',
@@ -85,12 +87,16 @@ class ItemsControllerTest extends TestCase
                 'cost' => 10.00,
                 'soldBy' => 'each',
                 'isForSale' => true,
-                'image' => ''
+                'image' => '',
+                'taxes' => [
+                    1
+                ]
             ],
             'stock' => [
                 'supplierId' => 1,
                 'warehouseId' => 1,
                 'inStock' => 12,
+                'minimumStock' => 10,
             ],
             'trackStock' => true,
         ];
@@ -127,7 +133,7 @@ class ItemsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_delete_items()
     {
         $data = [

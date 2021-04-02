@@ -27,7 +27,7 @@ class AccountControllerTest extends TestCase
     }
 
 
-    /** @test */
+    /** test */
     public function user_can_update_account()
     {
         $data = [

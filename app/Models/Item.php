@@ -48,10 +48,6 @@ class Item extends Model
      */
     public function taxes(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Tax::class, 
-            'item_tax', 
-            'item_id', 
-            'tax_id');
+        return $this->belongsToMany(Tax::class);
     }
 }

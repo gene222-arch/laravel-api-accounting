@@ -65,6 +65,11 @@ trait ItemServices
                     'is_for_sale' => $itemData['isForSale'],
                     'image' => $itemData['image']
                 ]);
+
+                if ($itemData['taxes'])
+                {
+                    $item->taxes()->attach($itemData['taxes']);
+                }
         
                 if ($trackStock)
                 {
@@ -75,6 +80,7 @@ trait ItemServices
                         'minimum_stock' => $stockData['minimumStock']
                     ]);
                 }
+
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -110,6 +116,11 @@ trait ItemServices
                     'is_for_sale' => $itemData['isForSale'],
                     'image' => $itemData['image']
                 ]);
+
+                if ($itemData['taxes'])
+                {
+                    $item->taxes()->attach($itemData['taxes']);
+                }
 
                 if ($trackStock)
                 {

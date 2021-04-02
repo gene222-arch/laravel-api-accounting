@@ -43,7 +43,6 @@ class CreateItemsTable extends Migration
             $table->id();
             $table->foreignId('item_id')->nullable();
             $table->foreignId('tax_id')->nullable();
-            $table->unsignedDecimal('total_tax');
             $table->timestamps();
 
             $table->unique([
