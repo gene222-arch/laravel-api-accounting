@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Exports\UserExportController;
 use App\Http\Controllers\Api\Item\CategoriesController;
+use App\Http\Controllers\Api\Item\ItemsController;
 use App\Http\Controllers\Api\Item\TaxController;
 
 /*
@@ -71,6 +72,19 @@ Route::prefix('categories')->group(function ()
     Route::put('/', [CategoriesController::class, 'update']);
     Route::delete('/', [CategoriesController::class, 'destroy']);
 });
+
+/**
+ * Item
+ */
+Route::prefix('items')->group(function () 
+{
+    Route::get('/', [ItemsController::class, 'index']);
+    Route::get('/{id}', [ItemsController::class, 'show']);
+    Route::post('/', [ItemsController::class, 'store']);
+    Route::put('/', [ItemsController::class, 'update']);
+    Route::delete('/', [ItemsController::class, 'destroy']);
+});
+
 
 /**
  * Settings

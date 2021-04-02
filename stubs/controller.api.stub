@@ -9,6 +9,13 @@ class {{ class }} extends Controller
 {
     use ApiResponser;
 
+    private User $user;
+    
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,7 +25,7 @@ class {{ class }} extends Controller
     {
         $result = true;
 
-        return !$result
+        return !$result->count()
             ? $this->noContent()
             : $this->success([
                 'data' => $result
@@ -34,9 +41,9 @@ class {{ class }} extends Controller
      */
     public function store(Request $request)
     {
-        return $this->success([
-            'data' => ''
-        ]);
+        $model = '';
+
+        return $this->success($model);
     }
 
     /**
@@ -51,9 +58,7 @@ class {{ class }} extends Controller
 
         return !$result
             ? $this->noContent()
-            : $this->success([
-                'data' => ''
-            ]);
+            : $this->success($result);
     }
 
 
@@ -66,9 +71,7 @@ class {{ class }} extends Controller
      */
     public function update(Request $request, $id)
     {
-        return $this->success([
-            'data' => ''
-        ]);
+        return $this->success(null, 'Item updated successfully.');
     }
 
     /**
@@ -78,8 +81,6 @@ class {{ class }} extends Controller
      */
     public function destroy()
     {
-        return $this->success([
-            'data' => ''
-        ]);
+        return $this->success(null, 'Item or items deleted successfully.');
     }
 }

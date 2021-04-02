@@ -52,7 +52,8 @@ class BaseRequest extends FormRequest
     public function messages()
     {
         return [
-            'id.exists' => 'The selected :attribute does not exist.'
+            'id.exists' => 'The selected :attribute does not exist.',
+            'ids.*.exists' => 'The selected :attribute does not exist.'
         ];
     }
 

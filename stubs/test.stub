@@ -64,10 +64,15 @@ class {{ class }} extends TestCase
     /** test */
     public function user_can_delete_()
     {
-        $id = 1;
+        $data = [
+            'ids' => [
+                1
+            ]
+        ];
 
         $response = $this->delete(
-            '/api/' . $id,
+            '/api/',
+            $data,
             $this->apiHeader()
         );
 
