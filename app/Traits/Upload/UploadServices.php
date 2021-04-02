@@ -4,23 +4,22 @@ namespace App\Traits\Upload;
 
 use Illuminate\Support\Facades\Storage;
 
-trait ImageUpload
+trait UploadServices
 {
     /**
      * File upload
      *
      * @param  $request
-     * @param  string $property
      * @param  string $pathToStore
      * @return string
      */
-    public function uploadImage($request, string $property, string $pathToStore): string
+    public function uploadImage($request, string $pathToStore): string
     {
         $path = '';
         
-        if ($request->hasFile($property))
+        if ($request->hasFile('image'))
         {
-            $file = $request->{$property};
+            $file = $request->image;
 
             $original = $file->getClientOriginalName();
             $ext = $file->getClientOriginalExtension();

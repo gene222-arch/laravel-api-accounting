@@ -4,6 +4,7 @@ namespace App\Traits\Item;
 
 use App\Models\Item;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Storage;
 
 trait ItemServices
 {
@@ -25,7 +26,8 @@ trait ItemServices
             'price',
             'cost',
             'sold_by',
-            'is_for_sale'
+            'is_for_sale',
+            'image'
         ]);
     }
 
@@ -47,7 +49,8 @@ trait ItemServices
             'price',
             'cost',
             'sold_by',
-            'is_for_sale'
+            'is_for_sale',
+            'image'
         )
         ->where('id', $id)
         ->first();
@@ -56,29 +59,31 @@ trait ItemServices
     /**
      * Create a new record if item
      *
-     * @param  int $category_id
+     * @param  int $categoryId
      * @param  string $sku
      * @param  string $barcode
      * @param  string $name
      * @param  string $description
      * @param  float $price
      * @param  float $cost
-     * @param  string $sold_by
-     * @param  bool $is_for_sale
+     * @param  string $soldBy
+     * @param  bool $isForSale
+     * @param  string $image
      * @return Item
      */
-    public function createItem (int $category_id, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $sold_by, bool $is_for_sale): Item
+    public function createItem (int $categoryId, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $soldBy, bool $isForSale, string $image): Item
     {
         return Item::create([
-            'category_id' => $category_id,
+            'category_id' => $categoryId,
             'sku' => $sku,
             'barcode' => $barcode,
             'name' => $name,
             'description' => $description,
             'price' => $price,
             'cost' => $cost,
-            'sold_by' => $sold_by,
-            'is_for_sale' => $is_for_sale
+            'sold_by' => $soldBy,
+            'is_for_sale' => $isForSale,
+            'image' => $image
         ]);
     }
     
@@ -86,30 +91,34 @@ trait ItemServices
      * Update an existing record of item
      *
      * @param  int $id
-     * @param  int $category_id
+     * @param  int $categoryId
      * @param  string $sku
      * @param  string $barcode
      * @param  string $name
      * @param  string $description
      * @param  float $price
      * @param  float $cost
-     * @param  string $sold_by
-     * @param  bool $is_for_sale
+     * @param  string $soldBy
+     * @param  bool $isForSale
+     * @param  string $image
      * @return boolean
      */
-    public function updateItem (int $id, int $category_id, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $sold_by, bool $is_for_sale): bool
+    public function updateItem (int $id, int $categoryId, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $soldBy, bool $isForSale, string $image): bool
     {   
+        Storage::delete($image);
+
         $update = Item::where('id', $id)
             ->update([
-                'category_id' => $category_id,
+                'category_id' => $categoryId,
                 'sku' => $sku,
                 'barcode' => $barcode,
                 'name' => $name,
                 'description' => $description,
                 'price' => $price,
                 'cost' => $cost,
-                'sold_by' => $sold_by,
-                'is_for_sale' => $is_for_sale
+                'sold_by' => $soldBy,
+                'is_for_sale' => $isForSale,
+                'image' => $image
             ]);
 
         return boolval($update);
@@ -123,7 +132,13 @@ trait ItemServices
      */
     public function deleteItems (array $ids): bool
     {
-        return Item::whereIn('id', $ids)->delete();
+        $items = Item::whereIn('ids', $ids);
+
+        $images = $items->pluck('image')->toArray();
+
+        Storage::delete($images);
+        
+        return $items->delete();
     }
     
 }

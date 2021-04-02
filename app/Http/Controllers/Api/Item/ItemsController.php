@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Item\Item\DeleteRequest;
 use App\Http\Requests\Item\Item\StoreRequest;
 use App\Http\Requests\Item\Item\UpdateRequest;
+use App\Http\Requests\Upload\UploadImageRequest;
 use App\Models\Item;
 use App\Traits\Api\ApiResponser;
 
@@ -54,7 +55,8 @@ class ItemsController extends Controller
             $request->price,
             $request->cost,
             $request->soldBy,
-            $request->isForSale
+            $request->isForSale,
+            $request->image
         );
 
         return $this->success($item, 'Item created successfully.');
@@ -94,10 +96,27 @@ class ItemsController extends Controller
             $request->price,
             $request->cost,
             $request->soldBy,
-            $request->isForSale
+            $request->isForSale,
+            $request->image,
         );
 
         return $this->success(null, 'Item updated successfully.');
+    }
+
+    /**
+     * Upload the specified resource.
+     *
+     * @param UploadImageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */   
+    public function upload(UploadImageRequest $request)
+    {
+        $data = $this->item->uploadImage(
+            $request,
+            'items/images'
+        );
+
+        return $this->success($data, 'Image uploaded successfully.');
     }
 
     /**

@@ -81,6 +81,7 @@ Route::prefix('items')->group(function ()
     Route::get('/', [ItemsController::class, 'index']);
     Route::get('/{id}', [ItemsController::class, 'show']);
     Route::post('/', [ItemsController::class, 'store']);
+    Route::post('/upload', [ItemsController::class, 'upload']);
     Route::put('/', [ItemsController::class, 'update']);
     Route::delete('/', [ItemsController::class, 'destroy']);
 });

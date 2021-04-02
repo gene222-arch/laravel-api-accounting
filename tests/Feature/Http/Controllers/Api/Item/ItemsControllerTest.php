@@ -4,6 +4,8 @@ namespace Tests\Feature\Http\Controllers\Api\Item;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ItemsControllerTest extends TestCase
@@ -81,6 +83,26 @@ class ItemsControllerTest extends TestCase
     }
 
     /** @test */
+    public function user_can_upload_item_image()
+    {
+        Storage::fake('avatars');
+
+        $image = UploadedFile::fake()->create('document.pdf');
+
+        $data = [
+            'image' => $image
+        ];
+
+        $response = $this->post(
+            '/api/items/upload',
+            $data,
+            $this->apiHeader()
+        );
+  
+        $this->assertResponse($response);
+    }
+
+    /** test */
     public function user_can_delete_items()
     {
         $data = [

@@ -24,6 +24,7 @@ class CreateItemsTable extends Migration
             $table->unsignedDecimal('cost', 10, 2);
             $table->string('sold_by');
             $table->boolean('is_for_sale')->default(false);
+            $table->string('image')->nullable();
             $table->timestamps();
 
             $table->unique([
