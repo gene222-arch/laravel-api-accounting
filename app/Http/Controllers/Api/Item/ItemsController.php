@@ -46,20 +46,15 @@ class ItemsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $item = $this->item->createItem(
-            $request->categoryId,
-            $request->sku,
-            $request->barcode,
-            $request->name,
-            $request->description,
-            $request->price,
-            $request->cost,
-            $request->soldBy,
-            $request->isForSale,
-            $request->image
+        $result = $this->item->createItem(
+            $request->item,
+            $request->stock,
+            $request->trackStock
         );
 
-        return $this->success($item, 'Item created successfully.');
+        return $result !== true 
+            ? $this->error(null, $result, 500)
+            : $this->success(null, 'Item created successfully.');
     }
 
     /**
@@ -87,17 +82,9 @@ class ItemsController extends Controller
     public function update(UpdateRequest $request)
     {
         $this->item->updateItem(
-            $request->id,
-            $request->categoryId,
-            $request->sku,
-            $request->barcode,
-            $request->name,
-            $request->description,
-            $request->price,
-            $request->cost,
-            $request->soldBy,
-            $request->isForSale,
-            $request->image,
+            $request->item,
+            $request->stock,
+            $request->trackStock
         );
 
         return $this->success(null, 'Item updated successfully.');

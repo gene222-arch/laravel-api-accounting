@@ -9,7 +9,7 @@ use Tests\TestCase;
 class SuppliersControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_view_any_suppliers()
     {
         $response = $this->get(
@@ -17,8 +17,6 @@ class SuppliersControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -35,7 +33,7 @@ class SuppliersControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_create_supplier()
     {
         $data = [
@@ -55,8 +53,6 @@ class SuppliersControllerTest extends TestCase
             $data,
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
         
         $this->assertResponse($response);
     }

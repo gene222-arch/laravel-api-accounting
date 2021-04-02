@@ -3,8 +3,9 @@
 namespace App\Traits\Item;
 
 use App\Models\Item;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 
 trait ItemServices
 {
@@ -38,72 +39,94 @@ trait ItemServices
         ->first();
     }
     
+
     /**
-     * Create a new record if item
+     * Create a new record of item
      *
-     * @param  int $categoryId
-     * @param  string $sku
-     * @param  string $barcode
-     * @param  string $name
-     * @param  string $description
-     * @param  float $price
-     * @param  float $cost
-     * @param  string $soldBy
-     * @param  bool $isForSale
-     * @param  string $image
-     * @return Item
+     * @param  array $itemData
+     * @param  array|null $stockData
+     * @param  bool $trackStock
+     * @return mixed
      */
-    public function createItem (int $categoryId, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $soldBy, bool $isForSale, string $image): Item
+    public function createItem (array $itemData, ?array $stockData, bool $trackStock): mixed
     {
-        return Item::create([
-            'category_id' => $categoryId,
-            'sku' => $sku,
-            'barcode' => $barcode,
-            'name' => $name,
-            'description' => $description,
-            'price' => $price,
-            'cost' => $cost,
-            'sold_by' => $soldBy,
-            'is_for_sale' => $isForSale,
-            'image' => $image
-        ]);
+        try {
+            DB::transaction(function () use ($itemData, $stockData, $trackStock) 
+            {
+                $item = Item::create([
+                    'category_id' => $itemData['categoryId'],
+                    'sku' => $itemData['sku'],
+                    'barcode' => $itemData['barcode'],
+                    'name' => $itemData['name'],
+                    'description' => $itemData['description'],
+                    'price' => $itemData['price'],
+                    'cost' => $itemData['cost'],
+                    'sold_by' => $itemData['soldBy'],
+                    'is_for_sale' => $itemData['isForSale'],
+                    'image' => $itemData['image']
+                ]);
+        
+                if ($trackStock)
+                {
+                    $item->stock()->create([
+                        'supplier_id' => $stockData['supplierId'],
+                        'warehouse_id' => $stockData['warehouseId'],
+                        'in_stock' => $stockData['inStock'],
+                        'minimum_stock' => $stockData['minimumStock']
+                    ]);
+                }
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
      * Update an existing record of item
      *
-     * @param  int $id
-     * @param  int $categoryId
-     * @param  string $sku
-     * @param  string $barcode
-     * @param  string $name
-     * @param  string $description
-     * @param  float $price
-     * @param  float $cost
-     * @param  string $soldBy
-     * @param  bool $isForSale
-     * @param  string $image
-     * @return boolean
+     * @param  array $itemData
+     * @param  array|null $stockData
+     * @param  bool $trackStock
+     * @return mixed
      */
-    public function updateItem (int $id, int $categoryId, string $sku, string $barcode, string $name, ?string $description, float $price, float $cost, string $soldBy, bool $isForSale, string $image): bool
+    public function updateItem (array $itemData, ?array $stockData, bool $trackStock): mixed
     {   
-        Storage::delete($image);
+        try {
+            DB::transaction(function () use ($itemData, $stockData, $trackStock)
+            {
+                $item = Item::find($itemData['id']);
 
-        $update = Item::where('id', $id)
-            ->update([
-                'category_id' => $categoryId,
-                'sku' => $sku,
-                'barcode' => $barcode,
-                'name' => $name,
-                'description' => $description,
-                'price' => $price,
-                'cost' => $cost,
-                'sold_by' => $soldBy,
-                'is_for_sale' => $isForSale,
-                'image' => $image
-            ]);
+                $item->update([
+                    'category_id' => $itemData['categoryId'],
+                    'sku' => $itemData['sku'],
+                    'barcode' => $itemData['barcode'],
+                    'name' => $itemData['name'],
+                    'description' => $itemData['description'],
+                    'price' => $itemData['price'],
+                    'cost' => $itemData['cost'],
+                    'sold_by' => $itemData['soldBy'],
+                    'is_for_sale' => $itemData['isForSale'],
+                    'image' => $itemData['image']
+                ]);
 
-        return boolval($update);
+                if ($trackStock)
+                {
+                    $item->stock()->updateOrCreate([
+                        'supplier_id' => $stockData['supplierId'],
+                        'warehouse_id' => $stockData['warehouseId'],
+                        'in_stock' => $stockData['inStock'],
+                        'minimum_stock' => $stockData['minimumStock']
+                    ]);
+                }
+
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
@@ -114,7 +137,7 @@ trait ItemServices
      */
     public function deleteItems (array $ids): bool
     {
-        $items = Item::whereIn('ids', $ids);
+        $items = Item::whereIn('id', $ids);
 
         $images = $items->pluck('image')->toArray();
 

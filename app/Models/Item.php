@@ -7,6 +7,7 @@ use App\Traits\Upload\UploadServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Item extends Model
 {
@@ -29,7 +30,17 @@ class Item extends Model
         'image'
     ];
 
-    
+        
+    /**
+     * Define a one-to-one relationship with Stock
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function stock(): HasOne
+    {
+        return $this->hasOne(Stock::class);
+    }
+
     /**
      * Define a many-to-many relationship with Tax class
      *

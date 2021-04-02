@@ -39,14 +39,24 @@ class ItemsControllerTest extends TestCase
     public function user_can_create_item()
     {
         $data = [
-            'categoryId' => 2,
-            'sku' => 'BBBBBBBB',
-            'barcode' => 'BBB',
-            'name' => 'Item two',
-            'price' => 0.00,
-            'cost' => 10.00,
-            'soldBy' => 'each',
-            'isForSale' => true
+            'item' => [
+                'categoryId' => 1,
+                'sku' => 'AAAAAAAA',
+                'barcode' => 'AAA',
+                'name' => 'Item one',
+                'description' => 'Some itme one',
+                'price' => 5.00,
+                'cost' => 10.00,
+                'soldBy' => 'each',
+                'isForSale' => true,
+                'image' => ''
+            ],
+            'stock' => [
+                'supplierId' => 1,
+                'warehouseId' => 1,
+                'inStock' => 1,
+            ],
+            'trackStock' => false,
         ];
 
         $response = $this->post(
@@ -55,6 +65,8 @@ class ItemsControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -62,16 +74,27 @@ class ItemsControllerTest extends TestCase
     public function user_can_update_item()
     {
         $data = [
-            'id' => 2,
-            'categoryId' => 2,
-            'sku' => 'BBBBBBBB',
-            'barcode' => 'BBB',
-            'name' => 'Item two',
-            'price' => 0.00,
-            'cost' => 10.00,
-            'soldBy' => 'each',
-            'isForSale' => true
+            'item' => [
+                'id' => 4,
+                'categoryId' => 1,
+                'sku' => 'AAAAAAAA',
+                'barcode' => 'AAA',
+                'name' => 'Item one',
+                'description' => 'Some itme one',
+                'price' => 5.00,
+                'cost' => 10.00,
+                'soldBy' => 'each',
+                'isForSale' => true,
+                'image' => ''
+            ],
+            'stock' => [
+                'supplierId' => 1,
+                'warehouseId' => 1,
+                'inStock' => 12,
+            ],
+            'trackStock' => true,
         ];
+
 
         $response = $this->put(
             '/api/items',
@@ -79,10 +102,12 @@ class ItemsControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_upload_item_image()
     {
         Storage::fake('avatars');
@@ -102,12 +127,12 @@ class ItemsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_delete_items()
     {
         $data = [
             'ids' => [
-                2
+                4
             ]
         ];
 

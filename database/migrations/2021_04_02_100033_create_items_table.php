@@ -39,10 +39,10 @@ class CreateItemsTable extends Migration
                 ->nullOnDelete();
         });
 
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('item_tax', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id');
-            $table->foreignId('tax_id');
+            $table->foreignId('item_id')->nullable();
+            $table->foreignId('tax_id')->nullable();
             $table->unsignedDecimal('total_tax');
             $table->timestamps();
 
@@ -59,7 +59,7 @@ class CreateItemsTable extends Migration
                 
             $table->foreign('tax_id')
                 ->references('id')
-                ->on('tax')
+                ->on('taxes')
                 ->nullOnDelete();
         });
     }
@@ -72,5 +72,6 @@ class CreateItemsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('items');
+        Schema::dropIfExists('item_tax');
     }
 }
