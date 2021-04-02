@@ -9,7 +9,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Exports\UserExportController;
-
+use App\Http\Controllers\Api\Item\TaxController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,4 +70,18 @@ Route::prefix('settings')->group(function ()
         Route::put('/', [AccountController::class, 'update']);
     });
 });
+
+/**
+ * Tax
+ */
+Route::prefix('taxes')->group(function () 
+{
+    Route::get('/', [TaxController::class, 'index']);
+    Route::get('/{id}', [TaxController::class, 'show']);
+    Route::post('/', [TaxController::class, 'store']);
+    Route::put('/', [TaxController::class, 'update']);
+    Route::delete('/', [TaxController::class, 'destroy']);
+});
+
+
 

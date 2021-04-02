@@ -20,20 +20,18 @@ class {{ class }} extends TestCase
         $this->assertResponse($response);
     }
 
-
     /** test */
     public function user_can_view_()
     {
         $id = 1;
 
         $response = $this->get(
-            '/api/auth/register/' . $id,
+            '/api/' . $id,
             $this->apiHeader()
         );
 
         $this->assertResponse($response);
     }
-
 
     /** test */
     public function user_can_create_()
@@ -41,14 +39,13 @@ class {{ class }} extends TestCase
         $data = [];
 
         $response = $this->post(
-            '/api/auth/register',
+            '/api/',
             $data,
             $this->apiHeader()
         );
 
         $this->assertResponse($response);
     }
-
 
     /** test */
     public function user_can_update_()
@@ -56,7 +53,7 @@ class {{ class }} extends TestCase
         $data = [];
 
         $response = $this->put(
-            '/api/auth/register',
+            '/api/',
             $data,
             $this->apiHeader()
         );
@@ -64,14 +61,13 @@ class {{ class }} extends TestCase
         $this->assertResponse($response);
     }
 
-
     /** test */
     public function user_can_delete_()
     {
         $id = 1;
 
         $response = $this->delete(
-            '/api/auth/register/' . $id,
+            '/api/' . $id,
             $this->apiHeader()
         );
 

@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Api\Settings;
 
+use App\Models\User;
+use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\Account\UpdateRequest;
 use App\Http\Requests\Settings\Account\VerifyUserRequest;
-use App\Traits\Api\ApiResponser;
-use App\Traits\Settings\AccountServices;
 
 class AccountController extends Controller
 {
-    use ApiResponser, AccountServices;
+    use ApiResponser;
 
+    private User $user;
     
-    public function __construct()
+    public function __construct(User $user)
     {
+        $this->user = $user;
         $this->middleware(['auth:api']);
     }
 
@@ -26,14 +28,14 @@ class AccountController extends Controller
      */
     public function verify(VerifyUserRequest $request)
     {
-        $result = $this->verifyAccountViaPassword(
+        $result = $this->user->verifyAccountViaPassword(
             $request->userId,
             $request->password 
         );
 
         return !$result
             ? $this->noContent()
-            : $this->success();
+            : $this->success(null, 'Account verified successfully.');
     }
 
 
@@ -45,7 +47,7 @@ class AccountController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->updateAccount(
+        $this->user->updateAccount(
             $request->userId,
             $request->firstName,
             $request->lastName,
@@ -53,7 +55,7 @@ class AccountController extends Controller
             $request->password
         );
 
-        return $this->success();
+        return $this->success(null, 'Account updated successfully.');
     }
 
 }
