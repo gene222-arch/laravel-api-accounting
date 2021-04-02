@@ -9,7 +9,7 @@ trait TaxServices
 {
         
     /**
-     * Get all the taxes
+     * Get all records of taxes 
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -19,7 +19,7 @@ trait TaxServices
     }
         
     /**
-     * Get a tax record via id
+     * Get a record of tax via id
      *
      * @param  int $id
      * @return \App\Models\Tax|null
@@ -30,7 +30,7 @@ trait TaxServices
     }
 
     /**
-     * Create a new tax
+     * Create a new record of tax
      *
      * @param  string $name
      * @param  float $rate
@@ -49,7 +49,7 @@ trait TaxServices
     }
         
     /**
-     * Update an existing tax record
+     * Update an existing record of tax
      *
      * @param  integer $id
      * @param  string $name

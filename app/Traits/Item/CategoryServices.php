@@ -19,7 +19,7 @@ trait CategoryServices
     }
     
     /**
-     * Get a record of category
+     * Get a record of category via id
      *
      * @param  int $id
      * @return Category|null
