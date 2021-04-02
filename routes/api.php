@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Exports\UserExportController;
+use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\Item\CategoriesController;
 use App\Http\Controllers\Api\Item\ItemsController;
 use App\Http\Controllers\Api\Item\TaxController;
@@ -97,6 +98,18 @@ Route::prefix('settings')->group(function ()
         Route::post('/verify', [AccountController::class, 'verify']);
         Route::put('/', [AccountController::class, 'update']);
     });
+});
+
+/**
+ * Suppliers
+ */
+Route::prefix('suppliers')->group(function () 
+{
+    Route::get('/', [SuppliersController::class, 'index']);
+    Route::get('/{id}', [SuppliersController::class, 'show']);
+    Route::post('/', [SuppliersController::class, 'store']);
+    Route::put('/', [SuppliersController::class, 'update']);
+    Route::delete('/', [SuppliersController::class, 'destroy']);
 });
 
 /**
