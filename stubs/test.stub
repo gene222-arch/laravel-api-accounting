@@ -26,7 +26,7 @@ class {{ class }} extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/${id}",
+            "/api//${id}",
             $this->apiHeader()
         );
 

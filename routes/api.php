@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Exports\UserExportController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
+use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Item\CategoriesController;
 use App\Http\Controllers\Api\Item\ItemsController;
 use App\Http\Controllers\Api\Item\TaxController;
@@ -122,6 +123,18 @@ Route::prefix('taxes')->group(function ()
     Route::post('/', [TaxController::class, 'store']);
     Route::put('/', [TaxController::class, 'update']);
     Route::delete('/', [TaxController::class, 'destroy']);
+});
+
+/**
+ * Warehouse
+ */
+Route::prefix('warehouses')->group(function () 
+{
+    Route::get('/', [WarehousesController::class, 'index']);
+    Route::get('/{id}', [WarehousesController::class, 'show']);
+    Route::post('/', [WarehousesController::class, 'store']);
+    Route::put('/', [WarehousesController::class, 'update']);
+    Route::delete('/', [WarehousesController::class, 'destroy']);
 });
 
 

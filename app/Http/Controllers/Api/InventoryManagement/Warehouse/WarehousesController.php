@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Controllers\Api\InventoryManagement\Supplier;
+namespace App\Http\Controllers\Api\InventoryManagement\Warehouse;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InventoryManagement\Supplier\DeleteRequest;
-use App\Http\Requests\InventoryManagement\Supplier\StoreRequest;
-use App\Http\Requests\InventoryManagement\Supplier\UpdateRequest;
-use App\Models\Supplier;
+use App\Http\Requests\Inventoryanagement\Warehouse\DeleteRequest;
+use App\Http\Requests\Inventoryanagement\Warehouse\StoreRequest;
+use App\Http\Requests\Inventoryanagement\Warehouse\UpdateRequest;
+use App\Models\Warehouse;
 use App\Traits\Api\ApiResponser;
 
-class SuppliersController extends Controller
+class WarehousesController extends Controller
 {
     use ApiResponser;
 
-    private Supplier $supplier;
+    private Warehouse $warehouse;
     
-    public function __construct(Supplier $supplier)
+    public function __construct(Warehouse $warehouse)
     {
-        $this->supplier = $supplier;
+        $this->warehouse = $warehouse;
     }
 
     /**
@@ -27,13 +27,12 @@ class SuppliersController extends Controller
      */
     public function index()
     {
-        $result = $this->supplier->getAllSuppliers();
+        $result = $this->warehouse->getAllWarehouses();
 
         return !$result->count()
             ? $this->noContent()
             : $this->success($result);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -43,16 +42,12 @@ class SuppliersController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->supplier->createSupplier(
+        $model = $this->warehouse->createWarehouse(
             $request->name,
             $request->email,
             $request->phone,
-            $request->mainAddress,
-            $request->optionalAddress,
-            $request->city,
-            $request->zipCode,
-            $request->country,
-            $request->province
+            $request->address,
+            $request->defaultWarehouse
         );
 
         return $this->success($model);
@@ -66,12 +61,13 @@ class SuppliersController extends Controller
      */
     public function show($id)
     {
-        $result = $this->supplier->getSupplierById($id);
+        $result = $this->warehouse->getWarehouseById($id);
 
         return !$result
             ? $this->noContent()
             : $this->success($result);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -81,20 +77,16 @@ class SuppliersController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->supplier->updateSupplier(
-            $request->id, 
+        $this->warehouse->updateWarehouse(
+            $request->id,
             $request->name,
             $request->email,
             $request->phone,
-            $request->mainAddress,
-            $request->optionalAddress,
-            $request->city,
-            $request->zipCode,
-            $request->country,
-            $request->province
+            $request->address,
+            $request->defaultWarehouse
         );
 
-        return $this->success(null, 'Supplier updated successfully.');
+        return $this->success(null, 'Warehouse updated successfully.');
     }
 
     /**
@@ -105,8 +97,8 @@ class SuppliersController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->supplier->deleteSuppliers($request->ids);
+        $this->warehouse->deleteWarehouses($request->ids);
 
-        return $this->success(null, 'Supplier or items deleted successfully.');
+        return $this->success(null, 'Warehouse or items deleted successfully.');
     }
 }

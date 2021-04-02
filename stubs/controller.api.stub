@@ -27,9 +27,7 @@ class {{ class }} extends Controller
 
         return !$result->count()
             ? $this->noContent()
-            : $this->success([
-                'data' => $result
-            ]);
+            : $this->success($result);
     }
 
 
