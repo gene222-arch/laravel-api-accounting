@@ -38,6 +38,30 @@ class CreateItemsTable extends Migration
                 ->on('categories')
                 ->nullOnDelete();
         });
+
+        Schema::create('items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('item_id');
+            $table->foreignId('tax_id');
+            $table->unsignedDecimal('total_tax');
+            $table->timestamps();
+
+            $table->unique([
+                'item_id',
+                'tax_id',
+            ]);
+
+            $table->foreign('item_id')
+                ->references('id')
+                ->on('items')
+                ->nullOnDelete();
+
+                
+            $table->foreign('tax_id')
+                ->references('id')
+                ->on('tax')
+                ->nullOnDelete();
+        });
     }
 
     /**
