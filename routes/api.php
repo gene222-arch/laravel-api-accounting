@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Item\Item\ItemsController;
 use App\Http\Controllers\Api\Item\Tax\TaxController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
+use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +99,20 @@ Route::prefix('discounts')->group(function ()
     Route::post('/', [DiscountsController::class, 'store']);
     Route::put('/', [DiscountsController::class, 'update']);
     Route::delete('/', [DiscountsController::class, 'destroy']);
+});
+
+/**
+ * Invoices
+ */
+Route::prefix('invoices')->group(function () 
+{
+    Route::get('/', [InvoicesController::class, 'index']);
+    Route::get('/{id}', [InvoicesController::class, 'show']);
+    Route::post('/', [InvoicesController::class, 'store']);
+    Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
+    Route::post('/payment', [InvoicesController::class, 'payment']);
+    Route::put('/', [InvoicesController::class, 'update']);
+    Route::delete('/', [InvoicesController::class, 'destroy']);
 });
 
 /**
