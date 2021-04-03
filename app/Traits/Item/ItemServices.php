@@ -11,13 +11,13 @@ trait ItemServices
 {
     
     /**
-     * Get all records if items
+     * Get all latest records if items
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllItems (): Collection
     {
-        return Item::all([
+        return Item::latest()->get([
             'id',
             ...(new Item())->getFillable()
         ]);

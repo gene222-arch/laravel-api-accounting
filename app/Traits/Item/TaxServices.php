@@ -9,13 +9,13 @@ trait TaxServices
 {
         
     /**
-     * Get all records of taxes 
+     * Get all latest records of taxes 
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllTaxes (): Collection
     {
-        return Tax::all([
+        return Tax::latest()->get([
             'id', 
             ...(new Tax())->getFillable()
         ]);

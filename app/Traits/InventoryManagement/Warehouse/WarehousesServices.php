@@ -9,13 +9,13 @@ trait WarehousesServices
 {
     
     /**
-     * Get all records of warehouses
+     * Get all latest records of warehouses
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllWarehouses (): Collection
     {
-        return Warehouse::all([
+        return Warehouse::latest()->get([
             'id',
             ...(new Warehouse())->getFillable()
         ]);

@@ -9,13 +9,16 @@ trait SupplierServices
 {
     
     /**
-     * Get all records of suppliers
+     * Get all latest records of suppliers
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllSuppliers (): Collection
     {
-        return Supplier::all(['id', ...(new Supplier())->getFillable()]);
+        return Supplier::latest()->get([
+            'id', 
+            ...(new Supplier())->getFillable()
+        ]);
     }
     
     /**

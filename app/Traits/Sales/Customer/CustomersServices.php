@@ -9,13 +9,13 @@ trait CustomersServices
 {
     
     /**
-     * Get all records of customers
+     * Get latest records of customers
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllCustomers (): Collection
     {
-        return Customer::all([
+        return Customer::latest()->get([
             'id',
             ...(new Customer())->getFillable()
         ]);

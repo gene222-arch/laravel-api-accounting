@@ -9,13 +9,13 @@ trait CategoryServices
 {
 
     /**
-     * Get all records of categories
+     * Get all latest records of categories
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function getAllCategories (): Collection
     {
-        return Category::all([
+        return Category::latest()->get([
             'id', 
             ...(new Category())->getFillable()
         ]);
