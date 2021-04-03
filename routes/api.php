@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Item\CategoriesController;
 use App\Http\Controllers\Api\Item\ItemsController;
 use App\Http\Controllers\Api\Item\TaxController;
+use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,6 +74,18 @@ Route::prefix('categories')->group(function ()
     Route::post('/', [CategoriesController::class, 'store']);
     Route::put('/', [CategoriesController::class, 'update']);
     Route::delete('/', [CategoriesController::class, 'destroy']);
+});
+
+/**
+ * Customers
+ */
+Route::prefix('customers')->group(function () 
+{
+    Route::get('/', [CustomersController::class, 'index']);
+    Route::get('/{id}', [CustomersController::class, 'show']);
+    Route::post('/', [CustomersController::class, 'store']);
+    Route::put('/', [CustomersController::class, 'update']);
+    Route::delete('/', [CustomersController::class, 'destroy']);
 });
 
 /**

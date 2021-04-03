@@ -1,11 +1,15 @@
 <?php
 
-namespace {{ namespace }};
+namespace App\Http\Controllers\Api\Sales\Customer;
 
-use {{ rootNamespace }}Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Traits\Api\ApiResponser;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Sales\Customer\DeleteRequest;
+use App\Http\Requests\Sales\Customer\StoreRequest;
+use App\Http\Requests\Sales\Customer\UpdateRequest;
 
-class {{ class }} extends Controller
+class CustomersController extends Controller
 {
     use ApiResponser;
 
@@ -39,7 +43,16 @@ class {{ class }} extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = '';
+        $model = $this->customer->createCustomer(
+            $request->name, 
+            $request->email, 
+            $request->taxNumber, 
+            $request->currency, 
+            $request->phone, 
+            $request->website, 
+            $request->address, 
+            $request->reference
+        );
 
         return $this->success($model);
     }
@@ -52,7 +65,7 @@ class {{ class }} extends Controller
      */
     public function show($id)
     {
-        $result = true;
+        $result = $this->customer->getCustomerById($id);
 
         return !$result
             ? $this->noContent()
@@ -67,7 +80,19 @@ class {{ class }} extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        return $this->success(null, 'Item updated successfully.');
+        $this->customer->updateCustomer(
+            $request->id,
+            $request->name, 
+            $request->email, 
+            $request->taxNumber, 
+            $request->currency, 
+            $request->phone, 
+            $request->website, 
+            $request->address, 
+            $request->reference
+        );
+
+        return $this->success(null, 'Customer updated successfully.');
     }
 
     /**
@@ -77,7 +102,9 @@ class {{ class }} extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(DeleteRequest $request)
-    {
-        return $this->success(null, 'Item or items deleted successfully.');
+    {   
+        $this->customer->deleteCustomers($request->ids);
+
+        return $this->success(null, 'Customer or customers deleted successfully.');
     }
 }

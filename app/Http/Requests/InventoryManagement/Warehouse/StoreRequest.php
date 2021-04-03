@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Inventoryanagement\Warehouse;
+namespace App\Http\Requests\InventoryManagement\Warehouse;
 
 use App\Http\Requests\BaseRequest;
 

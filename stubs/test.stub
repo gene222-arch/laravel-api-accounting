@@ -17,6 +17,8 @@ class {{ class }} extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+
         $this->assertResponse($response);
     }
 
@@ -29,6 +31,8 @@ class {{ class }} extends TestCase
             "/api//${id}",
             $this->apiHeader()
         );
+
+        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
@@ -44,6 +48,8 @@ class {{ class }} extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+
         $this->assertResponse($response);
     }
 
@@ -58,6 +64,8 @@ class {{ class }} extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 

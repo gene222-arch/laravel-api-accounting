@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Inventoryanagement\Warehouse;
+namespace App\Http\Requests\Sales\Customer;
 
 use App\Http\Requests\BaseRequest;
 
@@ -14,7 +14,7 @@ class DeleteRequest extends BaseRequest
     public function rules()
     {
         return [
-            'ids.*' => ['required', 'integer', 'distinct', 'exists:warehouses,id'] 
+            'ids.*' => ['required', 'integer', 'distinct', 'exists:customers,id']
         ];
     }
 }

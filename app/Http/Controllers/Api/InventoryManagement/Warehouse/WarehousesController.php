@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\InventoryManagement\Warehouse;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Inventoryanagement\Warehouse\DeleteRequest;
-use App\Http\Requests\Inventoryanagement\Warehouse\StoreRequest;
-use App\Http\Requests\Inventoryanagement\Warehouse\UpdateRequest;
+use App\Http\Requests\InventoryManagement\Warehouse\DeleteRequest;
+use App\Http\Requests\InventoryManagement\Warehouse\StoreRequest;
+use App\Http\Requests\InventoryManagement\Warehouse\UpdateRequest;
 use App\Models\Warehouse;
 use App\Traits\Api\ApiResponser;
 
