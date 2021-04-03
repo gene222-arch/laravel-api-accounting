@@ -40,17 +40,17 @@ trait AccessRightServices
     /**
      * Update an existing access right
      *
-     * @param  int $roleId
-     * @param  string $role
-     * @param  array $permissions
+     * @param integer $id
+     * @param string $role
+     * @param array $permissions
      * @return mixed
      */
-    public function updateAccessRight (int $roleId, string $role, array $permissions): mixed
+    public function updateAccessRight (int $id, string $role, array $permissions): mixed
     {
         try {
-            DB::transaction(function () use ($roleId, $role, $permissions) 
+            DB::transaction(function () use ($id, $role, $permissions) 
             {
-                $findRole = Role::find($roleId);
+                $findRole = Role::find($id);
 
                 $findRole->update([
                     'name' => $role

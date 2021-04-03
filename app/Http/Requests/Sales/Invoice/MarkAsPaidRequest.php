@@ -14,7 +14,7 @@ class MarkAsPaidRequest extends BaseRequest
     public function rules()
     {
         return [
-            //
+            'amount' => ['required', 'numeric', 'min:0']
         ];
     }
 }

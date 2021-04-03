@@ -49,17 +49,13 @@ class AccessRightsController extends Controller
             $request->permissions
         );
 
-        return $this->success(
-            [],
-            '',
-            201
-        );
+        return $this->success([], 'Access right created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -83,7 +79,7 @@ class AccessRightsController extends Controller
     public function update(UpdateRequest $request)
     {
         $this->updateAccessRight(
-            $request->roleId,
+            $request->id,
             $request->role,
             $request->permissions
         );
@@ -99,9 +95,7 @@ class AccessRightsController extends Controller
      */
     public function destroy(DestroyRequest $request)
     {
-        $this->deleteAccessRights(
-            $request->roleIds
-        );
+        $this->deleteAccessRights($request->ids);
 
         return $this->success();
     }

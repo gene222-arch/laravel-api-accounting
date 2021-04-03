@@ -40,7 +40,7 @@ class UpdateRequest extends BaseRequest
     /**
      * Rename attributes
      * 
-     * return $array
+     * @return array
      */
     public function attributes()
     {

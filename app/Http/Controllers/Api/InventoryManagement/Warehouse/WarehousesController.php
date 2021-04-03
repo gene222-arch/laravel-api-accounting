@@ -51,7 +51,7 @@ class WarehousesController extends Controller
             $request->defaultWarehouse
         );
 
-        return $this->success($model);
+        return $this->success($model, 'Warehouse created successfully.');
     }
 
     /**
@@ -100,6 +100,6 @@ class WarehousesController extends Controller
     {
         $this->warehouse->deleteWarehouses($request->ids);
 
-        return $this->success(null, 'Warehouse or items deleted successfully.');
+        return $this->success(null, 'Warehouse or warehouses deleted successfully.');
     }
 }

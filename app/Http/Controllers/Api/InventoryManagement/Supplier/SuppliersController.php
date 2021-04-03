@@ -35,7 +35,6 @@ class SuppliersController extends Controller
             : $this->success($result);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -56,13 +55,13 @@ class SuppliersController extends Controller
             $request->province
         );
 
-        return $this->success($model);
+        return $this->success($model, 'Supplier created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -108,6 +107,6 @@ class SuppliersController extends Controller
     {
         $this->supplier->deleteSuppliers($request->ids);
 
-        return $this->success(null, 'Supplier or items deleted successfully.');
+        return $this->success(null, 'Supplier or suppliers deleted successfully.');
     }
 }

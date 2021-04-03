@@ -57,7 +57,7 @@ class InvoicesController extends Controller
 
         return $result !== true 
             ? $this->error($result, 500)
-            : $this->success(null, 'Invoice successfully created.');
+            : $this->success(null, 'Invoice created successfully.');
     }
 
     /**
@@ -139,7 +139,7 @@ class InvoicesController extends Controller
 
         return $result !== true 
             ? $this->error($result, 500)
-            : $this->success(null, 'Item updated successfully.');
+            : $this->success(null, 'Invoice updated successfully.');
     }
 
     /**
@@ -152,6 +152,6 @@ class InvoicesController extends Controller
     {
         $this->invoice->deleteInvoices($request->ids);
 
-        return $this->success(null, 'Item or items deleted successfully.');
+        return $this->success(null, 'Invoice or invoices deleted successfully.');
     }
 }

@@ -61,7 +61,7 @@ class ItemsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -72,7 +72,6 @@ class ItemsController extends Controller
             ? $this->noContent()
             : $this->success($result);
     }
-
 
     /**
      * Update the specified resource in storage.

@@ -54,13 +54,13 @@ class CustomersController extends Controller
             $request->reference
         );
 
-        return $this->success($model);
+        return $this->success($model, 'Customer created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)

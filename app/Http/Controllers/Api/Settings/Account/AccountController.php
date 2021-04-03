@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Settings;
+namespace App\Http\Controllers\Api\Settings\Account;
 
 use App\Models\User;
 use App\Traits\Api\ApiResponser;

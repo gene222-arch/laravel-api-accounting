@@ -48,13 +48,13 @@ class DiscountsController extends Controller
             $request->rate
         );
 
-        return $this->success($model);
+        return $this->success($model, 'Discount created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)

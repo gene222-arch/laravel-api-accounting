@@ -57,7 +57,7 @@ class AccessRightsControllerTest extends TestCase
     public function user_can_update_access_right()
     {
         $data = [
-            'roleId' => 1,
+            'id' => 1,
             'role' => 'Super Duper Admin',
             'permissions' => [
                 'View Dashboard',
@@ -79,7 +79,7 @@ class AccessRightsControllerTest extends TestCase
     public function user_can_delete_access_rights()
     {
         $data = [
-            'roleIds' => [
+            'ids' => [
                 2
             ]
         ];
