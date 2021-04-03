@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Item;
+namespace App\Http\Controllers\Api\Item\Item;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Item\Item\DeleteRequest;

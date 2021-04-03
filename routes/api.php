@@ -8,12 +8,12 @@ use App\Http\Controllers\Api\Settings\AccountController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
-use App\Http\Controllers\Api\Exports\UserExportController;
+use App\Http\Controllers\Api\Item\Discount\DiscountsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
-use App\Http\Controllers\Api\Item\CategoriesController;
-use App\Http\Controllers\Api\Item\ItemsController;
-use App\Http\Controllers\Api\Item\TaxController;
+use App\Http\Controllers\Api\Item\Category\CategoriesController;
+use App\Http\Controllers\Api\Item\Item\ItemsController;
+use App\Http\Controllers\Api\Item\Tax\TaxController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 
 /*
@@ -86,6 +86,18 @@ Route::prefix('customers')->group(function ()
     Route::post('/', [CustomersController::class, 'store']);
     Route::put('/', [CustomersController::class, 'update']);
     Route::delete('/', [CustomersController::class, 'destroy']);
+});
+
+/**
+ * Discounts
+ */
+Route::prefix('discounts')->group(function () 
+{
+    Route::get('/', [DiscountsController::class, 'index']);
+    Route::get('/{id}', [DiscountsController::class, 'show']);
+    Route::post('/', [DiscountsController::class, 'store']);
+    Route::put('/', [DiscountsController::class, 'update']);
+    Route::delete('/', [DiscountsController::class, 'destroy']);
 });
 
 /**

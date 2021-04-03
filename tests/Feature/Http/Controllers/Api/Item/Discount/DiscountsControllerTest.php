@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api\Item;
+namespace Tests\Feature\Http\Controllers\Api\Item\Discount;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CategoriesControllerTest extends TestCase
+class DiscountsControllerTest extends TestCase
 {
 
     /** test */
-    public function user_can_view_any_categories()
+    public function user_can_view_any_discounts()
     {
         $response = $this->get(
-            '/api/categories',
+            '/api/discounts',
             $this->apiHeader()
         );
 
@@ -21,30 +21,28 @@ class CategoriesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_view_category()
+    public function user_can_view_discount()
     {
         $id = 1;
 
         $response = $this->get(
-            "/api/categories/${id}",
+            "/api/discounts/${id}",
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
-    /** @test */
-    public function user_can_create_category()
+    /** test */
+    public function user_can_create_discount()
     {
         $data = [
-            'name' => 'Guitar',
-            'hexCode' => '#000002'
+            'name' => 'Discount 3',
+            'rate' => 10
         ];
 
         $response = $this->post(
-            '/api/categories',
+            '/api/discounts',
             $data,
             $this->apiHeader()
         );
@@ -53,36 +51,35 @@ class CategoriesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_update_category()
+    public function user_can_update_discount()
     {
         $data = [
-            'id' => 2,
-            'name' => 'Guitar',
-            'hexCode' => '#000002'
+            'id' => 3,
+            'name' => 'New discount',
+            'rate' => 25
         ];
 
         $response = $this->put(
-            '/api/categories',
+            '/api/discounts',
             $data,
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
     /** test */
-    public function user_can_delete_categories()
+    public function user_can_delete_discounts()
     {
         $data = [
             'ids' => [
-                1
+                2,
+                3
             ]
         ];
 
         $response = $this->delete(
-            '/api/categories',
+            '/api/discounts',
             $data,
             $this->apiHeader()
         );

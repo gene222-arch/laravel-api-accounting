@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api\Item;
+namespace App\Http\Controllers\Api\Item\Category;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Item\Tax\DeleteRequest;
-use App\Http\Requests\Item\Tax\StoreRequest;
-use App\Http\Requests\Item\Tax\UpdateRequest;
-use App\Models\Tax;
+use App\Http\Requests\Item\Category\DeleteRequest;
+use App\Http\Requests\Item\Category\StoreRequest;
+use App\Http\Requests\Item\Category\UpdateRequest;
+use App\Models\Category;
 use App\Traits\Api\ApiResponser;
 
-class TaxController extends Controller
+class CategoriesController extends Controller
 {
     use ApiResponser;
 
-    private Tax $tax;
+    private Category $category;
     
-    public function __construct(Tax $tax)
+    public function __construct(Category $category)
     {
-        $this->tax = $tax;
-        $this->middleware('auth:api', ['permission:Manage Taxes']);
+        $this->category = $category;
+        $this->middleware(['auth:api', 'permission:Manage Categories']);
     }
 
     /**
@@ -28,29 +28,33 @@ class TaxController extends Controller
      */
     public function index()
     {
-        $result = $this->tax->getAllTaxes();
+        $result = $this->category->getAllCategories();
 
         return !$result->count()
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success([
+                'data' => $result
+            ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(StoreRequest $request)
     {
-        $tax = $this->tax->createTax(
+        $category = $this->category->createCategory(
             $request->name,
-            $request->rate,
-            $request->type,
-            $request->enabled
+            $request->hexCode
         );
 
-        return $this->success($tax, 'Tax created successfully.');
+        return $this->success(
+            $category, 
+            'Category created successfully.'
+        );
     }
 
     /**
@@ -61,12 +65,13 @@ class TaxController extends Controller
      */
     public function show($id)
     {
-        $result = $this->tax->getTaxById($id);
+        $result = $this->category->getCategoryById($id);
 
         return !$result
             ? $this->noContent()
             : $this->success($result);
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -76,27 +81,25 @@ class TaxController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->tax->updateTax(
+        $this->category->updateCategory(
             $request->id,
             $request->name,
-            $request->rate,
-            $request->type,
-            $request->enabled
+            $request->hexCode
         );
 
-        return $this->success(null, 'Tax updated successfully.');
+        return $this->success(null, 'Category updated successfully.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified or multiple resource from storage.
      *
      * @param DeleteRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->tax->deleteTaxes($request->ids);
+        $this->category->deleteCategories($request->ids);
 
-        return $this->success(null, 'Tax or taxes deleted successfully.');
+        return $this->success(null, 'Category or categories deleted successfully.');
     }
 }
