@@ -113,6 +113,7 @@ Route::prefix('invoices')->group(function ()
     Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
     Route::post('/payment', [InvoicesController::class, 'payment']);
     Route::put('/', [InvoicesController::class, 'update']);
+    Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
     Route::delete('/', [InvoicesController::class, 'destroy']);
 });
 

@@ -35,7 +35,7 @@ class InvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_create_invoice()
     {
         $data = [
@@ -71,8 +71,6 @@ class InvoicesControllerTest extends TestCase
             $this->apiHeader()
         ); 
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -179,6 +177,22 @@ class InvoicesControllerTest extends TestCase
 
         $response = $this->put(
             '/api/invoices',
+            $data,
+            $this->apiHeader()
+        );
+
+        $this->assertResponse($response);
+    }
+
+    /** test */
+    public function user_can_cancel_an_invoice()
+    {
+        $id = 1;
+
+        $data = [];
+
+        $response = $this->put(
+            "/api/invoices/${id}",
             $data,
             $this->apiHeader()
         );

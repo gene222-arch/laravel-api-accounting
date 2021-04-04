@@ -225,6 +225,8 @@ trait InvoicesServices
                 $invoice->invoiceDetails()->sync($items);
 
                 $invoice->invoicePaymentDetail()->update($paymentDetails);
+
+                (new Stock())->stockOut($items);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -232,6 +234,21 @@ trait InvoicesServices
 
         return true;
     }    
+    
+    /**
+     * Update an invoice status as cancelled
+     *
+     * @param  Invoice $invoice
+     * @return boolean
+     */
+    public function cancelInvoice (Invoice $invoice): bool
+    {
+        $update = $invoice->update([
+                'status' => 'Cancelled'
+            ]);
+
+        return boolval($update);
+    }
 
     /**
      * Delete one or multiple records of invoices

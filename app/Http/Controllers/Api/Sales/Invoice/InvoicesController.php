@@ -167,6 +167,19 @@ class InvoicesController extends Controller
     }
 
     /**
+     * Update the specified resource from storage.
+     *
+     * @param  Invoice  $invoice
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cancel(Invoice $invoice)
+    {
+        $this->invoice->cancelInvoice($invoice);
+
+        return $this->success(null, 'Invoice cancelled successfully.');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  DeleteRequest  $request

@@ -20,7 +20,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('order_no');
             $table->timestamp('date')->default(now());
             $table->timestamp('due_date')->default(now());
-            $table->string('status')->default('draft');
+            $table->string('status')->default('Draft');
             $table->timestamps();
 
             $table->foreign('customer_id')
