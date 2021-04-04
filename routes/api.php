@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Banking\Account\AccountsController;
 use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
+use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
@@ -195,6 +196,18 @@ Route::prefix('settings')->group(function ()
     {
         Route::post('/verify', [AccountController::class, 'verify']);
         Route::put('/', [AccountController::class, 'update']);
+    });
+
+    /**
+     * Currencies
+     */
+    Route::prefix('currencies')->group(function () 
+    {
+        Route::get('/', [CurrenciesController::class, 'index']);
+        Route::get('/{id}', [CurrenciesController::class, 'show']);
+        Route::post('/', [CurrenciesController::class, 'store']);
+        Route::put('/', [CurrenciesController::class, 'update']);
+        Route::delete('/', [CurrenciesController::class, 'destroy']);
     });
 
     /**
