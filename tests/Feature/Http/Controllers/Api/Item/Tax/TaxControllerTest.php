@@ -13,7 +13,7 @@ class TaxControllerTest extends TestCase
     public function user_can_view_any_taxes()
     {
         $response = $this->get(
-            '/api/taxes',
+            '/api/item/taxes',
             $this->apiHeader()
         );
   
@@ -26,7 +26,7 @@ class TaxControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/taxes/${id}",
+            "/api/item/taxes/${id}",
             $this->apiHeader()
         );
 
@@ -46,7 +46,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/taxes',
+            '/api/item/taxes',
             $data,
             $this->apiHeader()
         );
@@ -68,7 +68,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            "/api/taxes",
+            "/api/item/taxes",
             $data,
             $this->apiHeader()
         );
@@ -87,7 +87,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/taxes',
+            '/api/item/taxes',
             $data,
             $this->apiHeader()
         );

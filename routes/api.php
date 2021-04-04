@@ -66,42 +66,61 @@ Route::prefix('access-rights')->group(function ()
 });
 
 /**
- * Categories
- */
-Route::prefix('categories')->group(function () 
-{
-    Route::get('/', [CategoriesController::class, 'index']);
-    Route::get('/{id}', [CategoriesController::class, 'show']);
-    Route::post('/', [CategoriesController::class, 'store']);
-    Route::put('/', [CategoriesController::class, 'update']);
-    Route::delete('/', [CategoriesController::class, 'destroy']);
-});
-
-
-/**
- * Discounts
- */
-Route::prefix('discounts')->group(function () 
-{
-    Route::get('/', [DiscountsController::class, 'index']);
-    Route::get('/{id}', [DiscountsController::class, 'show']);
-    Route::post('/', [DiscountsController::class, 'store']);
-    Route::put('/', [DiscountsController::class, 'update']);
-    Route::delete('/', [DiscountsController::class, 'destroy']);
-});
-
-
-/**
  * Item
+ * - Items
+ * - Categories
+ * - Discounts
  */
-Route::prefix('items')->group(function () 
+Route::prefix('item')->group(function () 
 {
-    Route::get('/', [ItemsController::class, 'index']);
-    Route::get('/{id}', [ItemsController::class, 'show']);
-    Route::post('/', [ItemsController::class, 'store']);
-    Route::post('/upload', [ItemsController::class, 'upload']);
-    Route::put('/', [ItemsController::class, 'update']);
-    Route::delete('/', [ItemsController::class, 'destroy']);
+    /**
+     * Categories
+     */
+    Route::prefix('categories')->group(function () 
+    {
+        Route::get('/', [CategoriesController::class, 'index']);
+        Route::get('/{id}', [CategoriesController::class, 'show']);
+        Route::post('/', [CategoriesController::class, 'store']);
+        Route::put('/', [CategoriesController::class, 'update']);
+        Route::delete('/', [CategoriesController::class, 'destroy']);
+    });
+
+    /**
+     * Discounts
+     */
+    Route::prefix('discounts')->group(function () 
+    {
+        Route::get('/', [DiscountsController::class, 'index']);
+        Route::get('/{id}', [DiscountsController::class, 'show']);
+        Route::post('/', [DiscountsController::class, 'store']);
+        Route::put('/', [DiscountsController::class, 'update']);
+        Route::delete('/', [DiscountsController::class, 'destroy']);
+    });
+
+    /**
+     * Item
+     */
+    Route::prefix('items')->group(function () 
+    {
+        Route::get('/', [ItemsController::class, 'index']);
+        Route::get('/{id}', [ItemsController::class, 'show']);
+        Route::post('/', [ItemsController::class, 'store']);
+        Route::post('/upload', [ItemsController::class, 'upload']);
+        Route::put('/', [ItemsController::class, 'update']);
+        Route::delete('/', [ItemsController::class, 'destroy']);
+    });
+
+    /**
+     * Tax
+     */
+    Route::prefix('taxes')->group(function () 
+    {
+        Route::get('/', [TaxController::class, 'index']);
+        Route::get('/{id}', [TaxController::class, 'show']);
+        Route::post('/', [TaxController::class, 'store']);
+        Route::put('/', [TaxController::class, 'update']);
+        Route::delete('/', [TaxController::class, 'destroy']);
+    });
 });
 
 /**
@@ -122,7 +141,7 @@ Route::prefix('sales')->group(function ()
         Route::put('/', [CustomersController::class, 'update']);
         Route::delete('/', [CustomersController::class, 'destroy']);
     });
-    
+
     /**
      * Invoices
      */
@@ -162,18 +181,6 @@ Route::prefix('suppliers')->group(function ()
     Route::post('/', [SuppliersController::class, 'store']);
     Route::put('/', [SuppliersController::class, 'update']);
     Route::delete('/', [SuppliersController::class, 'destroy']);
-});
-
-/**
- * Tax
- */
-Route::prefix('taxes')->group(function () 
-{
-    Route::get('/', [TaxController::class, 'index']);
-    Route::get('/{id}', [TaxController::class, 'show']);
-    Route::post('/', [TaxController::class, 'store']);
-    Route::put('/', [TaxController::class, 'update']);
-    Route::delete('/', [TaxController::class, 'destroy']);
 });
 
 /**

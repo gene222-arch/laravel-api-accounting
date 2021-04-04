@@ -13,7 +13,7 @@ class DiscountsControllerTest extends TestCase
     public function user_can_view_any_discounts()
     {
         $response = $this->get(
-            '/api/discounts',
+            '/api/item/discounts',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class DiscountsControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/discounts/${id}",
+            "/api/item/discounts/${id}",
             $this->apiHeader()
         );
 
@@ -42,7 +42,7 @@ class DiscountsControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/discounts',
+            '/api/item/discounts',
             $data,
             $this->apiHeader()
         );
@@ -60,7 +60,7 @@ class DiscountsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/discounts',
+            '/api/item/discounts',
             $data,
             $this->apiHeader()
         );
@@ -79,7 +79,7 @@ class DiscountsControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/discounts',
+            '/api/item/discounts',
             $data,
             $this->apiHeader()
         );

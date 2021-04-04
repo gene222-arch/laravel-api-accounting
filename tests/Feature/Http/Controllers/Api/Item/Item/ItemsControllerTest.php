@@ -15,7 +15,7 @@ class ItemsControllerTest extends TestCase
     public function user_can_view_any_items()
     {
         $response = $this->get(
-            '/api/items',
+            '/api/item/items',
             $this->apiHeader()
         );
 
@@ -28,7 +28,7 @@ class ItemsControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/items/${id}",
+            "/api/item/items/${id}",
             $this->apiHeader()
         );
 
@@ -61,7 +61,7 @@ class ItemsControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/items',
+            '/api/item/items',
             $data,
             $this->apiHeader()
         );
@@ -100,7 +100,7 @@ class ItemsControllerTest extends TestCase
 
 
         $response = $this->put(
-            '/api/items',
+            '/api/item/items',
             $data,
             $this->apiHeader()
         );
@@ -120,7 +120,7 @@ class ItemsControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/items/upload',
+            '/api/item/items/upload',
             $data,
             $this->apiHeader()
         );
@@ -138,7 +138,7 @@ class ItemsControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/items',
+            '/api/item/items',
             $data,
             $this->apiHeader()
         );
