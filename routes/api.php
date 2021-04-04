@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
+use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -208,6 +209,18 @@ Route::prefix('settings')->group(function ()
         Route::post('/', [CurrenciesController::class, 'store']);
         Route::put('/', [CurrenciesController::class, 'update']);
         Route::delete('/', [CurrenciesController::class, 'destroy']);
+    });
+
+    /**
+     * Income Categories
+     */
+    Route::prefix('income-categories')->group(function () 
+    {
+        Route::get('/', [IncomeCategoriesController::class, 'index']);
+        Route::get('/{id}', [IncomeCategoriesController::class, 'show']);
+        Route::post('/', [IncomeCategoriesController::class, 'store']);
+        Route::put('/', [IncomeCategoriesController::class, 'update']);
+        Route::delete('/', [IncomeCategoriesController::class, 'destroy']);
     });
 
     /**

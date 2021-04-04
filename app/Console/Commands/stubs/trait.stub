@@ -15,7 +15,11 @@ trait {{ class }}
      */
     public function getAllCustomers (): Collection
     {
-
+        return Model::latest()
+            ->get([
+                'id', 
+                ...(new Model())->getFillable()
+            ]);
     }
     
     /**
