@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
+use App\Models\Stock;
 use Illuminate\Database\Eloquent\Collection;
 
 trait InvoicesServices
@@ -67,6 +68,8 @@ trait InvoicesServices
                 $invoice->invoiceDetails()->attach($items);
 
                 $invoice->invoicePaymentDetail()->create($paymentDetails);
+
+                (new Stock())->stockOut($items);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

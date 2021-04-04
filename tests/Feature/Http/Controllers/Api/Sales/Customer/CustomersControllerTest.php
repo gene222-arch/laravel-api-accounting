@@ -37,8 +37,8 @@ class CustomersControllerTest extends TestCase
     public function user_can_create_customer()
     {
         $data = [
-            'name' => 'JHoch',
-            'email' => 'jhoc@yahoo.com',
+            'name' => 'Gene Phillip Artista',
+            'email' => 'genephillip222@gmail.com',
             'taxNumber' => '12345',
             'currency' => 'US Dollar',            
             'phone' => '22222222222',
@@ -52,8 +52,6 @@ class CustomersControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 

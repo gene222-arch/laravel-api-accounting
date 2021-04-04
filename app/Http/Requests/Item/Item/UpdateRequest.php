@@ -31,7 +31,6 @@ class UpdateRequest extends BaseRequest
             'trackStock' => ['required', 'boolean'],
 
             'stock.supplierId' => ['nullable', 'integer', 'exists:suppliers,id'],
-            'stock.warehouseId' => ['nullable', 'integer', 'exists:warehouses,id'],
             'stock.in_stock' => ['nullable', 'integer', 'min:0'],
             'stock.minimumStock' => ['nullable', 'integer', 'min:0'],
         ];
@@ -59,7 +58,6 @@ class UpdateRequest extends BaseRequest
             'item.taxes' => 'taxes',
 
             'stock.supplierId' => 'supplier id',
-            'stock.warehouseId' => 'warehouse id',
             'stock.inStock' => 'in stock',
             'stock.minimumStock' => 'minimum stock',
         ];
@@ -78,7 +76,6 @@ class UpdateRequest extends BaseRequest
             'item.taxes' => 'The selected :attribute does not exist.',
             'stock.id.exists' => 'The selected :attribute does not exist.',
             'stock.supplierId.exists' => 'The selected :attribute does not exist.',
-            'stock.warehouseId.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

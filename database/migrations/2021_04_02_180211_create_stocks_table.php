@@ -17,8 +17,7 @@ class CreateStocksTable extends Migration
             $table->id();
             $table->foreignId('item_id')->unique();
             $table->foreignId('supplier_id')->nullable();
-            $table->foreignId('warehouse_id');
-            $table->unsignedBigInteger('in_stock');
+            $table->unsignedBigInteger('in_stock')->default(0);
             $table->unsignedBigInteger('stock_in')->default(0);
             $table->unsignedBigInteger('stock_out')->default(0);
             $table->unsignedBigInteger('bad_stock')->default(0);    
@@ -34,11 +33,6 @@ class CreateStocksTable extends Migration
                 ->references('id')
                 ->on('suppliers')
                 ->nullOnDelete();
-
-            $table->foreign('warehouse_id')
-                ->references('id')
-                ->on('warehouses')
-                ->cascadeOnDelete();
         });
     }
 

@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\InventoryManagement\Stock\StocksServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stock extends Model
 {
+    /** Libraries or Built-in */
     use HasFactory;
+
+    /** Custom */
+    use StocksServices;
 
     protected $fillable = [
         'supplier_id',

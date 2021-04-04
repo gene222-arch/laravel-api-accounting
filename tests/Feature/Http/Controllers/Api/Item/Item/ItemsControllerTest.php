@@ -35,7 +35,7 @@ class ItemsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_create_item()
     {
         $data = [
@@ -54,7 +54,6 @@ class ItemsControllerTest extends TestCase
             ],
             'stock' => [
                 'supplierId' => 1,
-                'warehouseId' => 1,
                 'inStock' => 1,
                 'minimumStock' => 10,
             ],

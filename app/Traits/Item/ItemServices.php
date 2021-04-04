@@ -75,7 +75,6 @@ trait ItemServices
                 {
                     $item->stock()->create([
                         'supplier_id' => $stockData['supplierId'],
-                        'warehouse_id' => $stockData['warehouseId'],
                         'in_stock' => $stockData['inStock'],
                         'minimum_stock' => $stockData['minimumStock']
                     ]);
@@ -126,7 +125,6 @@ trait ItemServices
                 {
                     $item->stock()->updateOrCreate([
                         'supplier_id' => $stockData['supplierId'],
-                        'warehouse_id' => $stockData['warehouseId'],
                         'in_stock' => $stockData['inStock'],
                         'minimum_stock' => $stockData['minimumStock']
                     ]);
@@ -148,13 +146,7 @@ trait ItemServices
      */
     public function deleteItems (array $ids): bool
     {
-        $items = Item::whereIn('id', $ids);
-
-        $images = $items->pluck('image')->toArray();
-
-        Storage::delete($images);
-        
-        return $items->delete();
+        return Item::whereIn('id', $ids)->delete();
     }
     
 }
