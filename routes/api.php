@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Banking\Account\AccountsController;
 use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
+use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 
@@ -180,14 +181,32 @@ Route::prefix('sales')->group(function ()
 });
 
 /**
- * Settings
+ * * Settings
+ *  - Account
+ *  - Payment methods
+ * 
  */
 Route::prefix('settings')->group(function () 
 {
+    /**
+     * Account
+     */
     Route::prefix('account')->group(function () 
     {
         Route::post('/verify', [AccountController::class, 'verify']);
         Route::put('/', [AccountController::class, 'update']);
+    });
+
+    /**
+     * Payment methods
+     */
+    Route::prefix('payment-methods')->group(function () 
+    {
+        Route::get('/', [PaymentMethodsController::class, 'index']);
+        Route::get('/{id}', [PaymentMethodsController::class, 'show']);
+        Route::post('/', [PaymentMethodsController::class, 'store']);
+        Route::put('/', [PaymentMethodsController::class, 'update']);
+        Route::delete('/', [PaymentMethodsController::class, 'destroy']);
     });
 });
 
