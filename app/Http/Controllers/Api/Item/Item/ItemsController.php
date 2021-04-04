@@ -19,7 +19,7 @@ class ItemsController extends Controller
     public function __construct(Item $item)
     {
         $this->item = $item;
-        $this->middleware(['auth:api', 'permission: Manage Items']);
+        $this->middleware(['auth:api', 'permission:Manage Items']);
     }
 
     /**
