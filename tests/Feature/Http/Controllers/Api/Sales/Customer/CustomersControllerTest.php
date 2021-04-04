@@ -13,7 +13,7 @@ class CustomersControllerTest extends TestCase
     public function user_can_view_any_customers()
     {
         $response = $this->get(
-            '/api/customers',
+            '/api/customers/sales',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class CustomersControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/customers/${id}",
+            "/api/customers/sales/${id}",
             $this->apiHeader()
         );
 
@@ -47,7 +47,7 @@ class CustomersControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/customers',
+            '/api/customers/sales',
             $data,
             $this->apiHeader()
         );
@@ -71,7 +71,7 @@ class CustomersControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/customers',
+            '/api/customers/sales',
             $data,
             $this->apiHeader()
         );
@@ -89,7 +89,7 @@ class CustomersControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/customers',
+            '/api/customers/sales',
             $data,
             $this->apiHeader()
         );

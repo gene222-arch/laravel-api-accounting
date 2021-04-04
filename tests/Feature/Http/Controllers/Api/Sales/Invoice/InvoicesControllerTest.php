@@ -9,11 +9,11 @@ use Tests\TestCase;
 class InvoicesControllerTest extends TestCase
 {
 
-    /** test */
+    /** @test */
     public function user_can_view_any_invoices()
     {
         $response = $this->get(
-            '/api/invoices',
+            '/api/invoices/sales',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class InvoicesControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/invoices/${id}",
+            "/api/invoices/sales/${id}",
             $this->apiHeader()
         );
 
@@ -66,7 +66,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/invoices',
+            '/api/invoices/sales',
             $data,
             $this->apiHeader()
         ); 
@@ -87,7 +87,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/invoices/${invoice}/customer/${customer}/mail",
+            "/api/invoices/sales/${invoice}/customer/${customer}/mail",
             $data,
             $this->apiHeader()
         ); 
@@ -105,7 +105,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/invoices/${id}/mark-as-paid",
+            "/api/invoices/sales/${id}/mark-as-paid",
             $data,
             $this->apiHeader()
         ); 
@@ -126,7 +126,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/invoices/payment',
+            '/api/invoices/sales/payment',
             $data,
             $this->apiHeader()
         ); 
@@ -176,7 +176,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/invoices',
+            '/api/invoices/sales',
             $data,
             $this->apiHeader()
         );
@@ -192,7 +192,7 @@ class InvoicesControllerTest extends TestCase
         $data = [];
 
         $response = $this->put(
-            "/api/invoices/${id}",
+            "/api/invoices/sales/${id}",
             $data,
             $this->apiHeader()
         );
@@ -210,7 +210,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/invoices',
+            '/api/invoices/sales',
             $data,
             $this->apiHeader()
         );

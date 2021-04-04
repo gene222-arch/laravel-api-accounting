@@ -77,17 +77,6 @@ Route::prefix('categories')->group(function ()
     Route::delete('/', [CategoriesController::class, 'destroy']);
 });
 
-/**
- * Customers
- */
-Route::prefix('customers')->group(function () 
-{
-    Route::get('/', [CustomersController::class, 'index']);
-    Route::get('/{id}', [CustomersController::class, 'show']);
-    Route::post('/', [CustomersController::class, 'store']);
-    Route::put('/', [CustomersController::class, 'update']);
-    Route::delete('/', [CustomersController::class, 'destroy']);
-});
 
 /**
  * Discounts
@@ -101,21 +90,6 @@ Route::prefix('discounts')->group(function ()
     Route::delete('/', [DiscountsController::class, 'destroy']);
 });
 
-/**
- * Invoices
- */
-Route::prefix('invoices')->group(function () 
-{
-    Route::get('/', [InvoicesController::class, 'index']);
-    Route::get('/{id}', [InvoicesController::class, 'show']);
-    Route::post('/', [InvoicesController::class, 'store']);
-    Route::post('/{invoice}/customer/{customer}/mail', [InvoicesController::class, 'email']);
-    Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
-    Route::post('/payment', [InvoicesController::class, 'payment']);
-    Route::put('/', [InvoicesController::class, 'update']);
-    Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
-    Route::delete('/', [InvoicesController::class, 'destroy']);
-});
 
 /**
  * Item
@@ -128,6 +102,42 @@ Route::prefix('items')->group(function ()
     Route::post('/upload', [ItemsController::class, 'upload']);
     Route::put('/', [ItemsController::class, 'update']);
     Route::delete('/', [ItemsController::class, 'destroy']);
+});
+
+/**
+ * Sales 
+ * - Invoices
+ * - Customers
+ */
+Route::prefix('sales')->group(function () 
+{
+    /**
+     * Customers
+     */
+    Route::prefix('customers')->group(function () 
+    {
+        Route::get('/', [CustomersController::class, 'index']);
+        Route::get('/{id}', [CustomersController::class, 'show']);
+        Route::post('/', [CustomersController::class, 'store']);
+        Route::put('/', [CustomersController::class, 'update']);
+        Route::delete('/', [CustomersController::class, 'destroy']);
+    });
+    
+    /**
+     * Invoices
+     */
+    Route::prefix('invoices')->group(function () 
+    {
+        Route::get('/', [InvoicesController::class, 'index']);
+        Route::get('/{id}', [InvoicesController::class, 'show']);
+        Route::post('/', [InvoicesController::class, 'store']);
+        Route::post('/{invoice}/customer/{customer}/mail', [InvoicesController::class, 'email']);
+        Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
+        Route::post('/payment', [InvoicesController::class, 'payment']);
+        Route::put('/', [InvoicesController::class, 'update']);
+        Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
+        Route::delete('/', [InvoicesController::class, 'destroy']);
+    });
 });
 
 /**
