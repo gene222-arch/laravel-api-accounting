@@ -109,6 +109,7 @@ Route::prefix('invoices')->group(function ()
     Route::get('/', [InvoicesController::class, 'index']);
     Route::get('/{id}', [InvoicesController::class, 'show']);
     Route::post('/', [InvoicesController::class, 'store']);
+    Route::post('/{invoice}/customer/{customer}/mail', [InvoicesController::class, 'email']);
     Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
     Route::post('/payment', [InvoicesController::class, 'payment']);
     Route::put('/', [InvoicesController::class, 'update']);
@@ -127,7 +128,6 @@ Route::prefix('items')->group(function ()
     Route::put('/', [ItemsController::class, 'update']);
     Route::delete('/', [ItemsController::class, 'destroy']);
 });
-
 
 /**
  * Settings

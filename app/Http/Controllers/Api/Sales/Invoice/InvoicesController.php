@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Api\Sales\Invoice;
 
 use App\Models\Invoice;
+use App\Models\Customer;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sales\Invoice\DeleteRequest;
-use App\Http\Requests\Sales\Invoice\MarkAsPaidRequest;
-use App\Http\Requests\Sales\Invoice\PaymentRequest;
+use App\Http\Requests\Sales\Invoice\MailRequest;
 use App\Http\Requests\Sales\Invoice\StoreRequest;
+use App\Http\Requests\Sales\Invoice\DeleteRequest;
 use App\Http\Requests\Sales\Invoice\UpdateRequest;
+use App\Http\Requests\Sales\Invoice\PaymentRequest;
+use App\Http\Requests\Sales\Invoice\MarkAsPaidRequest;
 
 class InvoicesController extends Controller
 {
@@ -75,6 +77,28 @@ class InvoicesController extends Controller
             : $this->success($result);
     }
     
+   /**
+     * Send an email to a specified customer.
+     *
+     * @param MailRequest $request
+     * @param Invoice $invoice
+     * @param Customer $customer
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function email(MailRequest $request, Invoice $invoice, Customer $customer)
+    {
+        $this->invoice->email(
+            $invoice,
+            $customer,
+            $request->subject,
+            $request->greeting,
+            $request->note,
+            $request->footer
+        );
+
+        return $this->success(null, 'Customer mailed successfully.');
+    }
+
    /**
      * Update the specified resource in storage.
      *

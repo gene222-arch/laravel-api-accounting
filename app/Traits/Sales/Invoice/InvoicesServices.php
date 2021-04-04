@@ -4,7 +4,9 @@ namespace App\Traits\Sales\Invoice;
 
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\QueueInvoiceNotification;
 use Illuminate\Database\Eloquent\Collection;
 
 trait InvoicesServices
@@ -72,7 +74,31 @@ trait InvoicesServices
 
         return true;
     }
-    
+        
+    /**
+     * Send an email notification to the specified customer
+     *
+     * @param  Invoice $invoice
+     * @param  Customer $customer
+     * @param  string|null $subject
+     * @param  string|null $greeting
+     * @param  string|null $note
+     * @param  string|null $footer
+     * @return void
+     */
+    public function email (Invoice $invoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): void
+    {
+        dispatch(new QueueInvoiceNotification(
+            $invoice, 
+            $customer, 
+            $subject, 
+            $greeting, 
+            $note, 
+            $footer
+        ))
+        ->delay(now()->addSeconds(5));
+    }
+
     /**
      * Mark an invoice record as paid via id
      *

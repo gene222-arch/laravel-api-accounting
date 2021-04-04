@@ -74,6 +74,29 @@ class InvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
+    /** @test */
+    public function user_can_mail_customer()
+    {
+        $invoice = 3;
+        $customer = 1;
+        $data = [
+            'subject' => 'Your Invoice Receipt',
+            'greeting' => 'Good day sir,',
+            'note' => 'We hope you continue using our services.',
+            'footer' => ''
+        ];
+
+        $response = $this->post(
+            "/api/invoices/${invoice}/customer/${customer}/mail",
+            $data,
+            $this->apiHeader()
+        ); 
+
+        dd(json_decode($response->getContent()));
+        
+        $this->assertResponse($response);
+    }
+
     /** test */
     public function user_can_mark_invoice_as_paid()
     {
