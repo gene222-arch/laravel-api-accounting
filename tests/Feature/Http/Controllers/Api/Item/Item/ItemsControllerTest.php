@@ -35,7 +35,7 @@ class ItemsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_create_item()
     {
         $data = [

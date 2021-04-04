@@ -50,7 +50,7 @@ class InvoicesControllerTest extends TestCase
                     'discount_id' => null,
                     'item' => 'Guitar',
                     'price' => 5.00,
-                    'quantity' => 5,
+                    'quantity' => 1,
                     'amount' => 25.00,
                     'discount' => 0.00,
                     'tax' => 0.00
