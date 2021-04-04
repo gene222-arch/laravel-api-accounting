@@ -24,7 +24,7 @@ class {{ class }} extends Controller
      */
     public function index()
     {
-        $result = $this->customer->getAllCustomers();
+        $result = $this->customer->getAllModel();
 
         return !$result->count()
             ? $this->noContent()
@@ -41,7 +41,7 @@ class {{ class }} extends Controller
     {
         $model = '';
 
-        return $this->success($model);
+        return $this->success($model, 'Model created successfully.');
     }
 
     /**
@@ -67,7 +67,7 @@ class {{ class }} extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        return $this->success(null, 'Item updated successfully.');
+        return $this->success(null, 'Model updated successfully.');
     }
 
     /**
@@ -78,6 +78,6 @@ class {{ class }} extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        return $this->success(null, 'Item or items deleted successfully.');
+        return $this->success(null, 'Model or models deleted successfully.');
     }
 }

@@ -3,19 +3,20 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\Item\Tax\TaxController;
 use App\Http\Controllers\Api\Auth\RegisterController;
-use App\Http\Controllers\Api\Settings\Account\AccountController;
+use App\Http\Controllers\Api\Item\Item\ItemsController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
-use App\Http\Controllers\Api\AccessRight\AccessRightsController;
+use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
 use App\Http\Controllers\Api\Item\Discount\DiscountsController;
+use App\Http\Controllers\Api\AccessRight\AccessRightsController;
+use App\Http\Controllers\Api\Banking\Account\AccountsController;
+use App\Http\Controllers\Api\Item\Category\CategoriesController;
+use App\Http\Controllers\Api\Sales\Customer\CustomersController;
+use App\Http\Controllers\Api\Settings\Account\AccountController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
-use App\Http\Controllers\Api\Item\Category\CategoriesController;
-use App\Http\Controllers\Api\Item\Item\ItemsController;
-use App\Http\Controllers\Api\Item\Tax\TaxController;
-use App\Http\Controllers\Api\Sales\Customer\CustomersController;
-use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,10 +67,29 @@ Route::prefix('access-rights')->group(function ()
 });
 
 /**
- * Item
- * - Items
- * - Categories
- * - Discounts
+ * * Banking
+ *  - Accounts
+ */
+Route::prefix('banking')->group(function () 
+{
+    /**
+     * Accounts
+     */
+    Route::prefix('accounts')->group(function () 
+    {
+        Route::get('/', [AccountsController::class, 'index']);
+        Route::get('/{id}', [AccountsController::class, 'show']);
+        Route::post('/', [AccountsController::class, 'store']);
+        Route::put('/', [AccountsController::class, 'update']);
+        Route::delete('/', [AccountsController::class, 'destroy']);
+    });
+});
+
+/**
+ * * Item
+ *  - Items
+ *  - Categories
+ *  - Discounts
  */
 Route::prefix('item')->group(function () 
 {
@@ -124,9 +144,9 @@ Route::prefix('item')->group(function ()
 });
 
 /**
- * Sales 
- * - Invoices
- * - Customers
+ * * Sales 
+ *  - Invoices
+ *  - Customers
  */
 Route::prefix('sales')->group(function () 
 {
