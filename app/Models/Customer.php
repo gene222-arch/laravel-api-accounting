@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Invoice;
 use App\Models\Revenue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -29,7 +30,17 @@ class Customer extends Model
     ];
 
     /**
-     * Define a one-to-many relationship with Revenue Class
+     * Define a one-to-many relationship with Invoice class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     * Define a one-to-many relationship with Revenue class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

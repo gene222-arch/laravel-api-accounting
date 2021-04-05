@@ -7,6 +7,7 @@ use App\Traits\Upload\UploadServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Item extends Model
@@ -30,9 +31,18 @@ class Item extends Model
         'image'
     ];
 
-        
     /**
-     * Define a one-to-one relationship with Stock
+     * Define a one-to-many relationship with InvoiceDetail class
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(InvoiceDetail::class);
+    }
+
+    /**
+     * Define a one-to-one relationship with Stock class
      *
      * @return Illuminate\Database\Eloquent\Relations\HasOne
      */
