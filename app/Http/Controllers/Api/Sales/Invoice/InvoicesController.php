@@ -54,7 +54,7 @@ class InvoicesController extends Controller
             $request->date,
             $request->dueDate,
             $request->items,
-            $request->paymentDetails
+            $request->paymentDetail
         );
 
         return $result !== true 
@@ -110,7 +110,13 @@ class InvoicesController extends Controller
     {
         $result = $this->invoice->markAsPaid(
             $id, 
-            $request->amount
+            $request->accountId,
+            $request->currencyId,
+            $request->paymentMethodId,
+            $request->date,
+            $request->amount,
+            $request->description,
+            $request->reference
         );
 
         return $result !== true
@@ -139,7 +145,7 @@ class InvoicesController extends Controller
 
         return $result !== true
             ? $this->error($result, 500)
-            : $this->success(null, 'Payment created successfully.');
+            : $this->success(null, 'Invoice payment created successfully.');
     }
 
     /**
@@ -158,7 +164,7 @@ class InvoicesController extends Controller
             $request->date,
             $request->dueDate,
             $request->items,
-            $request->paymentDetails
+            $request->paymentDetail
         );
 
         return $result !== true 

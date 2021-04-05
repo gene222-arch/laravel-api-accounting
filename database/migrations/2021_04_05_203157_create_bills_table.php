@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInvoicesTable extends Migration
+class CreateBillsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,25 +13,25 @@ class CreateInvoicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('invoices', function (Blueprint $table) {
+        Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id');
-            $table->string('invoice_number');
+            $table->foreignId('vendor_id');
+            $table->string('bill_number');
             $table->unsignedBigInteger('order_no');
             $table->timestamp('date')->default(now());
             $table->timestamp('due_date')->default(now());
             $table->string('status')->default('Draft');
             $table->timestamps();
 
-            $table->foreign('customer_id')
+            $table->foreign('vendor_id')
                 ->references('id')
-                ->on('customers')
+                ->on('vendors')
                 ->cascadeOnDelete();
         });
 
-        Schema::create('invoice_details', function (Blueprint $table) {
+        Schema::create('bill_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id');
+            $table->foreignId('bill_id');
             $table->foreignId('item_id');
             $table->foreignId('discount_id')->nullable();
             $table->string('item');
@@ -43,13 +43,13 @@ class CreateInvoicesTable extends Migration
             $table->timestamps();
 
             $table->unique([
-                'invoice_id',
+                'bill_id',
                 'item_id'
             ]);
 
-            $table->foreign('invoice_id')
+            $table->foreign('bill_id')
                 ->references('id')
-                ->on('invoices')
+                ->on('bills')
                 ->cascadeOnDelete();
 
             $table->foreign('item_id')
@@ -63,9 +63,9 @@ class CreateInvoicesTable extends Migration
                 ->nullOnDelete();
         });
 
-        Schema::create('invoice_payment_details', function (Blueprint $table) {
+        Schema::create('bill_payment_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id');
+            $table->foreignId('bill_id');
             $table->unsignedDecimal('total_discounts', 10, 2)->default(0.00);
             $table->unsignedDecimal('total_taxes', 10, 2)->default(0.00);
             $table->unsignedDecimal('sub_total', 10, 2);
@@ -73,15 +73,15 @@ class CreateInvoicesTable extends Migration
             $table->unsignedDecimal('amount_due', 10, 2)->default(0.00);
             $table->unsignedDecimal('over_due', 10, 2)->default(0.00);
 
-            $table->foreign('invoice_id')
+            $table->foreign('bill_id')
                 ->references('id')
-                ->on('invoices')
+                ->on('bills')
                 ->cascadeOnDelete();
         });
 
-        Schema::create('invoice_payments', function (Blueprint $table) {
+        Schema::create('bill_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('invoice_id')->index();
+            $table->foreignId('bill_id')->index();
             $table->foreignId('account_id');
             $table->foreignId('currency_id');
             $table->foreignId('payment_method_id');
@@ -91,11 +91,11 @@ class CreateInvoicesTable extends Migration
             $table->text('reference')->nullable();
             $table->timestamps();
 
-            $table->foreign('invoice_id')
+            $table->foreign('bill_id')
                 ->references('id')
-                ->on('invoices')
+                ->on('bills')
                 ->cascadeOnDelete();
-
+            
             $table->foreign('account_id')
                 ->references('id')
                 ->on('accounts')
@@ -120,9 +120,9 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoice_payments');
-        Schema::dropIfExists('invoice_payment_details');
-        Schema::dropIfExists('invoice_details');
-        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('bill_payments');
+        Schema::dropIfExists('bill_payment_details');
+        Schema::dropIfExists('bill_details');
+        Schema::dropIfExists('bills');
     }
 }

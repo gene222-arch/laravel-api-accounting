@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Sales\Invoice;
+namespace App\Http\Requests\Purchases\Bill;
 
 use App\Http\Requests\BaseRequest;
 

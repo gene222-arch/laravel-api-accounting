@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Sales\Invoice;
+namespace App\Http\Requests\Purchases\Bill;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreRequest extends BaseRequest
+class UpdateRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,9 +14,10 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'customerId' => ['required', 'integer', 'exists:customers,id'],
-            'invoiceNumber' => ['required', 'string', 'unique:invoices,invoice_number'],
-            'orderNo' => ['required', 'integer', 'unique:invoices,order_no'],
+            'id' => ['required', 'integer', 'exists:bills,id'],
+            'vendorId' => ['required', 'integer', 'exists:vendors,id'],
+            'billNumber' => ['required', 'string', 'unique:bills,bill_number,' . $this->id],
+            'orderNo' => ['required', 'integer', 'unique:bills,order_no,' . $this->id],
             'date' => ['required', 'string'],
             'dueDate' => ['required', 'string'],
             'items.*' => ['required', 'array', 'min:1'],
@@ -36,8 +37,8 @@ class StoreRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'customerId' => 'customer id',
-            'invoiceNumber' => 'invoice number',
+            'vendorId' => 'vendor id',
+            'billNumber' => 'bill number',
             'orderNo' => 'order number',
             'dueDate' => 'due date',
             'items.*.item_id' => 'item',
@@ -56,7 +57,7 @@ class StoreRequest extends BaseRequest
     public function messages()
     {
         return [
-            'customerId.exists' => 'The selected :attribute does not exist.',
+            'vendorId.exists' => 'The selected :attribute does not exist.',
             'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }

@@ -19,7 +19,7 @@ trait InvoicesServices
      */
     public function getAllInvoices (): Collection
     {
-        return Invoice::with('invoicePaymentDetail')
+        return Invoice::with('paymentDetail')
             ->latest()
             ->get();
     }
@@ -34,8 +34,8 @@ trait InvoicesServices
     {
         return Invoice::find($id)
             ->with([
-                'invoiceDetails' => fn($q) => $q->select('name'),
-                'invoicePaymentDetail'
+                'items' => fn($q) => $q->select('name'),
+                'paymentDetail'
             ])
             ->first();
     }
@@ -65,9 +65,9 @@ trait InvoicesServices
                     'due_date' => $dueDate
                 ]);
 
-                $invoice->invoiceDetails()->attach($items);
+                $invoice->items()->attach($items);
 
-                $invoice->invoicePaymentDetail()->create($paymentDetails);
+                $invoice->paymentDetail()->create($paymentDetails);
 
                 (new Stock())->stockOut($items);
             });
@@ -77,6 +77,47 @@ trait InvoicesServices
 
         return true;
     }
+
+    /**
+     * Update an existing record of invoice
+     *
+     * @param  integer $id
+     * @param  integer $customerId
+     * @param  string $invoiceNumber
+     * @param  integer $orderNo
+     * @param  string $date
+     * @param  string $dueDate
+     * @param  array $items
+     * @param  array $paymentDetails
+     * @return mixed
+     */
+    public function updateInvoice (int $id, int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetails): mixed
+    {
+        try {
+            DB::transaction(function () use ($id, $customerId, $invoiceNumber, $orderNo, $date, $dueDate, $items, $paymentDetails)
+            {
+                $invoice = Invoice::find($id);
+
+                $invoice->update([
+                    'customer_id' => $customerId,
+                    'invoice_number' => $invoiceNumber,
+                    'order_no' => $orderNo,
+                    'date' => $date,
+                    'due_date' => $dueDate
+                ]);
+
+                $invoice->items()->sync($items);
+
+                $invoice->paymentDetail()->update($paymentDetails);
+
+                (new Stock())->stockOut($items);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
+    }    
         
     /**
      * Send an email notification to the specified customer
@@ -106,17 +147,23 @@ trait InvoicesServices
      * Mark an invoice record as paid via id
      *
      * @param integer $id
-     * @param float $amount
+     * @param  integer $accountId
+     * @param  integer $currencyId
+     * @param  integer $paymentMethodId
+     * @param  string $date
+     * @param  float $amount
+     * @param  string|null $description
+     * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, float $amount): mixed
+    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use ($id, $amount) 
+            DB::transaction(function () use ($id, $accountId, $currencyId, $paymentMethodId, $date, $amount, $description, $reference) 
             {
                 $invoice = Invoice::find($id);
 
-                $invoice->invoicePaymentDetail()
+                $invoice->paymentDetail()
                     ->update([
                         'amount_due' => 0.00
                     ]);
@@ -124,12 +171,13 @@ trait InvoicesServices
                 $invoice
                     ->payments()
                     ->create([
-                        'model_type' => get_class($invoice),
-                        'date' => now(),
+                        'account_id' => $accountId,
+                        'currency_id' => $currencyId,
+                        'payment_method_id' => $paymentMethodId,
+                        'date' => $date,
                         'amount' => $amount,
-                        'account' => 'Cash',
-                        'currency' => 'US Dollar',
-                        'payment_method' => 'Cash',
+                        'description' => $description,
+                        'reference' => $reference
                     ]);
 
                 $invoice->update([
@@ -166,7 +214,7 @@ trait InvoicesServices
             {
                 $invoice = Invoice::find($id);
 
-                $invoice->invoicePaymentDetail()
+                $invoice->paymentDetail()
                     ->update([
                         'amount_due' => DB::raw('amount_due - ' . $amount)
                     ]);
@@ -195,47 +243,6 @@ trait InvoicesServices
         return true;
     }
  
-    /**
-     * Update an existing record of invoice
-     *
-     * @param  integer $id
-     * @param  integer $customerId
-     * @param  string $invoiceNumber
-     * @param  integer $orderNo
-     * @param  string $date
-     * @param  string $dueDate
-     * @param  array $items
-     * @param  array $paymentDetails
-     * @return mixed
-     */
-    public function updateInvoice (int $id, int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetails): mixed
-    {
-        try {
-            DB::transaction(function () use ($id, $customerId, $invoiceNumber, $orderNo, $date, $dueDate, $items, $paymentDetails)
-            {
-                $invoice = Invoice::find($id);
-
-                $invoice->update([
-                    'customer_id' => $customerId,
-                    'invoice_number' => $invoiceNumber,
-                    'order_no' => $orderNo,
-                    'date' => $date,
-                    'due_date' => $dueDate
-                ]);
-
-                $invoice->invoiceDetails()->sync($items);
-
-                $invoice->invoicePaymentDetail()->update($paymentDetails);
-
-                (new Stock())->stockOut($items);
-            });
-        } catch (\Throwable $th) {
-            return $th->getMessage();
-        }
-
-        return true;
-    }    
-    
     /**
      * Update an invoice status as cancelled
      *

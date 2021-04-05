@@ -22,10 +22,10 @@ class UpdateRequest extends BaseRequest
             'dueDate' => ['required', 'string'],
             'items.*' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
-            'paymentDetails.total_discounts' => ['required', 'numeric', 'min:0'],
-            'paymentDetails.total_taxes' => ['required', 'numeric', 'min:0'],
-            'paymentDetails.sub_total' => ['required', 'numeric', 'min:0'],
-            'paymentDetails.total' => ['required', 'numeric', 'min:0'],
+            'paymentDetail.total_discounts' => ['required', 'numeric', 'min:0'],
+            'paymentDetail.total_taxes' => ['required', 'numeric', 'min:0'],
+            'paymentDetail.sub_total' => ['required', 'numeric', 'min:0'],
+            'paymentDetail.total' => ['required', 'numeric', 'min:0'],
         ];
     }
 
@@ -42,10 +42,10 @@ class UpdateRequest extends BaseRequest
             'orderNo' => 'order number',
             'dueDate' => 'due date',
             'items.*.item_id' => 'item',
-            'paymentDetails.total_discounts' => 'discounts',
-            'paymentDetails.total_taxes' => 'taxes',
-            'paymentDetails.sub_total' => 'sub total',
-            'paymentDetails.total' => 'total',
+            'paymentDetail.total_discounts' => 'discounts',
+            'paymentDetail.total_taxes' => 'taxes',
+            'paymentDetail.sub_total' => 'sub total',
+            'paymentDetail.total' => 'total',
         ];
     }
 

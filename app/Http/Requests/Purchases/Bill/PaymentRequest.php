@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Sales\Invoice;
+namespace App\Http\Requests\Purchases\Bill;
 
 use App\Http\Requests\BaseRequest;
 
-class MarkAsPaidRequest extends BaseRequest
+class PaymentRequest extends BaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,7 +14,7 @@ class MarkAsPaidRequest extends BaseRequest
     public function rules()
     {
         return [
-            'amount' => ['required', 'numeric', 'min:0'],
+            'id' => ['required', 'integer', 'exists:bills,id'],
             'accountId' => ['required', 'integer', 'exists:accounts,id'],
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
@@ -22,6 +22,18 @@ class MarkAsPaidRequest extends BaseRequest
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'reference' => ['nullable', 'string']
+        ];
+    }
+
+    /**
+     * Rename attributes
+     * 
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'paymentMethod' => 'payment method id',
         ];
     }
 }

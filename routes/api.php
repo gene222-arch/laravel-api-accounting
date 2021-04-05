@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Item\Item\ItemsController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\Purchases\Bill\BillsController;
 use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
 use App\Http\Controllers\Api\Sales\Revenue\RevenuesController;
 use App\Http\Controllers\Api\Item\Discount\DiscountsController;
@@ -155,6 +156,22 @@ Route::prefix('item')->group(function ()
 Route::prefix('purchases')->group(function () 
 {
     /**
+     * Bills
+     */
+    Route::prefix('bills')->group(function () 
+    {
+        Route::get('/', [BillsController::class, 'index']);
+        Route::get('/{id}', [BillsController::class, 'show']);
+        Route::post('/', [BillsController::class, 'store']);
+        Route::post('/{bill}/vendor/{vendor}/mail', [BillsController::class, 'email']);
+        Route::post('/{id}/mark-as-paid', [BillsController::class, 'markAsPaid']);
+        Route::post('/payment', [BillsController::class, 'payment']);
+        Route::put('/', [BillsController::class, 'update']);
+        Route::put('/{bill}', [BillsController::class, 'cancel']);
+        Route::delete('/', [BillsController::class, 'destroy']);
+    });
+
+    /**
      * Vendors
      */
     Route::prefix('vendors')->group(function () 
@@ -165,6 +182,7 @@ Route::prefix('purchases')->group(function ()
         Route::put('/', [VendorsController::class, 'update']);
         Route::delete('/', [VendorsController::class, 'destroy']);
     });
+
 });
 
 /**

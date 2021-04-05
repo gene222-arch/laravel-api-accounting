@@ -2,31 +2,30 @@
 
 namespace App\Models;
 
-use App\Models\Item;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\Sales\Invoice\InvoicesServices;
+use App\Traits\Purchase\Bill\BillsServices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use \Illuminate\Database\Eloquent\Relations\belongsToMany;
 
-class Invoice extends Model
+class Bill extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
 
     /** Custom */
-    use InvoicesServices;
+    use BillsServices;
 
     protected $fillable = [
-        'customer_id',
-        'invoice_number',
+        'vendor_id',
+        'bill_number',
         'order_no',
         'date',
         'due_date',
         'status'
     ];
-    
+
     /**
      * Define a many-to-many relationship with Item class
      *
@@ -34,9 +33,9 @@ class Invoice extends Model
      */
     public function items(): belongsToMany
     {
-        return $this->belongsToMany(Item::class, 'invoice_details')
+        return $this->belongsToMany(Item::class, 'bill_details')
             ->withPivot([
-                'invoice_id',
+                'bill_id',
                 'item_id',
                 'discount_id',
                 'item',
@@ -51,32 +50,22 @@ class Invoice extends Model
     }
 
     /**
-     * Define a one-to-one relationship with InvoicePaymentDetail class
+     * Define a one-to-one relationship with BillPaymentDetail class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function paymentDetail(): HasOne
     {
-        return $this->hasOne(InvoicePaymentDetail::class);
+        return $this->hasOne(BillPaymentDetail::class);
     }
 
     /**
-     * Define many-to-one relationship with InvoicePayment class
+     * Define many-to-one relationship with BillPayment class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function payments(): HasMany
     {
-        return $this->hasMany(InvoicePayment::class);
-    }
-    
-    /**
-     * Define a many-to-many relationship with Revenue
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function revenues(): BelongsToMany
-    {
-        return $this->belongsToMany(Revenue::class);
+        return $this->hasMany(BillPayment::class);
     }
 }
