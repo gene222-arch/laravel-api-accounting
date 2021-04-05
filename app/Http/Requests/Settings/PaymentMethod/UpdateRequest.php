@@ -16,6 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:payment_methods,id'],
             'name' => ['required', 'string', 'unique:payment_methods,name,' . $this->id],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

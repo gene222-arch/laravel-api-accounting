@@ -42,13 +42,15 @@ trait DiscountsServices
      *
      * @param  string $name
      * @param  float $rate
+     * @param  bool $enabled
      * @return Discount
      */
-    public function createDiscount (string $name, float $rate): Discount
+    public function createDiscount (string $name, float $rate, bool $enabled): Discount
     {
         return Discount::create([
             'name' => $name,
-            'rate' => $rate
+            'rate' => $rate,
+            'enabled' => $enabled
         ]);
     }
     
@@ -58,14 +60,16 @@ trait DiscountsServices
      * @param  integer $id
      * @param  string $name
      * @param  float $rate
+     * @param  bool $enabled
      * @return boolean
      */
-    public function updateDiscount (int $id, string $name, float $rate): bool
+    public function updateDiscount (int $id, string $name, float $rate, bool $enabled): bool
     {
         $update = Discount::where('id', $id)
             ->update([
                 'name' => $name,
-                'rate' => $rate
+                'rate' => $rate,
+                'enabled' => $enabled
             ]);
             
         return boolval($update);

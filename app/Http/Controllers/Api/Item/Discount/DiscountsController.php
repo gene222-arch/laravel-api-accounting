@@ -45,7 +45,8 @@ class DiscountsController extends Controller
     {
         $model = $this->discount->createDiscount(
             $request->name,
-            $request->rate
+            $request->rate,
+            $request->enabled,
         );
 
         return $this->success($model, 'Discount created successfully.');
@@ -77,7 +78,8 @@ class DiscountsController extends Controller
         $this->discount->updateDiscount(
             $request->id,
             $request->name,
-            $request->rate
+            $request->rate,
+            $request->enabled,
         );
 
         return $this->success(null, 'Discount updated successfully.');

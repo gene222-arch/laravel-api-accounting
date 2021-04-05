@@ -45,9 +45,10 @@ trait WarehousesServices
      * @param  string $phone
      * @param  string $address
      * @param  bool $defaultWarehouse
+     * @param  bool $enabled
      * @return Warehouse
      */
-    public function createWarehouse (string $name, string $email, string $phone, string $address, bool $defaultWarehouse): Warehouse
+    public function createWarehouse (string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled): Warehouse
     {
         return Warehouse::create([
             'name' => $name,
@@ -55,7 +56,8 @@ trait WarehousesServices
             'phone' => $phone,
             'address' => $address,
             'default_warehouse' => $defaultWarehouse,
-            'updated_at' => null
+            'updated_at' => null,
+            'enabled' => $enabled
         ]);
     }
     
@@ -68,9 +70,10 @@ trait WarehousesServices
      * @param  string $phone
      * @param  string $address
      * @param  bool $defaultWarehouse
+     * @param  bool $enabled
      * @return boolean
      */
-    public function updateWarehouse (int $id, string $name, string $email, string $phone, string $address, bool $defaultWarehouse): bool
+    public function updateWarehouse (int $id, string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled): bool
     {
         $update = Warehouse::where('id', $id)
             ->update([
@@ -79,6 +82,7 @@ trait WarehousesServices
                 'phone' => $phone,
                 'address' => $address,
                 'default_warehouse' => $defaultWarehouse,
+                'enabled' => $enabled,
                 'updated_at' => now()
             ]);
 

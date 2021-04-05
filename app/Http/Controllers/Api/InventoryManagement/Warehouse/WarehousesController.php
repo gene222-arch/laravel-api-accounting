@@ -48,7 +48,8 @@ class WarehousesController extends Controller
             $request->email,
             $request->phone,
             $request->address,
-            $request->defaultWarehouse
+            $request->defaultWarehouse,
+            $request->enabled,
         );
 
         return $this->success($model, 'Warehouse created successfully.');
@@ -84,7 +85,8 @@ class WarehousesController extends Controller
             $request->email,
             $request->phone,
             $request->address,
-            $request->defaultWarehouse
+            $request->defaultWarehouse,
+            $request->enabled,
         );
 
         return $this->success(null, 'Warehouse updated successfully.');

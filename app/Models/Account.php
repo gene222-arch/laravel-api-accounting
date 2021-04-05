@@ -20,7 +20,8 @@ class Account extends Model
         'name',
         'number',
         'opening_balance',
-        'balance'
+        'balance',
+        'enabled'
     ];
     
     /**

@@ -20,6 +20,7 @@ class CreateWarehousesTable extends Migration
             $table->string('phone', 15);
             $table->string('address');
             $table->boolean('default_warehouse')->default(false);
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

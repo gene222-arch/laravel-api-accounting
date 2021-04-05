@@ -42,13 +42,15 @@ trait CurrenciesServices
      *
      * @param  string $name
      * @param  string $code
+     * @param  bool $enabled
      * @return Currency
      */
-    public function createCurrency (string $name, string $code): Currency
+    public function createCurrency (string $name, string $code, bool $enabled): Currency
     {
         return Currency::create([
             'name' => $name,
-            'code' => $code
+            'code' => $code,
+            'enabled' => $enabled
         ]);
     }
         
@@ -58,14 +60,16 @@ trait CurrenciesServices
      * @param  integer $id
      * @param  string $name
      * @param  string $code
+     * @param  bool $enabled
      * @return bool
      */
-    public function updateCurrency (int $id, string $name, string $code): bool
+    public function updateCurrency (int $id, string $name, string $code, bool $enabled): bool
     {
         $update = Currency::where('id', $id)
             ->update([
                 'name' => $name,
-                'code' => $code
+                'code' => $code,
+                'enabled' => $enabled
             ]);
 
         return boolval($update);

@@ -43,7 +43,8 @@ class CustomersControllerTest extends TestCase
             'taxNumber' => '12335',    
             'phone' => '22222223222',
             'address' => 'Somewhere down there',
-            'reference' => 'Nice store'
+            'reference' => 'Nice store',
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -69,7 +70,8 @@ class CustomersControllerTest extends TestCase
             'phone' => '11111111111',
             'website' => '',
             'address' => 'Somewhere down there',
-            'reference' => 'Nice store'
+            'reference' => 'Nice store',
+            'enabled' => true,
         ];
 
         $response = $this->put(

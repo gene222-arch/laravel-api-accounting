@@ -18,7 +18,8 @@ class PaymentMethod extends Model
     use PaymentMethodsServices;
 
     protected $fillable = [
-        'name'
+        'name',
+        'enabled'
     ];
 
     /**

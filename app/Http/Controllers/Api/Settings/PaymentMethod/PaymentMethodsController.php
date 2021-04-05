@@ -43,7 +43,10 @@ class PaymentMethodsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->paymentMethod->createPaymentMethod($request->name);
+        $model = $this->paymentMethod->createPaymentMethod(
+            $request->name,
+            $request->enabled,
+        );
 
         return $this->success($model, 'Payment method created successfully.');
     }
@@ -73,7 +76,8 @@ class PaymentMethodsController extends Controller
     {
         $this->paymentMethod->updatePaymentMethod(
             $request->id,
-            $request->name
+            $request->name,
+            $request->enabled,
         );
 
         return $this->success(null, 'Payment method updated successfully.');

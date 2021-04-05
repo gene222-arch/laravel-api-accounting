@@ -48,9 +48,10 @@ trait SupplierServices
      * @param  integer $zipCode
      * @param  string $country
      * @param  string $province
+     * @param  bool $enabled
      * @return Supplier
      */
-    public function createSupplier (string $name, string $email, string $phone, string $mainAddress, string $optionalAddress, string $city, int $zipCode, string $country, string $province): Supplier
+    public function createSupplier (string $name, string $email, string $phone, string $mainAddress, string $optionalAddress, string $city, int $zipCode, string $country, string $province, bool $enabled): Supplier
     {
         return Supplier::create([
             'name' => $name,
@@ -62,6 +63,7 @@ trait SupplierServices
             'zip_code' => $zipCode,
             'country' => $country,
             'province' => $province,
+            'enabled' => $enabled,
             'updated_at' => null
         ]);
     }
@@ -79,9 +81,10 @@ trait SupplierServices
      * @param  integer $zipCode
      * @param  string $country
      * @param  string $province
+     * @param  bool $enabled
      * @return Supplier
      */
-    public function updateSupplier (int $id, string $name, string $email, string $phone, string $mainAddress, string $optionalAddress, string $city, int $zipCode, string $country, string $province)
+    public function updateSupplier (int $id, string $name, string $email, string $phone, string $mainAddress, string $optionalAddress, string $city, int $zipCode, string $country, string $province, bool $enabled)
     {
         $update = Supplier::where('id', $id)
             ->update([
@@ -94,6 +97,7 @@ trait SupplierServices
                 'zip_code' => $zipCode,
                 'country' => $country,
                 'province' => $province,
+                'enabled' => $enabled,
                 'updated_at' => now()
             ]);
 

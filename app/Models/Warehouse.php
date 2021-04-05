@@ -19,6 +19,7 @@ class Warehouse extends Model
         'email',
         'phone',
         'address',
-        'default_warehouse'
+        'default_warehouse',
+        'enabled'
     ];
 }

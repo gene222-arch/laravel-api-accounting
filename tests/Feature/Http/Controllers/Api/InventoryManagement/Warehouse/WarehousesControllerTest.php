@@ -41,7 +41,8 @@ class WarehousesControllerTest extends TestCase
             'email' => 'warehouse2@mail.com',
             'phone'=> '2222222222',
             'address' => 'Somewhre',
-            'defaultWarehouse' => false
+            'defaultWarehouse' => false,
+            'enabled' => false,
         ];
 
         $response = $this->post(
@@ -62,7 +63,8 @@ class WarehousesControllerTest extends TestCase
             'email' => 'warehouse2@mail.com',
             'phone'=> '2222222222',
             'address' => 'Somewhre',
-            'defaultWarehouse' => false
+            'defaultWarehouse' => false,
+            'enabled' => false,
         ];
 
         $response = $this->put(

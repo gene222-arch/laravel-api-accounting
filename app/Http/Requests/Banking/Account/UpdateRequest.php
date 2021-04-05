@@ -18,7 +18,8 @@ class UpdateRequest extends BaseRequest
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:accounts,name,' . $this->id],
             'number' => ['required', 'integer', 'min:5', 'unique:accounts,number,' . $this->id],
-            'openingBalance' => ['required', 'numeric', 'min:0']
+            'openingBalance' => ['required', 'numeric', 'min:0'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

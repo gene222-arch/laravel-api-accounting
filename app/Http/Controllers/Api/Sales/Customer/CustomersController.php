@@ -51,7 +51,8 @@ class CustomersController extends Controller
             $request->phone, 
             $request->website, 
             $request->address, 
-            $request->reference
+            $request->reference,
+            $request->enabled,
         );
 
         return $this->success($model, 'Customer created successfully.');
@@ -89,7 +90,8 @@ class CustomersController extends Controller
             $request->phone, 
             $request->website, 
             $request->address, 
-            $request->reference
+            $request->reference,
+            $request->enabled,
         );
 
         return $this->success(null, 'Customer updated successfully.');

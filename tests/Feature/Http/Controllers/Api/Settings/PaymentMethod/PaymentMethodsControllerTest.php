@@ -38,7 +38,8 @@ class PaymentMethodsControllerTest extends TestCase
     public function user_can_create_payment_method()
     {
         $data = [
-            'name' => 'Deposit'
+            'name' => 'Deposit',
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -55,7 +56,8 @@ class PaymentMethodsControllerTest extends TestCase
     {
         $data = [
             'id' => 1,
-            'name' => 'Cash'
+            'name' => 'Cash',
+            'enabled' => true,
         ];
 
         $response = $this->put(

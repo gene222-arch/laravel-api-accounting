@@ -24,5 +24,6 @@ class Supplier extends Model
         'zip_code',
         'country',
         'province',
+        'enabled'
     ];
 }

@@ -5,7 +5,7 @@ namespace App\Traits\Item;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
 
-trait CategoryServices
+trait CategoriesServices
 {
 
     /**
@@ -42,13 +42,15 @@ trait CategoryServices
      *
      * @param  string $name
      * @param  string $hexCode
+     * @param  bool $enabled
      * @return Category
      */
-    public function createCategory (string $name, string $hexCode): Category
+    public function createCategory (string $name, string $hexCode, bool $enabled): Category
     {
         return Category::create([
             'name' => $name,
-            'hex_code' => $hexCode
+            'hex_code' => $hexCode,
+            'enabled' => $enabled,
         ]);
     }
     
@@ -58,14 +60,16 @@ trait CategoryServices
      * @param  int $id
      * @param  string $name
      * @param  string $hexCode
+     * @param  bool $enabled
      * @return boolean
      */
-    public function updateCategory (int $id, string $name, string $hexCode): bool
+    public function updateCategory (int $id, string $name, string $hexCode, bool $enabled): bool
     {
         $update = Category::where('id', $id)
             ->update([
                 'name' => $name,
-                'hex_code' => $hexCode
+                'hex_code' => $hexCode,
+                'enabled' => $enabled,
             ]);
 
         return boolval($update);

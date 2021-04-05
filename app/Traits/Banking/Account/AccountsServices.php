@@ -46,16 +46,18 @@ trait AccountsServices
      * @param string $name
      * @param integer $number
      * @param float $openingBalance
+     * @param bool $enabled
      * @return Account
      */
-    public function createAccount (int $currencyId, string $name, int $number, float $openingBalance): Account
+    public function createAccount (int $currencyId, string $name, int $number, float $openingBalance, bool $enabled): Account
     {
         return Account::create([
             'currency_id' => $currencyId,
             'name' => $name,
             'number' => $number,
             'opening_balance' => $openingBalance,
-            'balance' => $openingBalance
+            'balance' => $openingBalance,
+            'enabled' => $enabled
         ]);
     }
         
@@ -67,9 +69,10 @@ trait AccountsServices
      * @param string $name
      * @param integer $number
      * @param float $openingBalance
+     * @param bool $enabled
      * @return boolean
      */
-    public function updateAccount (int $id, int $currencyId, string $name, int $number, float $openingBalance): bool
+    public function updateAccount (int $id, int $currencyId, string $name, int $number, float $openingBalance, bool $enabled): bool
     {
         $update = Account::where('id', $id)
             ->update([
@@ -77,7 +80,8 @@ trait AccountsServices
                 'name' => $name,
                 'number' => $number,
                 'opening_balance' => $openingBalance,
-                'balance' => $openingBalance
+                'balance' => $openingBalance,
+                'enabled' => $enabled
             ]);
 
         return boolval($update);

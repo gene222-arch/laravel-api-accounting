@@ -46,6 +46,7 @@ class SuppliersControllerTest extends TestCase
             'zipCode' => '42032',
             'country' => 'Philippines',
             'province' => 'Laguna',
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -71,6 +72,7 @@ class SuppliersControllerTest extends TestCase
             'zipCode' => '32222',
             'country' => 'Philippines',
             'province' => 'Laguna',
+            'enabled' => true,
         ];
 
         $response = $this->put(

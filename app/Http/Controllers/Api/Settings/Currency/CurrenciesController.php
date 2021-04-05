@@ -45,7 +45,8 @@ class CurrenciesController extends Controller
     {
         $currency = $this->currency->createCurrency(
             $request->name,
-            $request->code
+            $request->code,
+            $request->enabled,
         );
 
         return $this->success($currency, 'Currency created successfully.');
@@ -77,7 +78,8 @@ class CurrenciesController extends Controller
         $this->currency->updateCurrency(
             $request->id,
             $request->name,
-            $request->code
+            $request->code,
+            $request->enabled,
         );
 
         return $this->success(null, 'Currency updated successfully.');

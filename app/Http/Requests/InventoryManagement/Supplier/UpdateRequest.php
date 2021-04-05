@@ -24,6 +24,7 @@ class UpdateRequest extends BaseRequest
             'zipCode' => ['required', 'string', 'min:4', 'max:5'],
             'country' => ['required', 'string'],
             'province' => ['required', 'string'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

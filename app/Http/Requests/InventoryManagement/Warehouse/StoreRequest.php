@@ -18,7 +18,8 @@ class StoreRequest extends BaseRequest
             'email' => ['required', 'string', 'unique:warehouses,email'],
             'phone' => ['required', 'string', 'unique:warehouses,phone'],
             'address' => ['required', 'string'],
-            'defaultWarehouse' => ['required', 'boolean']
+            'defaultWarehouse' => ['required', 'boolean'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

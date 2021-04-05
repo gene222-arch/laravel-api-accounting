@@ -39,7 +39,8 @@ class CurrenciesControllerTest extends TestCase
     {
         $data = [
             'name' => 'Philippines Peso',
-            'code' => 'Php'
+            'code' => 'Php',
+            'enabled' => true
         ];
 
         $response = $this->post(
@@ -57,7 +58,8 @@ class CurrenciesControllerTest extends TestCase
         $data = [
             'id' => 1,
             'name' => 'US Dollar',
-            'code' => 'USD'
+            'code' => 'USD',
+            'enabled' => true
         ];
 
         $response = $this->put(

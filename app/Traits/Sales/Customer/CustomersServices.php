@@ -48,9 +48,10 @@ trait CustomersServices
      * @param  string $website
      * @param  string $address
      * @param  string $reference
+     * @param  bool $enabled
      * @return Customer
      */
-    public function createCustomer (int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference): Customer
+    public function createCustomer (int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference, bool $enabled): Customer
     {
         return Customer::create([
             'currency_id' => $currencyId,         
@@ -60,7 +61,8 @@ trait CustomersServices
             'phone' => $phone,
             'website' => $website,
             'address' => $address,
-            'reference' => $reference
+            'reference' => $reference,
+            'enabled' => $enabled
         ]);
     }
     
@@ -76,9 +78,10 @@ trait CustomersServices
      * @param  string $website
      * @param  string $address
      * @param  string $reference
+     * @param  bool $enabled
      * @return boolean
      */
-    public function updateCustomer (int $id, int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference): bool
+    public function updateCustomer (int $id, int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference, bool $enabled): bool
     {
         $update = Customer::where('id', $id)
             ->update([
@@ -89,7 +92,8 @@ trait CustomersServices
                 'phone' => $phone,
                 'website' => $website,
                 'address' => $address,
-                'reference' => $reference
+                'reference' => $reference,
+                'enabled' => $enabled
             ]);
 
         return boolval($update);

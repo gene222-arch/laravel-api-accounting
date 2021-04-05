@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Item\CategoryServices;
+use App\Traits\Item\CategoriesServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class Category extends Model
     use HasFactory;
 
     /** Custom */
-    use CategoryServices;
+    use CategoriesServices;
 
     protected $fillable = [
         'name',

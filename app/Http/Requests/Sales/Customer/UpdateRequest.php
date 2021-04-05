@@ -22,7 +22,8 @@ class UpdateRequest extends BaseRequest
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:customers,phone,' . $this->id],
             'website' => ['nullable', 'url', 'string'],
             'address' => ['required', 'string'],
-            'reference' => ['nullable', 'string']
+            'reference' => ['nullable', 'string'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 

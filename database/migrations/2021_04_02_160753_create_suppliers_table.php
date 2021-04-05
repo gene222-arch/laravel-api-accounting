@@ -24,6 +24,7 @@ class CreateSuppliersTable extends Migration
             $table->char('zip_code', 5);
             $table->string('country');
             $table->string('province');
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

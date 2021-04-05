@@ -42,12 +42,14 @@ trait PaymentMethodsServices
      * Create a new record of payment method
      *
      * @param  string $name
+     * @param  bool $enabled
      * @return PaymentMethod
      */
-    public function createPaymentMethod (string $name): PaymentMethod
+    public function createPaymentMethod (string $name, bool $enabled): PaymentMethod
     {
         return PaymentMethod::create([
-            'name' => $name
+            'name' => $name,
+            'enabled' => $enabled,
         ]);
     }
         
@@ -56,13 +58,15 @@ trait PaymentMethodsServices
      *
      * @param  integer $id
      * @param  string $name
+     * @param  bool $enabled
      * @return boolean
      */
-    public function updatePaymentMethod (int $id, string $name): bool
+    public function updatePaymentMethod (int $id, string $name, bool $enabled): bool
     {
         $update = PaymentMethod::where('id', $id)
             ->update([
-                'name' => $name
+                'name' => $name,
+                'enabled' => $enabled,
             ]);
 
         return boolval($update);

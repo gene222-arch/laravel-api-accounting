@@ -26,7 +26,8 @@ class Customer extends Model
         'phone',
         'website',
         'address',
-        'reference'
+        'reference',
+        'enabled'
     ];
 
     /**

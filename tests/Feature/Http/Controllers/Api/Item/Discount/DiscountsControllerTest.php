@@ -38,7 +38,8 @@ class DiscountsControllerTest extends TestCase
     {
         $data = [
             'name' => 'Discount 3',
-            'rate' => 10
+            'rate' => 10,
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -56,7 +57,8 @@ class DiscountsControllerTest extends TestCase
         $data = [
             'id' => 3,
             'name' => 'New discount',
-            'rate' => 25
+            'rate' => 25,
+            'enabled' => true,
         ];
 
         $response = $this->put(

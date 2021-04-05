@@ -15,7 +15,8 @@ class StoreRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:discounts,name'],
-            'rate' => ['required', 'numeric', 'min:0', 'max:100']
+            'rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

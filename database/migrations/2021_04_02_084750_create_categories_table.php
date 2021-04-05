@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->char('hex_code', 7);
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

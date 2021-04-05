@@ -15,6 +15,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:payment_methods,name'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

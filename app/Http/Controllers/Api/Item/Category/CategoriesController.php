@@ -48,7 +48,8 @@ class CategoriesController extends Controller
     {
         $category = $this->category->createCategory(
             $request->name,
-            $request->hexCode
+            $request->hexCode,
+            $request->enabled,
         );
 
         return $this->success($category,'Category created successfully.' );
@@ -69,7 +70,6 @@ class CategoriesController extends Controller
             : $this->success($result);
     }
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -81,7 +81,8 @@ class CategoriesController extends Controller
         $this->category->updateCategory(
             $request->id,
             $request->name,
-            $request->hexCode
+            $request->hexCode,
+            $request->enabled,
         );
 
         return $this->success(null, 'Category updated successfully.');

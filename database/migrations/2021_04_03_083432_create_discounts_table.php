@@ -17,6 +17,7 @@ class CreateDiscountsTable extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->unsignedDecimal('rate', 10, 2);
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
         });
     }

@@ -23,6 +23,7 @@ class CreateCustomersTable extends Migration
             $table->string('website')->nullable();
             $table->string('address');
             $table->text('reference')->nullable();
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

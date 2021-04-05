@@ -30,8 +30,6 @@ class CategoriesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -40,7 +38,8 @@ class CategoriesControllerTest extends TestCase
     {
         $data = [
             'name' => 'Guitar',
-            'hexCode' => '#000002'
+            'hexCode' => '#000002',
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -58,7 +57,8 @@ class CategoriesControllerTest extends TestCase
         $data = [
             'id' => 2,
             'name' => 'Guitar',
-            'hexCode' => '#000002'
+            'hexCode' => '#000002',
+            'enabled' => true,
         ];
 
         $response = $this->put(
@@ -67,8 +67,7 @@ class CategoriesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
+
         $this->assertResponse($response);
     }
 

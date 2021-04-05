@@ -20,6 +20,7 @@ class CreateAccountsTable extends Migration
             $table->unsignedInteger('number');
             $table->unsignedDecimal('opening_balance', 10, 2)->default(0.00);
             $table->unsignedDecimal('balance', 10, 2)->default(0.00);
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

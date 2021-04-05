@@ -15,7 +15,8 @@ class StoreRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:categories,name'],
-            'hexCode' => ['required', 'string', 'min:4', 'max:7', 'unique:categories,hex_code']
+            'hexCode' => ['required', 'string', 'min:4', 'max:7', 'unique:categories,hex_code'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

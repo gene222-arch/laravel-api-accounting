@@ -52,7 +52,8 @@ class SuppliersController extends Controller
             $request->city,
             $request->zipCode,
             $request->country,
-            $request->province
+            $request->province,
+            $request->enabled,
         );
 
         return $this->success($model, 'Supplier created successfully.');
@@ -91,7 +92,8 @@ class SuppliersController extends Controller
             $request->city,
             $request->zipCode,
             $request->country,
-            $request->province
+            $request->province,
+            $request->enabled,
         );
 
         return $this->success(null, 'Supplier updated successfully.');

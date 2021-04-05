@@ -40,7 +40,8 @@ class AccountsControllerTest extends TestCase
             'currencyId' => 1,
             'name' => 'Bank',
             'number' => 12345,
-            'openingBalance' => 1000000.00
+            'openingBalance' => 1000000.00,
+            'enabled' => true,
         ];
 
         $response = $this->post(
@@ -60,7 +61,8 @@ class AccountsControllerTest extends TestCase
             'currencyId' => 1,
             'name' => 'Bank',
             'number' => 2222,
-            'openingBalance' => 1000000.00
+            'openingBalance' => 1000000.00,
+            'enabled' => true,
         ];
         $response = $this->put(
             '/api/banking/accounts',

@@ -16,7 +16,8 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:discounts,id'],
             'name' => ['required', 'string', 'unique:discounts,name,' . $this->id],
-            'rate' => ['required', 'numeric', 'min:0', 'max:100']
+            'rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

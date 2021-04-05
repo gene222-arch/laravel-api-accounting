@@ -17,7 +17,8 @@ class StoreRequest extends BaseRequest
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:accounts,name'],
             'number' => ['required', 'integer', 'min:5', 'unique:accounts,number'],
-            'openingBalance' => ['required', 'numeric', 'min:0']
+            'openingBalance' => ['required', 'numeric', 'min:0'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

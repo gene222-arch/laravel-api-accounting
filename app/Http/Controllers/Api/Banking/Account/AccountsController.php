@@ -47,7 +47,8 @@ class AccountsController extends Controller
             $request->currencyId,
             $request->name,
             $request->number,
-            $request->openingBalance
+            $request->openingBalance,
+            $request->enabled,
         );
 
         return $this->success($account, 'Account created successfully.');
@@ -81,7 +82,8 @@ class AccountsController extends Controller
             $request->currencyId,
             $request->name,
             $request->number,
-            $request->openingBalance
+            $request->openingBalance,
+            $request->enabled,
         );
 
         return $this->success(null, 'Account updated successfully.');
