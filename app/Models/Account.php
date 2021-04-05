@@ -16,10 +16,11 @@ class Account extends Model
     use AccountsServices;
 
     protected $fillable = [
+        'currency_id',
         'name',
         'number',
-        'currency',
-        'opening_balance'
+        'opening_balance',
+        'balance'
     ];
     
     /**

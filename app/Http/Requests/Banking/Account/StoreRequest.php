@@ -14,10 +14,10 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:accounts,name'],
             'number' => ['required', 'integer', 'min:5', 'unique:accounts,number'],
-            'currency' => ['required', 'string'],
-            'openingBalance' => ['required', 'numberic', 'min:0']
+            'openingBalance' => ['required', 'numeric', 'min:0']
         ];
     }
 }

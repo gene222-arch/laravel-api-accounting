@@ -18,10 +18,10 @@ class Customer extends Model
     use CustomersServices;
 
     protected $fillable = [
+        'currency_id',
         'name',
         'email',
         'tax_number',
-        'currency',
         'phone',
         'website',
         'address',

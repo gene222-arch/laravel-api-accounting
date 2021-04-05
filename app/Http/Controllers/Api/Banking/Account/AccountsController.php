@@ -44,9 +44,9 @@ class AccountsController extends Controller
     public function store(StoreRequest $request)
     {
         $account = $this->account->createAccount(
+            $request->currencyId,
             $request->name,
             $request->number,
-            $request->currency,
             $request->openingBalance
         );
 
@@ -78,9 +78,9 @@ class AccountsController extends Controller
     {
         $this->account->updateAccount(
             $request->id,
+            $request->currencyId,
             $request->name,
             $request->number,
-            $request->currency,
             $request->openingBalance
         );
 

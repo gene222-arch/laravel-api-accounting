@@ -9,11 +9,11 @@ use Tests\TestCase;
 class InvoicesControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_view_any_invoices()
     {
         $response = $this->get(
-            '/api/invoices/sales',
+            '/api/sales/invoices',
             $this->apiHeader()
         );
 
@@ -26,11 +26,9 @@ class InvoicesControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/invoices/sales/${id}",
+            "/api/sales/invoices/${id}",
             $this->apiHeader()
         );
-
-        
 
         $this->assertResponse($response);
     }
@@ -66,11 +64,13 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/invoices/sales',
+            '/api/sales/invoices',
             $data,
             $this->apiHeader()
         ); 
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -87,7 +87,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/invoices/sales/${invoice}/customer/${customer}/mail",
+            "/api/sales/invoices/${invoice}/customer/${customer}/mail",
             $data,
             $this->apiHeader()
         ); 
@@ -105,7 +105,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/invoices/sales/${id}/mark-as-paid",
+            "/api/sales/invoices/${id}/mark-as-paid",
             $data,
             $this->apiHeader()
         ); 
@@ -113,24 +113,26 @@ class InvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_create_invoice_payment()
     {
         $data = [
-            'id' => 3,
+            'id' => 1,
+            'accountId' => 2,
+            'currencyId' => 1,
+            'paymentMethodId' => 1,
             'date' => '2021-05-06',
             'amount' => 20.00,
-            'account' => 'Cash',
-            'currency' => 'US Dollar',
-            'paymentMethod' => 'Cash'
         ];
 
         $response = $this->post(
-            '/api/invoices/sales/payment',
+            '/api/sales/invoices/payment',
             $data,
             $this->apiHeader()
         ); 
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -176,7 +178,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/invoices/sales',
+            '/api/sales/invoices',
             $data,
             $this->apiHeader()
         );
@@ -192,7 +194,7 @@ class InvoicesControllerTest extends TestCase
         $data = [];
 
         $response = $this->put(
-            "/api/invoices/sales/${id}",
+            "/api/sales/invoices/${id}",
             $data,
             $this->apiHeader()
         );
@@ -210,7 +212,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/invoices/sales',
+            '/api/sales/invoices',
             $data,
             $this->apiHeader()
         );

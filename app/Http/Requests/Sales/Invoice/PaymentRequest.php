@@ -15,12 +15,12 @@ class PaymentRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:invoices,id'],
+            'accountId' => ['required', 'integer', 'exists:accounts,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
             'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
-            'account' => ['required', 'string'],
-            'currency' => ['required', 'string'],
             'description' => ['nullable', 'string'],
-            'paymentMethod' => ['required', 'string'],
             'reference' => ['nullable', 'string']
         ];
     }
@@ -33,7 +33,7 @@ class PaymentRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'paymentMethod' => 'payment method',
+            'paymentMethod' => 'payment method id',
         ];
     }
 }

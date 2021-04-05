@@ -128,12 +128,12 @@ class InvoicesController extends Controller
     {
         $result = $this->invoice->payment(
             $request->id,
+            $request->accountId,
+            $request->currencyId,
+            $request->paymentMethodId,
             $request->date,
             $request->amount,
-            $request->account,
-            $request->currency,
             $request->description,
-            $request->paymentMethod,
             $request->reference
         );
 

@@ -42,40 +42,42 @@ trait AccountsServices
     /**
      * Create a new record of account
      *
-     * @param  string $name
-     * @param  integer $number
-     * @param  string $currency
-     * @param  float $openingBalance
+     * @param integer $currencyId
+     * @param string $name
+     * @param integer $number
+     * @param float $openingBalance
      * @return Account
      */
-    public function createAccount (string $name, int $number, string $currency, float $openingBalance): Account
+    public function createAccount (int $currencyId, string $name, int $number, float $openingBalance): Account
     {
         return Account::create([
+            'currency_id' => $currencyId,
             'name' => $name,
             'number' => $number,
-            'currency' => $currency,
-            'opening_balance' => $openingBalance
+            'opening_balance' => $openingBalance,
+            'balance' => $openingBalance
         ]);
     }
         
     /**
      * Update an existing record of account
      *
-     * @param  integer $id
-     * @param  string $name
-     * @param  integer $number
-     * @param  string $currency
-     * @param  float $openingBalance
+     * @param integer $id
+     * @param integer $currencyId
+     * @param string $name
+     * @param integer $number
+     * @param float $openingBalance
      * @return boolean
      */
-    public function updateAccount (int $id, string $name, int $number, string $currency, float $openingBalance): bool
+    public function updateAccount (int $id, int $currencyId, string $name, int $number, float $openingBalance): bool
     {
         $update = Account::where('id', $id)
             ->update([
+                'currency_id' => $currencyId,
                 'name' => $name,
                 'number' => $number,
-                'currency' => $currency,
-                'opening_balance' => $openingBalance
+                'opening_balance' => $openingBalance,
+                'balance' => $openingBalance
             ]);
 
         return boolval($update);

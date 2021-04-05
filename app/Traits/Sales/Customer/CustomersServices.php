@@ -40,23 +40,23 @@ trait CustomersServices
     /**
      * Create a new record of customer
      *
+     * @param  integer $currencyId
      * @param  string $name
      * @param  string $email
      * @param  integer $taxNumber
-     * @param  string $currency
      * @param  string $phone
      * @param  string $website
      * @param  string $address
      * @param  string $reference
      * @return Customer
      */
-    public function createCustomer (string $name, string $email, int $taxNumber, string $currency, string $phone, ?string $website, string $address, ?string $reference): Customer
+    public function createCustomer (int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference): Customer
     {
         return Customer::create([
+            'currency_id' => $currencyId,         
             'name' => $name,
             'email' => $email,
-            'tax_number' => $taxNumber,
-            'currency' => $currency,            
+            'tax_number' => $taxNumber,   
             'phone' => $phone,
             'website' => $website,
             'address' => $address,
@@ -67,25 +67,25 @@ trait CustomersServices
     /**
      * Update an existing record of customer
      *
-     * @param integer $id
+     * @param  integer $id
+     * @param  integer $currencyId
      * @param  string $name
      * @param  string $email
      * @param  integer $taxNumber
-     * @param  string $currency
      * @param  string $phone
      * @param  string $website
      * @param  string $address
      * @param  string $reference
      * @return boolean
      */
-    public function updateCustomer (int $id, string $name, string $email, int $taxNumber, string $currency, string $phone, ?string $website, string $address, ?string $reference): bool
+    public function updateCustomer (int $id, int $currencyId, string $name, string $email, int $taxNumber, string $phone, ?string $website, string $address, ?string $reference): bool
     {
         $update = Customer::where('id', $id)
             ->update([
+                'currency_id' => $currencyId,    
                 'name' => $name,
                 'email' => $email,
-                'tax_number' => $taxNumber,
-                'currency' => $currency,            
+                'tax_number' => $taxNumber,        
                 'phone' => $phone,
                 'website' => $website,
                 'address' => $address,

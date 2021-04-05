@@ -2,7 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Tax;
+use Database\Seeders\TaxSeeder;
 use Illuminate\Database\Seeder;
+use Database\Seeders\ItemSeeder;
+use Database\Seeders\StockSeeder;
+use Database\Seeders\AccountSeeder;
+use Database\Seeders\CategorySeeder;
+use Database\Seeders\CurrencySeeder;
+use Database\Seeders\CustomerSeeder;
+use Database\Seeders\DiscountSeeder;
+use Database\Seeders\SupplierSeeder;
+use Database\Seeders\PaymentMethodSeeder;
+use Database\Seeders\IncomeCategorySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +25,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        $this->call([
+            TaxSeeder::class,
+            CurrencySeeder::class,
+            AccountSeeder::class,
+            IncomeCategorySeeder::class,
+            PaymentMethodSeeder::class,
+            CategorySeeder::class,
+            DiscountSeeder::class,
+            ItemSeeder::class,
+            SupplierSeeder::class,
+            CustomerSeeder::class,
+            StockSeeder::class,
+        ]);
     }
 }

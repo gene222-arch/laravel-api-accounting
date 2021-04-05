@@ -148,19 +148,21 @@ trait InvoicesServices
      * Create a new record of invoice payment
      *
      * @param  integer $id
+     * @param  integer $accountId
+     * @param  integer $currencyId
+     * @param  integer $paymentMethodId
      * @param  string $date
      * @param  float $amount
-     * @param  string $account
-     * @param  string $currency
      * @param  string|null $description
-     * @param  string $paymentMethod
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (int $id, string $date, float $amount, string $account, string $currency, ?string $description, string $paymentMethod, ?string $reference): mixed
+    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use ($id, $date, $amount, $account, $currency, $description, $paymentMethod, $reference) 
+            DB::transaction(function () use (
+                $id, $accountId, $currencyId, $paymentMethodId, 
+                $date, $amount, $description, $reference) 
             {
                 $invoice = Invoice::find($id);
 
@@ -172,13 +174,12 @@ trait InvoicesServices
                 $invoice
                     ->payments()
                     ->create([
-                        'model_type' => get_class($invoice),
+                        'account_id' => $accountId,
+                        'currency_id' => $currencyId,
+                        'payment_method_id' => $paymentMethodId,
                         'date' => $date,
                         'amount' => $amount,
-                        'account' => $account,
-                        'currency' => $currency,
                         'description' => $description,
-                        'payment_method' => $paymentMethod,
                         'reference' => $reference
                     ]);
 

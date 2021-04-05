@@ -78,6 +78,35 @@ class CreateInvoicesTable extends Migration
                 ->on('invoices')
                 ->cascadeOnDelete();
         });
+
+        Schema::create('invoice_payments', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('invoice_id')->index();
+            $table->foreignId('account_id');
+            $table->foreignId('currency_id');
+            $table->foreignId('payment_method_id');
+            $table->timestamp('date');
+            $table->unsignedDecimal('amount', 10, 2);
+            $table->text('description')->nullable();
+            $table->text('reference')->nullable();
+            $table->timestamps();
+
+            
+            $table->foreign('account_id')
+                ->references('id')
+                ->on('accounts')
+                ->cascadeOnDelete();
+
+            $table->foreign('currency_id')
+                ->references('id')
+                ->on('currencies')
+                ->cascadeOnDelete();
+
+            $table->foreign('payment_method_id')
+                ->references('id')
+                ->on('payment_methods')
+                ->cascadeOnDelete();
+        });
     }
 
     /**
@@ -87,6 +116,7 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('invoice_payments');
         Schema::dropIfExists('invoice_payment_details');
         Schema::dropIfExists('invoice_details');
         Schema::dropIfExists('invoices');

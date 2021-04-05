@@ -44,10 +44,10 @@ class CustomersController extends Controller
     public function store(StoreRequest $request)
     {
         $model = $this->customer->createCustomer(
+            $request->currencyId, 
             $request->name, 
             $request->email, 
             $request->taxNumber, 
-            $request->currency, 
             $request->phone, 
             $request->website, 
             $request->address, 
@@ -82,10 +82,10 @@ class CustomersController extends Controller
     {
         $this->customer->updateCustomer(
             $request->id,
+            $request->currencyId, 
             $request->name, 
             $request->email, 
             $request->taxNumber, 
-            $request->currency, 
             $request->phone, 
             $request->website, 
             $request->address, 

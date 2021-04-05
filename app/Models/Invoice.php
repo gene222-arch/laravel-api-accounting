@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Item;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sales\Invoice\InvoicesServices;
-use App\Traits\Sales\Payment\PaymentsServices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -62,13 +61,13 @@ class Invoice extends Model
     }
 
     /**
-     * Define an inverse many-to-one relationship with Payment class
+     * Define many-to-one relationship with InvoicePayment class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function payments(): HasMany
     {
-        return $this->hasMany(Payment::class, 'model_id');
+        return $this->hasMany(InvoicePayment::class);
     }
     
     /**

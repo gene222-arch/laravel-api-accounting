@@ -37,9 +37,9 @@ class AccountsControllerTest extends TestCase
     public function user_can_create_account()
     {
         $data = [
+            'currencyId' => 1,
             'name' => 'Bank',
             'number' => 12345,
-            'currency' => 'Philippine Peso',
             'openingBalance' => 1000000.00
         ];
 
@@ -49,7 +49,6 @@ class AccountsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-
         $this->assertResponse($response);
     }
 
@@ -57,10 +56,10 @@ class AccountsControllerTest extends TestCase
     public function user_can_update_account()
     {
         $data = [
-            'id' => 1,
+            'id' => 3,
+            'currencyId' => 1,
             'name' => 'Bank',
-            'number' => 12345,
-            'currency' => 'Philippine Peso',
+            'number' => 2222,
             'openingBalance' => 1000000.00
         ];
         $response = $this->put(
@@ -69,6 +68,8 @@ class AccountsControllerTest extends TestCase
             $this->apiHeader()
         );
  
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 

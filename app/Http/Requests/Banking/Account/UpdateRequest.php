@@ -15,10 +15,10 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:accounts,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:accounts,name,' . $this->id],
             'number' => ['required', 'integer', 'min:5', 'unique:accounts,number,' . $this->id],
-            'currency' => ['required', 'string'],
-            'openingBalance' => ['required', 'numberic', 'min:0']
+            'openingBalance' => ['required', 'numeric', 'min:0']
         ];
     }
 }
