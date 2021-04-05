@@ -168,7 +168,7 @@ trait InvoicesServices
                     ->update([
                         'amount_due' => DB::raw('amount_due - ' . $amount)
                     ]);
-
+                        
                 $invoice
                     ->payments()
                     ->create([

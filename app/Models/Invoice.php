@@ -70,4 +70,14 @@ class Invoice extends Model
     {
         return $this->hasMany(Payment::class, 'model_id');
     }
+    
+    /**
+     * Define a many-to-many relationship with Revenue
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function revenues(): BelongsToMany
+    {
+        return $this->belongsToMany(Revenue::class);
+    }
 }

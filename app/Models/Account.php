@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Banking\Account\AccountsServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
 {
@@ -20,4 +21,14 @@ class Account extends Model
         'currency',
         'opening_balance'
     ];
+    
+    /**
+     * Define a one-to-many relationship with Revenue Class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function revenues(): HasMany
+    {
+        return $this->hasMany(Revenue::class);
+    }
 }
