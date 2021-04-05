@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\Sttings\IncomeCategory\IncomeCategoriesServices;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Settings\IncomeCategory\IncomeCategoriesServices;
 
 class IncomeCategory extends Model
 {

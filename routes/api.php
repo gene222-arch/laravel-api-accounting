@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Item\Item\ItemsController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
+use App\Http\Controllers\Api\Sales\Revenue\RevenuesController;
 use App\Http\Controllers\Api\Item\Discount\DiscountsController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Banking\Account\AccountsController;
@@ -150,6 +151,7 @@ Route::prefix('item')->group(function ()
  * * Sales 
  *  - Invoices
  *  - Customers
+ *  - Revenues
  */
 Route::prefix('sales')->group(function () 
 {
@@ -179,6 +181,18 @@ Route::prefix('sales')->group(function ()
         Route::put('/', [InvoicesController::class, 'update']);
         Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
         Route::delete('/', [InvoicesController::class, 'destroy']);
+    });
+
+    /**
+     * Revenues
+     */
+    Route::prefix('revenues')->group(function () 
+    {
+        Route::get('/', [RevenuesController::class, 'index']);
+        Route::get('/{id}', [RevenuesController::class, 'show']);
+        Route::post('/', [RevenuesController::class, 'store']);
+        Route::put('/', [RevenuesController::class, 'update']);
+        Route::delete('/', [RevenuesController::class, 'destroy']);
     });
 });
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Sttings\IncomeCategory;
+namespace App\Traits\Settings\IncomeCategory;
 
 use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Collection;

@@ -2,6 +2,7 @@
 
 namespace {{ namespace }};
 
+use App\Models\Model;
 use {{ rootNamespace }}Http\Controllers\Controller;
 use App\Traits\Api\ApiResponser;
 

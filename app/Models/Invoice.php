@@ -62,7 +62,7 @@ class Invoice extends Model
     }
 
     /**
-     * Define a one-to-one relationship with Payment class
+     * Define an inverse many-to-one relationship with Payment class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
