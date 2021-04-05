@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\Item\Discount\DiscountsController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
 use App\Http\Controllers\Api\Banking\Account\AccountsController;
 use App\Http\Controllers\Api\Item\Category\CategoriesController;
+use App\Http\Controllers\Api\Purchases\Vendor\VendorsController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
@@ -144,6 +145,25 @@ Route::prefix('item')->group(function ()
         Route::post('/', [TaxController::class, 'store']);
         Route::put('/', [TaxController::class, 'update']);
         Route::delete('/', [TaxController::class, 'destroy']);
+    });
+});
+
+/**
+ * * Purchases
+ *  - Vendor
+ */
+Route::prefix('purchases')->group(function () 
+{
+    /**
+     * Vendors
+     */
+    Route::prefix('vendors')->group(function () 
+    {
+        Route::get('/', [VendorsController::class, 'index']);
+        Route::get('/{id}', [VendorsController::class, 'show']);
+        Route::post('/', [VendorsController::class, 'store']);
+        Route::put('/', [VendorsController::class, 'update']);
+        Route::delete('/', [VendorsController::class, 'destroy']);
     });
 });
 
