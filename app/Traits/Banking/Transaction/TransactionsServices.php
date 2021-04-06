@@ -43,10 +43,10 @@ trait TransactionsServices
                     ->get();
     }
     
-    
     /**
      * Create a new record of transaction
      *
+     * @param  integer $paymentTransactionId
      * @param  integer $accountId
      * @param  integer $categoryId
      * @param  string $type
@@ -57,9 +57,10 @@ trait TransactionsServices
      * @param  string $contact
      * @return Transaction
      */
-    public function createTransaction (int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
+    public function createTransaction (int $paymentTransactionId, int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
     {
         return Transaction::create([
+            'payment_transaction_id' => $paymentTransactionId,
             'account_id' => $accountId,
             'category_id' => $categoryId,
             'type' => $type,
@@ -74,6 +75,8 @@ trait TransactionsServices
     /**
      * Update an existing record of transaction
      *
+     * @param  integer $id 
+     * @param  integer $paymentTransactionId
      * @param  integer $accountId
      * @param  integer $categoryId
      * @param  string $type
@@ -84,10 +87,11 @@ trait TransactionsServices
      * @param  string $contact
      * @return boolean
      */
-    public function updateTransaction (int $id, int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
+    public function updateTransaction (int $id, int $paymentTransactionId, int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
     {
         return Transaction::find($id)
             ->update([
+                'payment_transaction_id' => $paymentTransactionId,
                 'account_id' => $accountId,
                 'category_id' => $categoryId,
                 'type' => $type,
