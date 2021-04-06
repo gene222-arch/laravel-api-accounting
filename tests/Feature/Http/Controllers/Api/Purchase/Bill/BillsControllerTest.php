@@ -98,6 +98,27 @@ class BillsControllerTest extends TestCase
     }
 
     /** test */
+    public function user_can_mail_vendor()
+    {
+        $bill = 3;
+        $vendor = 1;
+        $data = [
+            'subject' => 'Bill Receipt',
+            'greeting' => 'Good day sir,',
+            'note' => 'We hope you continue using our services.',
+            'footer' => ''
+        ];
+
+        $response = $this->post(
+            "/api/purchases/bills/${bill}/vendors/${vendor}/mail",
+            $data,
+            $this->apiHeader()
+        ); 
+
+        $this->assertResponse($response);
+    }
+
+    /** test */
     public function user_can_create_bill_payment()
     {
         $data = [

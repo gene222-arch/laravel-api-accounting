@@ -154,7 +154,7 @@ Route::prefix('item')->group(function ()
 
 /**
  * * Purchases
- * 
+ *  - Bills
  *  - Vendor
  */
 Route::prefix('purchases')->group(function () 
@@ -167,7 +167,7 @@ Route::prefix('purchases')->group(function ()
         Route::get('/', [BillsController::class, 'index']);
         Route::get('/{id}', [BillsController::class, 'show']);
         Route::post('/', [BillsController::class, 'store']);
-        Route::post('/{bill}/vendor/{vendor}/mail', [BillsController::class, 'email']);
+        Route::post('/{bill}/vendors/{vendor}/mail', [BillsController::class, 'email']);
         Route::post('/{id}/mark-as-paid', [BillsController::class, 'markAsPaid']);
         Route::post('/payment', [BillsController::class, 'payment']);
         Route::put('/', [BillsController::class, 'update']);
@@ -218,7 +218,7 @@ Route::prefix('sales')->group(function ()
         Route::get('/', [InvoicesController::class, 'index']);
         Route::get('/{id}', [InvoicesController::class, 'show']);
         Route::post('/', [InvoicesController::class, 'store']);
-        Route::post('/{invoice}/customer/{customer}/mail', [InvoicesController::class, 'email']);
+        Route::post('/{invoice}/customers/{customer}/mail', [InvoicesController::class, 'email']);
         Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
         Route::post('/payment', [InvoicesController::class, 'payment']);
         Route::put('/', [InvoicesController::class, 'update']);

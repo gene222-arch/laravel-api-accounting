@@ -85,7 +85,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/sales/invoices/${invoice}/customer/${customer}/mail",
+            "/api/sales/invoices/${invoice}/customers/${customer}/mail",
             $data,
             $this->apiHeader()
         ); 

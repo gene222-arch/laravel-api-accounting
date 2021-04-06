@@ -55,7 +55,7 @@ class BillNotification extends Notification implements ShouldQueue
             ->subject($this->subject)
             ->greeting($this->greeting ?? "Hi {$notifiable->name},")
             ->line("")
-            ->line("I hope you’re well! This your e-bill with an id of {$this->bill->invoice_number}")
+            ->line("I hope you’re well! This your e-bill with an id of {$this->bill->bill_number}")
             ->line("Due on {$this->bill->due_date} Don’t hesitate to reach out if you have any questions,")
             ->line('don\'t hesitate to ask.')
             ->line('Thank you for your patronage.!')

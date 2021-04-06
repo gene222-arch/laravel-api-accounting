@@ -6,11 +6,12 @@ use App\Traits\Purchases\Vendor\VendorsServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
 class Vendor extends Model
 {
     /** Libraries or Built-in */
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     /** Custom */
     use VendorsServices;
