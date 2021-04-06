@@ -116,9 +116,7 @@ trait BillsServices
                         'reference' => $reference
                     ]);
 
-                $bill->update([
-                    'status' => 'Paid'
-                ]);
+                $this->updateStatus($bill);
                 
             });
         } catch (\Throwable $th) {
@@ -159,8 +157,6 @@ trait BillsServices
                 $bill->items()->sync($items);
 
                 $bill->paymentDetail()->update($paymentDetail);
-
-                (new Stock())->stockOut($items);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -168,6 +164,23 @@ trait BillsServices
 
         return true;
     }    
+    
+    /**
+     * Update an existing record of bill record's status
+     *
+     * @param  Bill $bill
+     * @param  float $amountDue
+     * @param  string $status
+     * @return boolean
+     */
+    public function updateStatus (Bill $bill, float $amountDue = 0, string $status = null): bool
+    {
+        $status ?? !$amountDue ? 'Paid' : 'Partially Paid';
+
+        return $bill->update([
+            'status' => $status
+        ]);
+    }
 
     /**
      * Send an email notification to the specified vendor
@@ -232,9 +245,7 @@ trait BillsServices
                         'reference' => $reference
                     ]);
 
-                $bill->update([
-                    'status' => 'Partially paid'
-                ]);
+                $this->updateStatus($bill, $bill->paymentDetail->amount_due);
                 
             });
         } catch (\Throwable $th) {
@@ -245,18 +256,14 @@ trait BillsServices
     }
 
     /**
-     * Update an bill status as cancelled
+     * Update a bill status as cancelled
      *
      * @param  Bill $bill
      * @return boolean
      */
     public function cancelInvoice (Bill $bill): bool
     {
-        $update = $bill->update([
-                'status' => 'Cancelled'
-            ]);
-
-        return boolval($update);
+        return $this->updateStatus($bill, 0, 'Cancelled');
     }
 
     /**

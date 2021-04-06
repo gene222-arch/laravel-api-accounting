@@ -38,8 +38,8 @@ class InvoicesControllerTest extends TestCase
     {
         $data = [
             'customerId' => 1,
-            'invoiceNumber' => 'INV-00002',
-            'orderNo' => 2,
+            'invoiceNumber' => 'INV-00003',
+            'orderNo' => 3,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
             'items' => [
@@ -69,8 +69,6 @@ class InvoicesControllerTest extends TestCase
             $this->apiHeader()
         ); 
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -193,7 +191,7 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_cancel_an_invoice()
     {
-        $id = 1;
+        $id = 2;
 
         $data = [];
 

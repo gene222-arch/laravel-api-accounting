@@ -109,8 +109,6 @@ trait InvoicesServices
                 $invoice->items()->sync($items);
 
                 $invoice->paymentDetail()->update($paymentDetails);
-
-                (new Stock())->stockOut($items);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -118,6 +116,23 @@ trait InvoicesServices
 
         return true;
     }    
+    
+    /**
+     * Update an existing invoice record's status
+     *
+     * @param  Invoice $invoice
+     * @param  float $amountDue
+     * @param  string $status
+     * @return boolean
+     */
+    public function updateStatus(Invoice $invoice, float $amountDue = 0, string $status = null): bool
+    {
+        $status ?? !$amountDue ? 'Paid' : 'Partially Paid';
+
+        return $invoice->update([
+            'status' => $status
+        ]);
+    }
         
     /**
      * Send an email notification to the specified customer
@@ -180,9 +195,7 @@ trait InvoicesServices
                         'reference' => $reference
                     ]);
 
-                $invoice->update([
-                    'status' => 'Paid'
-                ]);
+                $this->updateStatus($invoice);
                 
             });
         } catch (\Throwable $th) {
@@ -231,9 +244,7 @@ trait InvoicesServices
                         'reference' => $reference
                     ]);
 
-                $invoice->update([
-                    'status' => 'Partially paid'
-                ]);
+                $this->updateStatus($invoice, $invoice->paymentDetail->amount_due);
                 
             });
         } catch (\Throwable $th) {
@@ -251,11 +262,7 @@ trait InvoicesServices
      */
     public function cancelInvoice (Invoice $invoice): bool
     {
-        $update = $invoice->update([
-                'status' => 'Cancelled'
-            ]);
-
-        return boolval($update);
+        return $this->updateStatus($invoice, 0, 'Cancelled');
     }
 
     /**
@@ -268,5 +275,6 @@ trait InvoicesServices
     {
         return Invoice::whereIn('id', $ids)->delete();
     }
+
 
 }
