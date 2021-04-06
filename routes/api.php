@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
+use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,7 @@ Route::prefix('access-rights')->group(function ()
  * * Banking
  * 
  *  - Accounts
+ *  - Bank account transfers
  */
 Route::prefix('banking')->group(function () 
 {
@@ -90,6 +92,18 @@ Route::prefix('banking')->group(function ()
         Route::post('/', [AccountsController::class, 'store']);
         Route::put('/', [AccountsController::class, 'update']);
         Route::delete('/', [AccountsController::class, 'destroy']);
+    });
+
+    /**
+     * Bank account transfers
+     */
+    Route::prefix('transfers')->group(function () 
+    {
+        Route::get('/', [BankAccountTransfersController::class, 'index']);
+        Route::get('/{id}', [BankAccountTransfersController::class, 'show']);
+        Route::post('/', [BankAccountTransfersController::class, 'store']);
+        Route::put('/', [BankAccountTransfersController::class, 'update']);
+        Route::delete('/', [BankAccountTransfersController::class, 'destroy']);
     });
 });
 
