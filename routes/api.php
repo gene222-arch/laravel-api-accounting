@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
+use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,7 @@ Route::prefix('access-rights')->group(function ()
  * 
  *  - Accounts
  *  - Bank account transfers
+ *  - Bank account reconciliations
  */
 Route::prefix('banking')->group(function () 
 {
@@ -104,6 +106,18 @@ Route::prefix('banking')->group(function ()
         Route::post('/', [BankAccountTransfersController::class, 'store']);
         Route::put('/', [BankAccountTransfersController::class, 'update']);
         Route::delete('/', [BankAccountTransfersController::class, 'destroy']);
+    });
+
+    /**
+     * Bank account reconciliations
+     */
+    Route::prefix('reconciliations')->group(function () 
+    {
+        Route::get('/', [BankAccountReconciliationsController::class, 'index']);
+        Route::get('/{id}', [BankAccountReconciliationsController::class, 'show']);
+        Route::post('/', [BankAccountReconciliationsController::class, 'store']);
+        Route::put('/', [BankAccountReconciliationsController::class, 'update']);
+        Route::delete('/', [BankAccountReconciliationsController::class, 'destroy']);
     });
 });
 
