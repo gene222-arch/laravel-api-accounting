@@ -75,6 +75,29 @@ class BillsControllerTest extends TestCase
     }
 
     /** test */
+    public function user_can_mark_bill_as_paid()
+    {
+        $id = 1;
+
+        $data = [
+            'id' => 1,
+            'accountId' => 2,
+            'currencyId' => 1,
+            'paymentMethodId' => 1,
+            'date' => '2021-05-06',
+            'amount' => 20.00,
+        ];
+
+        $response = $this->post(
+            "/api/purchases/bills/${id}/mark-as-paid",
+            $data,
+            $this->apiHeader()
+        ); 
+
+        $this->assertResponse($response);
+    }
+
+    /** test */
     public function user_can_create_bill_payment()
     {
         $data = [
