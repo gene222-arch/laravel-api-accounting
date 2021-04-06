@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
+use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -74,6 +75,7 @@ Route::prefix('access-rights')->group(function ()
 
 /**
  * * Banking
+ * 
  *  - Accounts
  */
 Route::prefix('banking')->group(function () 
@@ -93,6 +95,7 @@ Route::prefix('banking')->group(function ()
 
 /**
  * * Item
+ * 
  *  - Items
  *  - Categories
  *  - Discounts
@@ -151,6 +154,7 @@ Route::prefix('item')->group(function ()
 
 /**
  * * Purchases
+ * 
  *  - Vendor
  */
 Route::prefix('purchases')->group(function () 
@@ -187,6 +191,7 @@ Route::prefix('purchases')->group(function ()
 
 /**
  * * Sales 
+ * 
  *  - Invoices
  *  - Customers
  *  - Revenues
@@ -236,9 +241,11 @@ Route::prefix('sales')->group(function ()
 
 /**
  * * Settings
+ * 
  *  - Account
  *  - Payment methods
- * 
+ *  - Income categories
+ *  - Payment methods
  */
 Route::prefix('settings')->group(function () 
 {
@@ -289,28 +296,51 @@ Route::prefix('settings')->group(function ()
 });
 
 /**
- * Suppliers
+ * * Inventory Management
+ * 
+ *  - Suppliers
+ *  - Stock adjustments
+ *  - Warehouses
  */
-Route::prefix('suppliers')->group(function () 
+Route::prefix('inventory-management')->group(function () 
 {
-    Route::get('/', [SuppliersController::class, 'index']);
-    Route::get('/{id}', [SuppliersController::class, 'show']);
-    Route::post('/', [SuppliersController::class, 'store']);
-    Route::put('/', [SuppliersController::class, 'update']);
-    Route::delete('/', [SuppliersController::class, 'destroy']);
+    /**
+     * Suppliers
+     */
+    Route::prefix('suppliers')->group(function () 
+    {
+        Route::get('/', [SuppliersController::class, 'index']);
+        Route::get('/{id}', [SuppliersController::class, 'show']);
+        Route::post('/', [SuppliersController::class, 'store']);
+        Route::put('/', [SuppliersController::class, 'update']);
+        Route::delete('/', [SuppliersController::class, 'destroy']);
+    });
+
+    /**
+     * Stock adjustments
+     */
+    Route::prefix('stock-adjustments')->group(function () 
+    {
+        Route::get('/', [StockAdjustmentsController::class, 'index']);
+        Route::get('/{id}', [StockAdjustmentsController::class, 'show']);
+        Route::post('/', [StockAdjustmentsController::class, 'store']);
+        Route::put('/', [StockAdjustmentsController::class, 'update']);
+        Route::delete('/', [StockAdjustmentsController::class, 'destroy']);
+    });
+
+    /**
+     * Warehouse
+     */
+    Route::prefix('warehouses')->group(function () 
+    {
+        Route::get('/', [WarehousesController::class, 'index']);
+        Route::get('/{id}', [WarehousesController::class, 'show']);
+        Route::post('/', [WarehousesController::class, 'store']);
+        Route::put('/', [WarehousesController::class, 'update']);
+        Route::delete('/', [WarehousesController::class, 'destroy']);
+    });
 });
 
-/**
- * Warehouse
- */
-Route::prefix('warehouses')->group(function () 
-{
-    Route::get('/', [WarehousesController::class, 'index']);
-    Route::get('/{id}', [WarehousesController::class, 'show']);
-    Route::post('/', [WarehousesController::class, 'store']);
-    Route::put('/', [WarehousesController::class, 'update']);
-    Route::delete('/', [WarehousesController::class, 'destroy']);
-});
 
 
 

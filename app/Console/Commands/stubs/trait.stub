@@ -48,12 +48,10 @@ trait {{ class }}
     
     public function updateCustomer (int $id): bool
     {
-        $update = Model::where('id', $id)
+        return Model::where('id', $id)
             ->update([
                 'data' => 'data'
             ]);
-
-        return boolval($update);
     }
 
     /**

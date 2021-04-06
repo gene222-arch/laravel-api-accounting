@@ -13,7 +13,7 @@ class SuppliersControllerTest extends TestCase
     public function user_can_view_any_suppliers()
     {
         $response = $this->get(
-            '/api/suppliers',
+            '/api/inventory-management/suppliers',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class SuppliersControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/suppliers/${id}",
+            "/api/inventory-management/suppliers/${id}",
             $this->apiHeader()
         );
  
@@ -50,7 +50,7 @@ class SuppliersControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/suppliers',
+            '/api/inventory-management/suppliers',
             $data,
             $this->apiHeader()
         );
@@ -76,7 +76,7 @@ class SuppliersControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/suppliers',
+            '/api/inventory-management/suppliers',
             $data,
             $this->apiHeader()
         );
@@ -94,7 +94,7 @@ class SuppliersControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/suppliers',
+            '/api/inventory-management/suppliers',
             $data,
             $this->apiHeader()
         );

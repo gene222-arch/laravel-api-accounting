@@ -13,7 +13,7 @@ class WarehousesControllerTest extends TestCase
     public function user_can_view_any_warehouses()
     {
         $response = $this->get(
-            '/api/warehouses',
+            '/api/inventory-management/warehouses',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class WarehousesControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/warehouses/${id}",
+            "/api/inventory-management/warehouses/${id}",
             $this->apiHeader()
         );
 
@@ -46,7 +46,7 @@ class WarehousesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/warehouses',
+            '/api/inventory-management/warehouses',
             $data,
             $this->apiHeader()
         );
@@ -68,7 +68,7 @@ class WarehousesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/warehouses',
+            '/api/inventory-management/warehouses',
             $data,
             $this->apiHeader()
         );
@@ -86,7 +86,7 @@ class WarehousesControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/warehouses',
+            '/api/inventory-management/warehouses',
             $data,
             $this->apiHeader()
         );
