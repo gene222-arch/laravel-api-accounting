@@ -18,6 +18,7 @@ class Transaction extends Model
     use TransactionsServices;
     
     protected $fillable = [
+        'payment_transaction_id',
         'account_id',
         'category_id',
         'type',
