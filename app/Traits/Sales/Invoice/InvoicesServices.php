@@ -2,19 +2,21 @@
 
 namespace App\Traits\Sales\Invoice;
 
+use Carbon\Carbon;
+use App\Models\Stock;
+use App\Models\Account;
 use App\Models\Invoice;
-use App\Models\Payment;
 use App\Models\Customer;
+use App\Models\IncomeCategory;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
-use App\Models\Stock;
-use App\Traits\Sales\Revenue\RevenuesServices;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use App\Traits\Sales\Revenue\RevenuesServices;
+use App\Traits\Banking\Transaction\HasTransaction;
 
 trait InvoicesServices
 {    
-    use RevenuesServices;
+    use HasTransaction, RevenuesServices;
 
     /**
      * Get all records of invoices
@@ -215,7 +217,7 @@ trait InvoicesServices
 
                 $invoice->paymentDetail()
                     ->update([
-                        'amount_due' => 0.00
+                        'amount_due' => DB::raw("amount_due - ${amount}")
                     ]);
 
                 $status = $this->updateStatus($invoice);
@@ -227,20 +229,43 @@ trait InvoicesServices
                         'description' => "$amount Payment"
                     ]);
 
-                    $this->createRevenue(
-                        $invoice->invoice_number,
-                        Carbon::now(),
-                        $amount,
-                        $description,
-                        $invoice->recurring,
-                        $reference,
-                        null,
-                        $accountId,
-                        $invoice->customer_id,
-                        $incomeCategoryId,
-                        $paymentMethodId,
-                        $currencyId
-                    );
+                $this->createRevenue(
+                    $invoice->invoice_number,
+                    Carbon::now(),
+                    $amount,
+                    $description,
+                    $invoice->recurring,
+                    $reference,
+                    null,
+                    $accountId,
+                    $invoice->customer_id,
+                    $incomeCategoryId,
+                    $paymentMethodId,
+                    $currencyId
+                );
+
+                /** Transactions */
+                $this->createTransaction(
+                    get_class($invoice),
+                    $id,
+                    $accountId,
+                    $incomeCategoryId,
+                    null,
+                    IncomeCategory::find($incomeCategoryId)->name,
+                    'Income',
+                    $amount,
+                    $amount,
+                    0.00,
+                    $description,
+                    Customer::find($invoice->customer_id)->name
+                );
+
+                /** Account */
+                Account::where('id', $accountId)
+                    ->update([
+                        'balance' => DB::raw("balance - ${amount}")
+                    ]);
+
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -300,6 +325,28 @@ trait InvoicesServices
                     $paymentMethodId,
                     $currencyId
                 );
+
+                /** Transactions */
+                $this->createTransaction(
+                    get_class($invoice),
+                    $id,
+                    $accountId,
+                    $incomeCategoryId,
+                    null,
+                    IncomeCategory::find($incomeCategoryId)->name,
+                    'Income',
+                    $amount,
+                    $amount,
+                    0.00,
+                    $description,
+                    Customer::find($invoice->customer_id)->name
+                );
+
+                /** Account */
+                Account::where('id', $accountId)
+                    ->update([
+                        'balance' => DB::raw("balance - ${amount}")
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

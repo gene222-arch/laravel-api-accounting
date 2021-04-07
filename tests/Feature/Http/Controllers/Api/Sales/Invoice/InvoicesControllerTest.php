@@ -38,8 +38,8 @@ class InvoicesControllerTest extends TestCase
     {
         $data = [
             'customerId' => 1,
-            'invoiceNumber' => 'INV-00002',
-            'orderNo' => 2,
+            'invoiceNumber' => 'INV-00003',
+            'orderNo' => 3,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
             'recurring' => 'No',
@@ -97,14 +97,14 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_mark_invoice_as_paid()
     {
-        $id = 2;
+        $id = 3;
 
         $data = [
             'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'incomeCategoryId' => 2,
-            'amount' => 130.00,
+            'amount' => 110.00,
         ];
 
         $response = $this->post(
@@ -120,13 +120,13 @@ class InvoicesControllerTest extends TestCase
     public function user_can_create_invoice_payment()
     {
         $data = [
-            'id' => 1,
+            'id' => 3,
             'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'incomeCategoryId' => 2,
             'date' => '2021-05-06',
-            'amount' => 80.00,
+            'amount' => 10.00,
         ];
 
         $response = $this->post(
