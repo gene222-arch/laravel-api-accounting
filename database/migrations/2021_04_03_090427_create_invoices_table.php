@@ -20,6 +20,7 @@ class CreateInvoicesTable extends Migration
             $table->unsignedBigInteger('order_no');
             $table->timestamp('date')->default(now());
             $table->timestamp('due_date')->default(now());
+            $table->string('recurring')->default('No');
             $table->string('status')->default('Draft');
             $table->timestamps();
 
@@ -79,42 +80,16 @@ class CreateInvoicesTable extends Migration
                 ->cascadeOnDelete();
         });
 
-        Schema::create('invoice_payments', function (Blueprint $table) {
+        Schema::create('invoice_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->index();
-            $table->foreignId('account_id');
-            $table->foreignId('currency_id');
-            $table->foreignId('payment_method_id');
-            $table->foreignId('income_category_id');
-            $table->timestamp('date');
-            $table->unsignedDecimal('amount', 10, 2);
-            $table->text('description')->nullable();
-            $table->text('reference')->nullable();
+            $table->string('status');
+            $table->text('description');
             $table->timestamps();
 
             $table->foreign('invoice_id')
                 ->references('id')
                 ->on('invoices')
-                ->cascadeOnDelete();
-
-            $table->foreign('account_id')
-                ->references('id')
-                ->on('accounts')
-                ->cascadeOnDelete();
-
-            $table->foreign('currency_id')
-                ->references('id')
-                ->on('currencies')
-                ->cascadeOnDelete();
-
-            $table->foreign('payment_method_id')
-                ->references('id')
-                ->on('payment_methods')
-                ->cascadeOnDelete();
-
-            $table->foreign('income_category_id')
-                ->references('id')
-                ->on('income_categories')
                 ->cascadeOnDelete();
         });
     }
@@ -126,7 +101,7 @@ class CreateInvoicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('invoice_payments');
+        Schema::dropIfExists('invoice_histories');
         Schema::dropIfExists('invoice_payment_details');
         Schema::dropIfExists('invoice_details');
         Schema::dropIfExists('invoices');

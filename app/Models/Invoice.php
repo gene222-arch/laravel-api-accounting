@@ -24,7 +24,8 @@ class Invoice extends Model
         'order_no',
         'date',
         'due_date',
-        'status'
+        'status',
+        'recurring'
     ];
     
     /**
@@ -61,22 +62,12 @@ class Invoice extends Model
     }
 
     /**
-     * Define many-to-one relationship with InvoicePayment class
+     * Define many-to-one relationship with InvoiceHistory class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function payments(): HasMany
+    public function histories(): HasMany
     {
-        return $this->hasMany(InvoicePayment::class);
-    }
-    
-    /**
-     * Define a many-to-many relationship with Revenue
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function revenues(): BelongsToMany
-    {
-        return $this->belongsToMany(Revenue::class);
+        return $this->hasMany(InvoiceHistory::class);
     }
 }

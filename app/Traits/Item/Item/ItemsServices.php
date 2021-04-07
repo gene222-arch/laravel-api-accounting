@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Traits\Item;
+namespace App\Traits\Item\Item;
 
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 
-trait ItemServices
+trait ItemsServices
 {
     
     /**

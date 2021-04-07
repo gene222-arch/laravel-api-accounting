@@ -44,6 +44,7 @@ class BillsControllerTest extends TestCase
             'orderNo' => 2,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
+            'recurring' => 'No',
             'items' => [
                 [
                     'item_id' => 1,
@@ -74,17 +75,17 @@ class BillsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_mark_bill_as_paid()
     {
-        $id = 1;
+        $id = 2;
 
         $data = [
-            'accountId' => 2,
+            'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'expenseCategoryId' => 1,
-            'amount' => 20.00,
+            'amount' => 65.00,
         ];
 
         $response = $this->post(
@@ -99,7 +100,7 @@ class BillsControllerTest extends TestCase
     /** test */
     public function user_can_mail_vendor()
     {
-        $bill = 3;
+        $bill = 1;
         $vendor = 1;
         $data = [
             'subject' => 'Bill Receipt',
@@ -122,12 +123,12 @@ class BillsControllerTest extends TestCase
     {
         $data = [
             'id' => 1,
-            'accountId' => 2,
+            'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'expenseCategoryId' => 1,
             'date' => '2021-05-06',
-            'amount' => 20.00,
+            'amount' => 45.00,
         ];
 
         $response = $this->post(
@@ -149,6 +150,7 @@ class BillsControllerTest extends TestCase
             'orderNo' => 1,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
+            'recurring' => 'No',
             'items' => [
                 [
                     'item_id' => 1,
@@ -192,6 +194,8 @@ class BillsControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 

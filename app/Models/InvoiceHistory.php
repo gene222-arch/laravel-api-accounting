@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class InvoicePayment extends Model
+class InvoiceHistory extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
@@ -14,14 +14,8 @@ class InvoicePayment extends Model
 
     protected $fillable = [
         'invoice_id',
-        'account_id',
-        'currency_id',
-        'payment_method_id',
-        'income_category_id',
-        'date',
-        'amount',
-        'description',
-        'reference'
+        'status',
+        'description'
     ];
     
     /**

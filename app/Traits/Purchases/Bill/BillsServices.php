@@ -8,12 +8,13 @@ use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueBillNotification;
 use App\Traits\Banking\Transaction\HasTransaction;
+use App\Traits\Purchases\Purchase\PurchasesServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
 {
-    use HasTransaction;
+    use HasTransaction, PurchasesServices;
     
     /**
      * Get latest records of Bills
@@ -52,21 +53,23 @@ trait BillsServices
      * @param  integer $orderNo
      * @param  string $date
      * @param  string $dueDate
+     * @param  string $recurring
      * @param  array $items
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function createBill (int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetail): mixed
+    public function createBill (int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($vendorId, $billNumber, $orderNo, $date, $dueDate, $items, $paymentDetail)
+            DB::transaction(function () use ($vendorId, $billNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetail)
             {
                 $bill = Bill::create([
                     'vendor_id' => $vendorId,
                     'bill_number' => $billNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
-                    'due_date' => $dueDate
+                    'due_date' => $dueDate,
+                    'recurring' => $recurring
                 ]);
 
                 $bill->items()->attach($items);
@@ -74,6 +77,13 @@ trait BillsServices
                 $bill->paymentDetail()->create($paymentDetail);
 
                 (new Stock())->stockOut($items);
+
+                $bill
+                    ->histories()
+                    ->create([
+                        'status' => 'Draft',
+                        'description' => "${billNumber} added!"
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -111,22 +121,30 @@ trait BillsServices
                         'amount_due' => 0.00
                     ]);
 
-                $bill
-                    ->payments()
-                    ->create([
-                        'account_id' => $accountId,
-                        'currency_id' => $currencyId,
-                        'payment_method_id' => $paymentMethodId,
-                        'expense_category_id' => $expenseCategoryId,
-                        'date' => Carbon::now(),
-                        'amount' => $amount,
-                        'description' => $description,
-                        'reference' => $reference
-                    ]);
+                $status = $this->updateStatus($bill);
 
-                $this->updateStatus($bill);
-                
-                /** Transactions */
+                $bill
+                    ->histories()
+                    ->create([
+                        'status' => $status,
+                        'description' => "${amount} Payment!"
+                    ]);
+        
+
+                $this->createPurchase(
+                    $bill->number,
+                    $accountId,
+                    $bill->vendor_id,
+                    $expenseCategoryId,
+                    $paymentMethodId,
+                    $currencyId,
+                    Carbon::now(),
+                    $amount,
+                    $description,
+                    $bill->recurring,
+                    $reference,
+                    null
+                );
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -163,21 +181,30 @@ trait BillsServices
                     ->update([
                         'amount_due' => DB::raw('amount_due - ' . $amount)
                     ]);
-                        
+
+                $status = $this->updateStatus($bill, $bill->paymentDetail->amount_due);    
+
                 $bill
-                    ->payments()
+                    ->histories()
                     ->create([
-                        'account_id' => $accountId,
-                        'currency_id' => $currencyId,
-                        'payment_method_id' => $paymentMethodId,
-                        'expense_category_id' => $expenseCategoryId,
-                        'date' => $date,
-                        'amount' => $amount,
-                        'description' => $description,
-                        'reference' => $reference
+                        'status' => $status,
+                        'description' => "${amount} Payment"
                     ]);
 
-                $this->updateStatus($bill, $bill->paymentDetail->amount_due);
+                $this->createPurchase(
+                    $bill->number,
+                    $accountId,
+                    $bill->vendor_id,
+                    $expenseCategoryId,
+                    $paymentMethodId,
+                    $currencyId,
+                    $date,
+                    $amount,
+                    $description,
+                    $bill->recurring,
+                    $reference,
+                    null
+                );
                 
             });
         } catch (\Throwable $th) {
@@ -196,14 +223,15 @@ trait BillsServices
      * @param  integer $orderNo
      * @param  string $date
      * @param  string $dueDate
+     * @param  string $recurring
      * @param  array $items
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function updateBill (int $id, int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetail): mixed
+    public function updateBill (int $id, int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($id, $vendorId, $billNumber, $orderNo, $date, $dueDate, $items, $paymentDetail)
+            DB::transaction(function () use ($id, $vendorId, $billNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetail)
             {
                 $bill = Bill::find($id);
 
@@ -212,12 +240,20 @@ trait BillsServices
                     'bill_number' => $billNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
-                    'due_date' => $dueDate
+                    'due_date' => $dueDate,
+                    'recurring' => $recurring
                 ]);
 
                 $bill->items()->sync($items);
 
                 $bill->paymentDetail()->update($paymentDetail);
+
+                $bill
+                    ->histories()
+                    ->create([
+                        'status' => 'Draft',
+                        'description' => "Bill updated!"
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -232,15 +268,17 @@ trait BillsServices
      * @param  Bill $bill
      * @param  float $amountDue
      * @param  string $status
-     * @return boolean
+     * @return string
      */
-    public function updateStatus (Bill $bill, float $amountDue = 0, string $status = null): bool
+    public function updateStatus (Bill $bill, float $amountDue = 0, string $status = null): string
     {
         $status ??= !$amountDue ? 'Paid' : 'Partially Paid';
 
-        return $bill->update([
+        $bill->update([
             'status' => $status
         ]);
+
+        return $status;
     }
 
     /**
@@ -256,6 +294,13 @@ trait BillsServices
      */
     public function email (Bill $bill, Vendor $vendor, ?string $subject, ?string $greeting, ?string $note, ?string $footer): void
     {
+        $bill
+            ->histories()
+            ->create([
+                'status' => 'Sent',
+                'description' => "Bill has been sent!"
+            ]);
+
         dispatch(new QueueBillNotification(
             $bill, 
             $vendor, 
@@ -271,11 +316,18 @@ trait BillsServices
      * Update a bill status as cancelled
      *
      * @param  Bill $bill
-     * @return boolean
+     * @return void
      */
-    public function cancelInvoice (Bill $bill): bool
+    public function cancelBill (Bill $bill): void
     {
-        return $this->updateStatus($bill, 0, 'Cancelled');
+        $status = $this->updateStatus($bill, 0, 'Cancelled');
+
+        $bill
+            ->histories()
+            ->create([
+                'status' => $status,
+                'description' => "Bill marked as cancelled!"
+            ]);
     }
 
     /**

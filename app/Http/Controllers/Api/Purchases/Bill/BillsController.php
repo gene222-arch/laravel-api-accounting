@@ -102,6 +102,7 @@ class BillsController extends Controller
             $request->orderNo,
             $request->date,
             $request->dueDate,
+            $request->recurring,
             $request->items,
             $request->paymentDetail
         );
@@ -167,6 +168,7 @@ class BillsController extends Controller
             $request->orderNo,
             $request->date,
             $request->dueDate,
+            $request->recurring,
             $request->items,
             $request->paymentDetail
         );
@@ -184,7 +186,7 @@ class BillsController extends Controller
      */
     public function cancel(Bill $bill)
     {
-        $this->bill->cancelInvoice($bill);
+        $this->bill->cancelBill($bill);
 
         return $this->success(null, 'Bill cancelled successfully.');
     }

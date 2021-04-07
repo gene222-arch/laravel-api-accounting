@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Item;
+namespace App\Traits\Item\Category;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;

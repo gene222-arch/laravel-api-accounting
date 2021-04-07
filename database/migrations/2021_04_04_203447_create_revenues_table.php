@@ -15,10 +15,12 @@ class CreateRevenuesTable extends Migration
     {
         Schema::create('revenues', function (Blueprint $table) {
             $table->id();
+            $table->string('number')->nullable();
             $table->foreignId('account_id')->nullable();
             $table->foreignId('customer_id')->nullable();
             $table->foreignId('income_category_id')->nullable();
             $table->foreignId('payment_method_id')->nullable();
+            $table->foreignId('currency_id')->nullable();
             $table->timestamp('date')->default(now());
             $table->unsignedDecimal('amount', 10, 2);
             $table->text('description')->nullable();

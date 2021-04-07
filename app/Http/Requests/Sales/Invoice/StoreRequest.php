@@ -19,6 +19,7 @@ class StoreRequest extends BaseRequest
             'orderNo' => ['required', 'integer', 'unique:invoices,order_no'],
             'date' => ['required', 'string'],
             'dueDate' => ['required', 'string'],
+            'recurring' => ['required', 'string', 'in:No,Daily,Weekly,Monthly,Yearly'],
             'items.*' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
             'paymentDetail.total_discounts' => ['required', 'numeric', 'min:0'],

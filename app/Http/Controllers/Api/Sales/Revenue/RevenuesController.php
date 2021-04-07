@@ -44,6 +44,7 @@ class RevenuesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->revenue->createRevenue(
+            $request->number,
             $request->date,
             $request->amount,
             $request->description,
@@ -54,7 +55,7 @@ class RevenuesController extends Controller
             $request->customerId,
             $request->incomeCategoryId,
             $request->paymentMethodId,
-            $request->invoiceId
+            $request->currencyId
         );
 
         return $result !== true 
@@ -87,6 +88,7 @@ class RevenuesController extends Controller
     {
         $result = $this->revenue->updateRevenue(
             $request->id,
+            $request->number,
             $request->date,
             $request->amount,
             $request->description,
@@ -97,7 +99,7 @@ class RevenuesController extends Controller
             $request->customerId,
             $request->incomeCategoryId,
             $request->paymentMethodId,
-            $request->invoiceId
+            $request->currencyId
         );
 
         return $result !== true 

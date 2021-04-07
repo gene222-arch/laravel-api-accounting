@@ -18,10 +18,12 @@ class Revenue extends Model
     use RevenuesServices;
 
     protected $fillable = [
+        'number',
         'account_id',
         'customer_id',
         'income_category_id',
         'payment_method_id',
+        'currency_id',
         'date',
         'amount',
         'description',

@@ -50,32 +50,35 @@ trait RevenuesServices
     /**
      * Create a new record of revenue
      *
+     * @param string|null $number
      * @param string $date
      * @param float $amount
      * @param string|null $description
-     * @param string $recurring
+     * @param string|null $recurring
      * @param string|null $reference
      * @param string|null $file
      * @param integer $accountId
      * @param integer $customerId
      * @param integer $incomeCategoryId
      * @param integer $paymentMethodId
-     * @param integer $invoiceId
+     * @param integer $currencyId
      * @return mixed
      */
-    public function createRevenue (string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file, int $accountId, int $customerId, int $incomeCategoryId, int $paymentMethodId, int $invoiceId): mixed
+    public function createRevenue (?string $number, string $date, float $amount, ?string $description, ?string $recurring, ?string $reference, ?string $file, int $accountId, int $customerId, int $incomeCategoryId, int $paymentMethodId, int $currencyId): mixed
     {
         try {
             DB::transaction(function () use (
-                $date, $amount, $description, $recurring, $reference, $file,
-                $accountId, $customerId, $incomeCategoryId, $paymentMethodId, $invoiceId
+                $number, $date, $amount, $description, $recurring, $reference, $file,
+                $accountId, $customerId, $incomeCategoryId, $paymentMethodId, $currencyId
             )
             {
                 $revenue = Revenue::create([
+                    'number' => $number,
                     'account_id' => $accountId,
                     'customer_id' => $customerId,
                     'income_category_id' => $incomeCategoryId,
                     'payment_method_id' => $paymentMethodId,
+                    'currency_id' => $currencyId,
                     'date' =>  $date,
                     'amount' => $amount,
                     'description' => $description,
@@ -84,7 +87,7 @@ trait RevenuesServices
                     'file' => $file
                 ]);
 
-                $revenue->invoices()->attach($invoiceId);
+                $revenue->invoices()->attach($currencyId);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -97,6 +100,7 @@ trait RevenuesServices
      * Update an existing record of revenue
      *
      * @param integer $id
+     * @param string|null $number
      * @param string $date
      * @param float $amount
      * @param string|null $description
@@ -107,24 +111,26 @@ trait RevenuesServices
      * @param integer $customerId
      * @param integer $incomeCategoryId
      * @param integer $paymentMethodId
-     * @param integer $invoiceId
+     * @param integer $currencyId
      * @return mixed
      */
-    public function updateRevenue (int $id, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file, int $accountId, int $customerId, int $incomeCategoryId, int $paymentMethodId, int $invoiceId): mixed
+    public function updateRevenue (int $id, string $number, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file, int $accountId, int $customerId, int $incomeCategoryId, int $paymentMethodId, int $currencyId): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $date, $amount, $description, $recurring, $reference, $file,
-                $accountId, $customerId, $incomeCategoryId, $paymentMethodId, $invoiceId
+                $id, $number, $date, $amount, $description, $recurring, $reference, $file,
+                $accountId, $customerId, $incomeCategoryId, $paymentMethodId, $currencyId
             )
             {
                 $revenue = Revenue::find($id);
 
                 $revenue->update([
+                    'number' => $number,
                     'account_id' => $accountId,
                     'customer_id' => $customerId,
                     'income_category_id' => $incomeCategoryId,
                     'payment_method_id' => $paymentMethodId,
+                    'currency_id' => $currencyId,
                     'date' =>  $date,
                     'amount' => $amount,
                     'description' => $description,
@@ -133,7 +139,7 @@ trait RevenuesServices
                     'file' => $file
                 ]);
 
-                $revenue->invoices()->sync($invoiceId);
+                $revenue->invoices()->sync($currencyId);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

@@ -15,6 +15,7 @@ use Database\Seeders\DiscountSeeder;
 use Database\Seeders\SupplierSeeder;
 use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\IncomeCategorySeeder;
+use Database\Seeders\ExpenseCategorySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,12 +31,14 @@ class DatabaseSeeder extends Seeder
             CurrencySeeder::class,
             AccountSeeder::class,
             IncomeCategorySeeder::class,
+            ExpenseCategorySeeder::class,
             PaymentMethodSeeder::class,
             CategorySeeder::class,
             DiscountSeeder::class,
             ItemSeeder::class,
             SupplierSeeder::class,
             CustomerSeeder::class,
+            VendorSeeder::class,
             StockSeeder::class,
         ]);
     }

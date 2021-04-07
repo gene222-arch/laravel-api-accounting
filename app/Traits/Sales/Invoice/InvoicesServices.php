@@ -8,11 +8,14 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
 use App\Models\Stock;
+use App\Traits\Sales\Revenue\RevenuesServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait InvoicesServices
 {    
+    use RevenuesServices;
+
     /**
      * Get all records of invoices
      *
@@ -49,21 +52,23 @@ trait InvoicesServices
      * @param  integer $orderNo
      * @param  string $date
      * @param  string $dueDate
+     * @param  string $recurring
      * @param  array $items
      * @param  array $paymentDetails
      * @return mixed
      */
-    public function createInvoice (int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetails): mixed
+    public function createInvoice (int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
     {
         try {
-            DB::transaction(function () use ($customerId, $invoiceNumber, $orderNo, $date, $dueDate, $items, $paymentDetails)
+            DB::transaction(function () use ($customerId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
             {
                 $invoice = Invoice::create([
                     'customer_id' => $customerId,
                     'invoice_number' => $invoiceNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
-                    'due_date' => $dueDate
+                    'due_date' => $dueDate,
+                    'recurring' => $recurring
                 ]);
 
                 $invoice->items()->attach($items);
@@ -71,6 +76,13 @@ trait InvoicesServices
                 $invoice->paymentDetail()->create($paymentDetails);
 
                 (new Stock())->stockOut($items);
+
+                $invoice
+                    ->histories()
+                    ->create([
+                        'status' => 'Draft',
+                        'description' => "${invoiceNumber} added!"
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -88,14 +100,15 @@ trait InvoicesServices
      * @param  integer $orderNo
      * @param  string $date
      * @param  string $dueDate
+     * @param  string $recurring
      * @param  array $items
      * @param  array $paymentDetails
      * @return mixed
      */
-    public function updateInvoice (int $id, int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, array $items, array $paymentDetails): mixed
+    public function updateInvoice (int $id, int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
     {
         try {
-            DB::transaction(function () use ($id, $customerId, $invoiceNumber, $orderNo, $date, $dueDate, $items, $paymentDetails)
+            DB::transaction(function () use ($id, $customerId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
             {
                 $invoice = Invoice::find($id);
 
@@ -104,12 +117,20 @@ trait InvoicesServices
                     'invoice_number' => $invoiceNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
-                    'due_date' => $dueDate
+                    'due_date' => $dueDate,
+                    'recurring' => $recurring
                 ]);
 
                 $invoice->items()->sync($items);
 
                 $invoice->paymentDetail()->update($paymentDetails);
+
+                $invoice
+                    ->histories()
+                    ->create([
+                        'status' => 'Draft',
+                        'description' => "$invoiceNumber updated"
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -124,15 +145,17 @@ trait InvoicesServices
      * @param  Invoice $invoice
      * @param  float $amountDue
      * @param  string $status
-     * @return boolean
+     * @return string
      */
-    public function updateStatus(Invoice $invoice, float $amountDue = 0, string $status = null): bool
+    public function updateStatus(Invoice $invoice, float $amountDue = 0, string $status = null): string
     {
-        $status ?? !$amountDue ? 'Paid' : 'Partially Paid';
+        $status ??= !$amountDue ? 'Paid' : 'Partially Paid';
 
-        return $invoice->update([
+        $invoice->update([
             'status' => $status
         ]);
+
+        return $status;
     }
         
     /**
@@ -148,6 +171,13 @@ trait InvoicesServices
      */
     public function email (Invoice $invoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): void
     {
+        $invoice
+            ->histories()
+            ->create([
+                'status' => $invoice->status,
+                'description' => "Invoice marked as sent!"
+            ]);
+
         dispatch(new QueueInvoiceNotification(
             $invoice, 
             $customer, 
@@ -188,21 +218,29 @@ trait InvoicesServices
                         'amount_due' => 0.00
                     ]);
 
+                $status = $this->updateStatus($invoice);
+
                 $invoice
-                    ->payments()
+                    ->histories()
                     ->create([
-                        'account_id' => $accountId,
-                        'currency_id' => $currencyId,
-                        'payment_method_id' => $paymentMethodId,
-                        'income_category_id' => $incomeCategoryId,
-                        'date' => Carbon::now(),
-                        'amount' => $amount,
-                        'description' => $description,
-                        'reference' => $reference
+                        'status' => $status,
+                        'description' => "$amount Payment"
                     ]);
 
-                $this->updateStatus($invoice);
-                
+                    $this->createRevenue(
+                        $invoice->invoice_number,
+                        Carbon::now(),
+                        $amount,
+                        $description,
+                        $invoice->recurring,
+                        $reference,
+                        null,
+                        $accountId,
+                        $invoice->customer_id,
+                        $incomeCategoryId,
+                        $paymentMethodId,
+                        $currencyId
+                    );
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -238,22 +276,30 @@ trait InvoicesServices
                     ->update([
                         'amount_due' => DB::raw('amount_due - ' . $amount)
                     ]);
-                        
-                $invoice
-                    ->payments()
-                    ->create([
-                        'account_id' => $accountId,
-                        'currency_id' => $currencyId,
-                        'payment_method_id' => $paymentMethodId,
-                        'income_category_id' => $incomeCategoryId,
-                        'date' => $date,
-                        'amount' => $amount,
-                        'description' => $description,
-                        'reference' => $reference
-                    ]);
 
-                $this->updateStatus($invoice, $invoice->paymentDetail->amount_due);
+                $status = $this->updateStatus($invoice, $invoice->paymentDetail->amount_due);
+
+                $invoice
+                    ->histories()
+                    ->create([
+                        'status' => $status,
+                        'description' => "$amount Payment"
+                    ]);
                 
+                $this->createRevenue(
+                    $invoice->invoice_number,
+                    $date,
+                    $amount,
+                    $description,
+                    $invoice->recurring,
+                    $reference,
+                    null,
+                    $accountId,
+                    $invoice->customer_id,
+                    $incomeCategoryId,
+                    $paymentMethodId,
+                    $currencyId
+                );
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -266,11 +312,18 @@ trait InvoicesServices
      * Update an invoice status as cancelled
      *
      * @param  Invoice $invoice
-     * @return boolean
+     * @return void
      */
-    public function cancelInvoice (Invoice $invoice): bool
+    public function cancelInvoice (Invoice $invoice): void
     {
-        return $this->updateStatus($invoice, 0, 'Cancelled');
+        $status = $this->updateStatus($invoice, 0, 'Cancelled');
+
+        $invoice
+            ->histories()
+            ->create([
+                'status' => $status,
+                'description' => 'Invoice marked as cancelled!'
+            ]);
     }
 
     /**

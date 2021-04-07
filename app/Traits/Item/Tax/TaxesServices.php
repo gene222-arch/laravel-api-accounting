@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Traits\Item;
+namespace App\Traits\Item\Tax;
 
 use App\Models\Tax;
 use Illuminate\Database\Eloquent\Collection;
 
-trait TaxServices
+trait TaxesServices
 {
         
     /**

@@ -53,6 +53,7 @@ class InvoicesController extends Controller
             $request->orderNo,
             $request->date,
             $request->dueDate,
+            $request->recurring,
             $request->items,
             $request->paymentDetail
         );
@@ -164,6 +165,7 @@ class InvoicesController extends Controller
             $request->orderNo,
             $request->date,
             $request->dueDate,
+            $request->recurring,
             $request->items,
             $request->paymentDetail
         );

@@ -37,6 +37,7 @@ class RevenuesControllerTest extends TestCase
     public function user_can_create_revenue()
     {
         $data = [
+            'number' => 'INV-1002',
             'date' => '2021-05-03',
             'amount' => 120.00,
             'recurring' => 'No',
@@ -45,7 +46,7 @@ class RevenuesControllerTest extends TestCase
             'customerId' => 1,
             'incomeCategoryId' => 1,
             'paymentMethodId' => 1,
-            'invoiceId' => 1,
+            'currencyId' => 1,
         ];
 
         $response = $this->post(
@@ -62,6 +63,7 @@ class RevenuesControllerTest extends TestCase
     {
         $data = [
             'id' => 2,
+            'number' => 'INV-1002',
             'date' => '2021-05-03',
             'amount' => 140.00,
             'description' => '',
@@ -71,7 +73,7 @@ class RevenuesControllerTest extends TestCase
             'customerId' => 1,
             'incomeCategoryId' => 1,
             'paymentMethodId' => 1,
-            'invoiceId' => 1,
+            'currencyId' => 1,
         ];
 
         $response = $this->put(

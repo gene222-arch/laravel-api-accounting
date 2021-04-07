@@ -15,6 +15,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:revenues,id'],
+            'number' => ['nullable', 'string', 'unique:revenues,number'],
             'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
@@ -25,7 +26,39 @@ class UpdateRequest extends BaseRequest
             'customerId' => ['required', 'integer', 'exists:customers,id'],
             'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
             'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
-            'invoiceId' => ['required', 'integer', 'exists:invoices,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+        ];
+    }
+
+    /**
+     * Rename attributes
+     * 
+     * return $array
+     */
+    public function attributes()
+    {
+        return [
+            'accountId' => 'account id',
+            'customerId' => 'customer id',
+            'incomeCategoryId' => 'expense category id',
+            'paymentMethodId' => 'payment method id',
+            'currencyId' => 'currency id',
+        ];
+    }
+
+    /**
+     * Customize the error message
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'accountId.exists' => 'The selected :attribute does not exist.',
+            'customerId.exists' => 'The selected :attribute does not exist.',
+            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
+            'paymentMethodId.exists' => 'The selected :attribute does not exist.',
+            'currencyId.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

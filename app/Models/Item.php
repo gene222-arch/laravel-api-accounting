@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Traits\Item\ItemServices;
+use App\Traits\Item\Item\ItemsServices;
 use App\Traits\Upload\UploadServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +16,7 @@ class Item extends Model
     use HasFactory;
 
     /** Custom */
-    use ItemServices, UploadServices;
+    use ItemsServices, UploadServices;
 
     protected $fillable = [
         'category_id',

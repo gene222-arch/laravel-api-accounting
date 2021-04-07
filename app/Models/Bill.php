@@ -23,7 +23,8 @@ class Bill extends Model
         'order_no',
         'date',
         'due_date',
-        'status'
+        'status',
+        'recurring'
     ];
 
     /**
@@ -60,12 +61,12 @@ class Bill extends Model
     }
 
     /**
-     * Define many-to-one relationship with BillPayment class
+     * Define many-to-one relationship with BillHistory class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function payments(): HasMany
+    public function histories(): HasMany
     {
-        return $this->hasMany(BillPayment::class);
+        return $this->hasMany(BillHistory::class);
     }
 }

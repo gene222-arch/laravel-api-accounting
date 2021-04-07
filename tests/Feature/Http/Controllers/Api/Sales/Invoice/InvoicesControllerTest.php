@@ -38,15 +38,16 @@ class InvoicesControllerTest extends TestCase
     {
         $data = [
             'customerId' => 1,
-            'invoiceNumber' => 'INV-00003',
-            'orderNo' => 3,
+            'invoiceNumber' => 'INV-00002',
+            'orderNo' => 2,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
+            'recurring' => 'No',
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'discount_id' => null,
-                    'item' => 'Guitar',
+                    'item' => 'Dawk',
                     'price' => 5.00,
                     'quantity' => 1,
                     'amount' => 25.00,
@@ -56,10 +57,10 @@ class InvoicesControllerTest extends TestCase
             ],
             'paymentDetail' => [
                 'total_discounts' => 0.00,
-                'total_taxes' => 20.00,
-                'sub_total' => 45.00,
-                'total' => 65.00,
-                'amount_due' => 65.00
+                'total_taxes' => 40.00,
+                'sub_total' => 90.00,
+                'total' => 130.00,
+                'amount_due' => 130.00
             ]
         ];
 
@@ -96,14 +97,14 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_mark_invoice_as_paid()
     {
-        $id = 4;
+        $id = 2;
 
         $data = [
-            'accountId' => 2,
+            'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'incomeCategoryId' => 2,
-            'amount' => 20.00,
+            'amount' => 130.00,
         ];
 
         $response = $this->post(
@@ -120,12 +121,12 @@ class InvoicesControllerTest extends TestCase
     {
         $data = [
             'id' => 1,
-            'accountId' => 2,
+            'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'incomeCategoryId' => 2,
             'date' => '2021-05-06',
-            'amount' => 20.00,
+            'amount' => 80.00,
         ];
 
         $response = $this->post(
@@ -134,8 +135,6 @@ class InvoicesControllerTest extends TestCase
             $this->apiHeader()
         ); 
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -149,6 +148,7 @@ class InvoicesControllerTest extends TestCase
             'orderNo' => 2,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
+            'recurring' => 'No',
             'items' => [
                 [
                     'item_id' => 1,
