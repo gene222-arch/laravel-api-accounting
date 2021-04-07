@@ -213,15 +213,19 @@ trait InvoicesServices
                 $amount, $description, $reference
             ) 
             {
+                /** Invoice */
                 $invoice = Invoice::find($id);
 
+                /** Invoice payment detail */
                 $invoice->paymentDetail()
                     ->update([
                         'amount_due' => DB::raw("amount_due - ${amount}")
                     ]);
 
+                /** Invoice status */
                 $status = $this->updateStatus($invoice);
 
+                /** Invoice action histories */
                 $invoice
                     ->histories()
                     ->create([
@@ -229,6 +233,7 @@ trait InvoicesServices
                         'description' => "$amount Payment"
                     ]);
 
+                /** Revenue */
                 $this->createRevenue(
                     $invoice->invoice_number,
                     Carbon::now(),
@@ -295,15 +300,19 @@ trait InvoicesServices
                 $id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId,
                 $date, $amount, $description, $reference) 
             {
+                /** Invoice */
                 $invoice = Invoice::find($id);
 
+                /** Invoice payment detail */
                 $invoice->paymentDetail()
                     ->update([
                         'amount_due' => DB::raw('amount_due - ' . $amount)
                     ]);
 
+                /** Invoice status */
                 $status = $this->updateStatus($invoice, $invoice->paymentDetail->amount_due);
 
+                /** Invoice action histories */
                 $invoice
                     ->histories()
                     ->create([
@@ -311,6 +320,7 @@ trait InvoicesServices
                         'description' => "$amount Payment"
                     ]);
                 
+                /** Revenue */
                 $this->createRevenue(
                     $invoice->invoice_number,
                     $date,

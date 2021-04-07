@@ -17,7 +17,8 @@ trait HasTransaction
     {
         return Transaction::with([
             'account',
-            'incomeCategory'
+            'incomeCategory',
+            'expenseCategory'
         ])
             ->latest()
             ->get();
@@ -27,20 +28,36 @@ trait HasTransaction
      * Get a record of transaction via id
      *
      * @param  int $id
-     * @return Transaction|null
+     * @return \Illuminate\Database\Eloquent\Collection|null
      */
-    public function getTransactionById (int $id): Transaction|null
+    public function getTransactionById (int $id): Collection|null
     {
-        $transaction = Transaction::find($id);
+        return Transaction::where('id', $id)
+            ->with([
+                'account',
+                'incomeCategory',
+                'expenseCategory'
+            ])
+            ->latest()
+            ->get();
+    }
 
-        return !$transaction
-            ? null 
-            : $transaction->with([
-                    'account',
-                    'incomeCategory'
-                ])
-                    ->latest()
-                    ->get();
+    /**
+     * Get a record of transaction via account id
+     *
+     * @param  int $id
+     * @return \Illuminate\Database\Eloquent\Collection|null
+     */
+    public function getTransactionByAccountId (int $id): Collection|null
+    {
+        return Transaction::where('account_id', $id)
+            ->with([
+                'account',
+                'incomeCategory',
+                'expenseCategory'
+            ])
+            ->latest()
+            ->get();
     }
     
     /**

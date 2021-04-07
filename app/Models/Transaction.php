@@ -51,4 +51,14 @@ class Transaction extends Model
     {
         return $this->belongsTo(IncomeCategory::class);
     }
+
+    /**
+     * Define an inverse one-to-many relationship with ExpenseCategory class
+     *
+     * @return BelongsTo
+     */
+    public function expenseCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpenseCategory::class);
+    }
 }

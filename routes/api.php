@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsControlle
 use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
+use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,6 +66,8 @@ Route::middleware(['api'])->group(function ()
     });
 });
 
+
+
 /**
  * Access rights module
  */
@@ -77,12 +80,16 @@ Route::prefix('access-rights')->group(function ()
     Route::delete('/', [AccessRightsController::class, 'destroy']);
 });
 
+
+
+
 /**
  * * Banking
  * 
  *  - Accounts
  *  - Bank account transfers
  *  - Bank account reconciliations
+ *  - Transactions
  */
 Route::prefix('banking')->group(function () 
 {
@@ -121,7 +128,19 @@ Route::prefix('banking')->group(function ()
         Route::put('/', [BankAccountReconciliationsController::class, 'update']);
         Route::delete('/', [BankAccountReconciliationsController::class, 'destroy']);
     });
+
+    /**
+    * Transactions
+    */
+    Route::prefix('transactions')->group(function () 
+    {
+        Route::get('/', [TransactionsController::class, 'index']);
+        Route::get('/{id}', [TransactionsController::class, 'show']);
+        Route::get('/account/{id}', [TransactionsController::class, 'showByAccount']);
+    });
 });
+
+
 
 /**
  * * Item
@@ -129,6 +148,7 @@ Route::prefix('banking')->group(function ()
  *  - Items
  *  - Categories
  *  - Discounts
+ *  - Taxes
  */
 Route::prefix('item')->group(function () 
 {
@@ -157,7 +177,7 @@ Route::prefix('item')->group(function ()
     });
 
     /**
-     * Item
+     * Items
      */
     Route::prefix('items')->group(function () 
     {
@@ -170,7 +190,7 @@ Route::prefix('item')->group(function ()
     });
 
     /**
-     * Tax
+     * Taxes
      */
     Route::prefix('taxes')->group(function () 
     {
@@ -182,9 +202,13 @@ Route::prefix('item')->group(function ()
     });
 });
 
+
+
 /**
  * * Purchases
+ * 
  *  - Bills
+ *  - Purchases
  *  - Vendor
  */
 Route::prefix('purchases')->group(function () 
@@ -206,7 +230,7 @@ Route::prefix('purchases')->group(function ()
     });
 
     /**
-     * Purchase
+     * Purchases
      */
     Route::prefix('purchases')->group(function () 
     {
@@ -234,8 +258,8 @@ Route::prefix('purchases')->group(function ()
 /**
  * * Sales 
  * 
- *  - Invoices
  *  - Customers
+ *  - Invoices
  *  - Revenues
  */
 Route::prefix('sales')->group(function () 
@@ -281,10 +305,13 @@ Route::prefix('sales')->group(function ()
     });
 });
 
+
+
 /**
  * * Settings
  * 
- *  - Account
+ *  - Accounts
+ *  - Currencies
  *  - Payment methods
  *  - Income categories
  *  - Expense categories
@@ -293,7 +320,7 @@ Route::prefix('sales')->group(function ()
 Route::prefix('settings')->group(function () 
 {
     /**
-     * Account
+     * Accounts
      */
     Route::prefix('account')->group(function () 
     {
@@ -326,7 +353,7 @@ Route::prefix('settings')->group(function ()
     });
     
     /**
-     * Income Categories
+     * Expense Categories
      */
     Route::prefix('expense-categories')->group(function () 
     {
@@ -349,6 +376,8 @@ Route::prefix('settings')->group(function ()
         Route::delete('/', [PaymentMethodsController::class, 'destroy']);
     });
 });
+
+
 
 /**
  * * Inventory Management
@@ -384,7 +413,7 @@ Route::prefix('inventory-management')->group(function ()
     });
 
     /**
-     * Warehouse
+     * Warehouses
      */
     Route::prefix('warehouses')->group(function () 
     {
