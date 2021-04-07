@@ -84,6 +84,7 @@ class BillsControllerTest extends TestCase
             'accountId' => 2,
             'currencyId' => 1,
             'paymentMethodId' => 1,
+            'expenseCategoryId' => 1,
             'date' => '2021-05-06',
             'amount' => 20.00,
         ];
@@ -126,6 +127,7 @@ class BillsControllerTest extends TestCase
             'accountId' => 2,
             'currencyId' => 1,
             'paymentMethodId' => 1,
+            'expenseCategoryId' => 1,
             'date' => '2021-05-06',
             'amount' => 20.00,
         ];

@@ -84,20 +84,24 @@ trait BillsServices
     /**
      * Mark a bill record as paid via id
      *
-     * @param integer $id
+     * @param  integer $id
      * @param  integer $accountId
      * @param  integer $currencyId
      * @param  integer $paymentMethodId
+     * @param  integer $expenseCategoryId
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use ($id, $accountId, $currencyId, $paymentMethodId, $date, $amount, $description, $reference) 
+            DB::transaction(function () use (
+                $id, $accountId, $currencyId, $paymentMethodId, $expenseCategoryId, 
+                $date, $amount, $description, $reference
+            ) 
             {
                 $bill = Bill::find($id);
 
@@ -112,6 +116,7 @@ trait BillsServices
                         'account_id' => $accountId,
                         'currency_id' => $currencyId,
                         'payment_method_id' => $paymentMethodId,
+                        'expense_category_id' => $expenseCategoryId,
                         'date' => $date,
                         'amount' => $amount,
                         'description' => $description,
@@ -121,6 +126,58 @@ trait BillsServices
                 $this->updateStatus($bill);
                 
                 /** Transactions */
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
+    }
+
+    /**
+     * Create a new record of bill payment
+     *
+     * @param  integer $id
+     * @param  integer $accountId
+     * @param  integer $currencyId
+     * @param  integer $paymentMethodId
+     * @param  integer $expenseCategoryId
+     * @param  string $date
+     * @param  float $amount
+     * @param  string|null $description
+     * @param  string|null $reference
+     * @return mixed
+     */
+    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    {
+        try {
+            DB::transaction(function () use (
+                $id, $accountId, $currencyId, $paymentMethodId, $expenseCategoryId, 
+
+                $date, $amount, $description, $reference) 
+            {
+                $bill = Bill::find($id);
+
+                $bill->paymentDetail()
+                    ->update([
+                        'amount_due' => DB::raw('amount_due - ' . $amount)
+                    ]);
+                        
+                $bill
+                    ->payments()
+                    ->create([
+                        'account_id' => $accountId,
+                        'currency_id' => $currencyId,
+                        'payment_method_id' => $paymentMethodId,
+                        'expense_category_id' => $expenseCategoryId,
+                        'date' => $date,
+                        'amount' => $amount,
+                        'description' => $description,
+                        'reference' => $reference
+                    ]);
+
+                $this->updateStatus($bill, $bill->paymentDetail->amount_due);
+                
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -207,55 +264,6 @@ trait BillsServices
             $footer
         ))
         ->delay(now()->addSeconds(5));
-    }
-
-    /**
-     * Create a new record of bill payment
-     *
-     * @param  integer $id
-     * @param  integer $accountId
-     * @param  integer $currencyId
-     * @param  integer $paymentMethodId
-     * @param  string $date
-     * @param  float $amount
-     * @param  string|null $description
-     * @param  string|null $reference
-     * @return mixed
-     */
-    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
-    {
-        try {
-            DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, 
-                $date, $amount, $description, $reference) 
-            {
-                $bill = Bill::find($id);
-
-                $bill->paymentDetail()
-                    ->update([
-                        'amount_due' => DB::raw('amount_due - ' . $amount)
-                    ]);
-                        
-                $bill
-                    ->payments()
-                    ->create([
-                        'account_id' => $accountId,
-                        'currency_id' => $currencyId,
-                        'payment_method_id' => $paymentMethodId,
-                        'date' => $date,
-                        'amount' => $amount,
-                        'description' => $description,
-                        'reference' => $reference
-                    ]);
-
-                $this->updateStatus($bill, $bill->paymentDetail->amount_due);
-                
-            });
-        } catch (\Throwable $th) {
-            return $th->getMessage();
-        }
-
-        return true;
     }
 
     /**
