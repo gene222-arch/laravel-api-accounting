@@ -18,8 +18,10 @@ use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Purchases\Vendor\VendorsController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
+use App\Http\Controllers\Api\Settings\Company\CompaniesController;
 use App\Http\Controllers\Api\Purchases\Purchase\PurchasesController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
+use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
@@ -28,7 +30,6 @@ use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsControlle
 use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
-use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -311,6 +312,7 @@ Route::prefix('sales')->group(function ()
  * * Settings
  * 
  *  - Accounts
+ *  - Company
  *  - Currencies
  *  - Payment methods
  *  - Income categories
@@ -326,6 +328,19 @@ Route::prefix('settings')->group(function ()
     {
         Route::post('/verify', [AccountController::class, 'verify']);
         Route::put('/', [AccountController::class, 'update']);
+    });
+
+    /**
+     * Company
+     */
+    /**
+    * Route
+    */
+    Route::prefix('company')->group(function () 
+    {
+        Route::get('/{id}', [CompaniesController::class, 'show']);
+        Route::post('/', [CompaniesController::class, 'store']);
+        Route::put('/', [CompaniesController::class, 'update']);
     });
 
     /**
