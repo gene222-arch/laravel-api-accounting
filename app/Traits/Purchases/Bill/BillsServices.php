@@ -8,6 +8,7 @@ use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueBillNotification;
 use App\Traits\Banking\Transaction\HasTransaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
@@ -95,12 +96,12 @@ trait BillsServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
                 $id, $accountId, $currencyId, $paymentMethodId, $expenseCategoryId, 
-                $date, $amount, $description, $reference
+                $amount, $description, $reference
             ) 
             {
                 $bill = Bill::find($id);
@@ -117,7 +118,7 @@ trait BillsServices
                         'currency_id' => $currencyId,
                         'payment_method_id' => $paymentMethodId,
                         'expense_category_id' => $expenseCategoryId,
-                        'date' => $date,
+                        'date' => Carbon::now(),
                         'amount' => $amount,
                         'description' => $description,
                         'reference' => $reference
@@ -235,7 +236,7 @@ trait BillsServices
      */
     public function updateStatus (Bill $bill, float $amountDue = 0, string $status = null): bool
     {
-        $status ?? !$amountDue ? 'Paid' : 'Partially Paid';
+        $status ??= !$amountDue ? 'Paid' : 'Partially Paid';
 
         return $bill->update([
             'status' => $status

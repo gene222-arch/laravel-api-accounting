@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
 use App\Models\Stock;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait InvoicesServices
@@ -172,10 +173,13 @@ trait InvoicesServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use ($id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, $date, $amount, $description, $reference) 
+            DB::transaction(function () use (
+                $id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, 
+                $amount, $description, $reference
+            ) 
             {
                 $invoice = Invoice::find($id);
 
@@ -191,7 +195,7 @@ trait InvoicesServices
                         'currency_id' => $currencyId,
                         'payment_method_id' => $paymentMethodId,
                         'income_category_id' => $incomeCategoryId,
-                        'date' => $date,
+                        'date' => Carbon::now(),
                         'amount' => $amount,
                         'description' => $description,
                         'reference' => $reference

@@ -19,7 +19,6 @@ class MarkAsPaidRequest extends BaseRequest
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
             'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
-            'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'reference' => ['nullable', 'string']

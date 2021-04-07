@@ -74,18 +74,16 @@ class BillsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_mark_bill_as_paid()
     {
         $id = 1;
 
         $data = [
-            'id' => 1,
             'accountId' => 2,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'expenseCategoryId' => 1,
-            'date' => '2021-05-06',
             'amount' => 20.00,
         ];
 

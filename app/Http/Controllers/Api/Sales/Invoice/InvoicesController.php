@@ -114,7 +114,6 @@ class InvoicesController extends Controller
             $request->currencyId,
             $request->paymentMethodId,
             $request->incomeCategoryId,
-            $request->date,
             $request->amount,
             $request->description,
             $request->reference

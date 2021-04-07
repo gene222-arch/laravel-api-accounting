@@ -78,7 +78,6 @@ class BillsController extends Controller
             $request->currencyId,
             $request->paymentMethodId,
             $request->expenseCategoryId,
-            $request->date,
             $request->amount,
             $request->description,
             $request->reference
