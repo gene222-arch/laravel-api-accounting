@@ -40,8 +40,8 @@ class BillsControllerTest extends TestCase
     {
         $data = [
             'vendorId' => 1,
-            'billNumber' => 'BILL-00002',
-            'orderNo' => 2,
+            'billNumber' => 'BILL-00005',
+            'orderNo' => 5,
             'date' => '2021-05-03',
             'dueDate' => '2021-06-03',
             'recurring' => 'No',
@@ -78,7 +78,7 @@ class BillsControllerTest extends TestCase
     /** test */
     public function user_can_mark_bill_as_paid()
     {
-        $id = 2;
+        $id = 5;
 
         $data = [
             'accountId' => 1,
@@ -122,13 +122,13 @@ class BillsControllerTest extends TestCase
     public function user_can_create_bill_payment()
     {
         $data = [
-            'id' => 1,
+            'id' => 3,
             'accountId' => 1,
             'currencyId' => 1,
             'paymentMethodId' => 1,
             'expenseCategoryId' => 1,
             'date' => '2021-05-06',
-            'amount' => 45.00,
+            'amount' => 20.00,
         ];
 
         $response = $this->post(

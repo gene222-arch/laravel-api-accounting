@@ -60,7 +60,7 @@ trait HasTransaction
      * @param  string $contact
      * @return Transaction
      */
-    public function createTransaction (string $modelType, int $modelId, int $accountId, int $incomeCategoryId, int $expenseCategoryId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
+    public function createTransaction (string $modelType, int $modelId, int $accountId, ?int $incomeCategoryId, ?int $expenseCategoryId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
     {
         return Transaction::create([
             'model_type' => $modelType,

@@ -7,6 +7,8 @@ use App\Models\Stock;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueBillNotification;
+use App\Models\Account;
+use App\Models\ExpenseCategory;
 use App\Traits\Banking\Transaction\HasTransaction;
 use App\Traits\Purchases\Purchase\PurchasesServices;
 use Carbon\Carbon;
@@ -132,7 +134,7 @@ trait BillsServices
         
 
                 $this->createPurchase(
-                    $bill->number,
+                    $bill->bill_number,
                     $accountId,
                     $bill->vendor_id,
                     $expenseCategoryId,
@@ -145,6 +147,28 @@ trait BillsServices
                     $reference,
                     null
                 );
+
+                /** Transactions */
+                $this->createTransaction(
+                    get_class($bill),
+                    $id,
+                    $accountId,
+                    null,
+                    $expenseCategoryId,
+                    ExpenseCategory::find($expenseCategoryId)->name,
+                    'Expense',
+                    $amount,
+                    0.00,
+                    $amount,
+                    $description,
+                    Vendor::find($bill->vendor_id)->name
+                );
+
+                /** Account */
+                Account::where('id', $accountId)
+                    ->update([
+                        'balance' => DB::raw("balance - ${amount}")
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -175,15 +199,19 @@ trait BillsServices
 
                 $date, $amount, $description, $reference) 
             {
+                /** Bill */
                 $bill = Bill::find($id);
 
+                /** Bill payment detail */
                 $bill->paymentDetail()
                     ->update([
-                        'amount_due' => DB::raw('amount_due - ' . $amount)
+                        'amount_due' => DB::raw("amount_due - ${amount}")
                     ]);
 
+                /** Bill status */
                 $status = $this->updateStatus($bill, $bill->paymentDetail->amount_due);    
 
+                /** Bill histories */
                 $bill
                     ->histories()
                     ->create([
@@ -191,8 +219,9 @@ trait BillsServices
                         'description' => "${amount} Payment"
                     ]);
 
+                /** Purchases */
                 $this->createPurchase(
-                    $bill->number,
+                    $bill->bill_number,
                     $accountId,
                     $bill->vendor_id,
                     $expenseCategoryId,
@@ -206,6 +235,27 @@ trait BillsServices
                     null
                 );
                 
+                /** Transactions */
+                $this->createTransaction(
+                    get_class($bill),
+                    $id,
+                    $accountId,
+                    null,
+                    $expenseCategoryId,
+                    ExpenseCategory::find($expenseCategoryId)->name,
+                    'Expense',
+                    $amount,
+                    0.00,
+                    $amount,
+                    $description,
+                    Vendor::find($bill->vendor_id)->name
+                );
+
+                /** Account */
+                Account::where('id', $accountId)
+                    ->update([
+                        'balance' => DB::raw("balance - ${amount}")
+                    ]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

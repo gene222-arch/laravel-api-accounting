@@ -29,7 +29,20 @@ class CreateTransactionsTable extends Migration
             $table->string('contact')->nullable();
             $table->timestamps();
 
+            $table->foreign('account_id')
+                ->references('id')
+                ->on('accounts')
+                ->cascadeOnDelete();
 
+            $table->foreign('income_category_id')
+                ->references('id')
+                ->on('income_categories')
+                ->cascadeOnDelete();
+
+            $table->foreign('expense_category_id')
+                ->references('id')
+                ->on('expense_categories')
+                ->cascadeOnDelete();
         });
     }
 
