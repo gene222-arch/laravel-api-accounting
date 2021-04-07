@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Settings\Company\CompaniesController;
 use App\Http\Controllers\Api\Purchases\Purchase\PurchasesController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
+use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
@@ -138,6 +139,27 @@ Route::prefix('banking')->group(function ()
         Route::get('/', [TransactionsController::class, 'index']);
         Route::get('/{id}', [TransactionsController::class, 'show']);
         Route::get('/account/{id}', [TransactionsController::class, 'showByAccount']);
+    });
+});
+
+
+
+/**
+ * * Human Resources
+ *  - Employees
+ */
+Route::prefix('human-resources')->group(function () 
+{
+    /**
+    * Employees
+    */
+    Route::prefix('employees')->group(function () 
+    {
+        Route::get('/', [EmployeesController::class, 'index']);
+        Route::get('/{id}', [EmployeesController::class, 'show']);
+        Route::post('/', [EmployeesController::class, 'store']);
+        Route::put('/', [EmployeesController::class, 'update']);
+        Route::delete('/', [EmployeesController::class, 'destroy']);
     });
 });
 
@@ -333,9 +355,6 @@ Route::prefix('settings')->group(function ()
     /**
      * Company
      */
-    /**
-    * Route
-    */
     Route::prefix('company')->group(function () 
     {
         Route::get('/{id}', [CompaniesController::class, 'show']);
