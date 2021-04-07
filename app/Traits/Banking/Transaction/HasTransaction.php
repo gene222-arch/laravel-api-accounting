@@ -5,7 +5,7 @@ namespace App\Traits\Banking\Transaction;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Collection;
 
-trait TransactionsServices
+trait HasTransaction
 {
     
     /**
@@ -17,7 +17,7 @@ trait TransactionsServices
     {
         return Transaction::with([
             'account',
-            'category'
+            'incomeCategory'
         ])
             ->latest()
             ->get();
@@ -37,7 +37,7 @@ trait TransactionsServices
             ? null 
             : $transaction->with([
                     'account',
-                    'category'
+                    'incomeCategory'
                 ])
                     ->latest()
                     ->get();
@@ -46,9 +46,12 @@ trait TransactionsServices
     /**
      * Create a new record of transaction
      *
-     * @param  integer $paymentTransactionId
+     * @param  string $modelType
+     * @param  integer $modelId
      * @param  integer $accountId
-     * @param  integer $categoryId
+     * @param  integer $incomeCategoryId
+     * @param  integer $expenseCategoryId
+     * @param  string $category
      * @param  string $type
      * @param  float $amount
      * @param  float $deposit
@@ -57,12 +60,15 @@ trait TransactionsServices
      * @param  string $contact
      * @return Transaction
      */
-    public function createTransaction (int $paymentTransactionId, int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
+    public function createTransaction (string $modelType, int $modelId, int $accountId, int $incomeCategoryId, int $expenseCategoryId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
     {
         return Transaction::create([
-            'payment_transaction_id' => $paymentTransactionId,
+            'model_type' => $modelType,
+            'model_id' => $modelId,
             'account_id' => $accountId,
-            'category_id' => $categoryId,
+            'income_category_id' => $incomeCategoryId,
+            'expense_category_id' => $expenseCategoryId,
+            'category' => $category,
             'type' => $type,
             'amount' => $amount,
             'deposit' => $deposit,
@@ -76,9 +82,12 @@ trait TransactionsServices
      * Update an existing record of transaction
      *
      * @param  integer $id 
-     * @param  integer $paymentTransactionId
+     * @param  string $modelType
+     * @param  integer $modelId
      * @param  integer $accountId
-     * @param  integer $categoryId
+     * @param  integer $incomeCategoryId
+     * @param  integer $expenseCategoryId
+     * @param  string $category
      * @param  string $type
      * @param  float $amount
      * @param  float $deposit
@@ -87,13 +96,16 @@ trait TransactionsServices
      * @param  string $contact
      * @return boolean
      */
-    public function updateTransaction (int $id, int $paymentTransactionId, int $accountId, int $categoryId, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
+    public function updateTransaction (int $id, string $modelType, int $modelId, int $accountId, int $incomeCategoryId, int $expenseCategoryId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
     {
         return Transaction::find($id)
             ->update([
-                'payment_transaction_id' => $paymentTransactionId,
+                'model_type' => $modelType,
+                'model_id' => $modelId,
                 'account_id' => $accountId,
-                'category_id' => $categoryId,
+                'income_category_id' => $incomeCategoryId,
+                'expense_category_id' => $expenseCategoryId,
+                'category' => $category,
                 'type' => $type,
                 'amount' => $amount,
                 'deposit' => $deposit,

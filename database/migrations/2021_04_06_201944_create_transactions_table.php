@@ -15,9 +15,12 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('payment_transaction_id');
+            $table->string('model_type');
+            $table->unsignedBigInteger('model_id');
             $table->foreignId('account_id');
-            $table->foreignId('category_id')->nullable();
+            $table->foreignId('income_category_id')->nullable();
+            $table->foreignId('expense_category_id')->nullable();
+            $table->string('category');
             $table->string('type');
             $table->unsignedDecimal('amount', 10, 2);
             $table->unsignedDecimal('deposit', 10, 2)->nullable();
@@ -25,6 +28,8 @@ class CreateTransactionsTable extends Migration
             $table->text('description')->nullable();
             $table->string('contact')->nullable();
             $table->timestamps();
+
+
         });
     }
 

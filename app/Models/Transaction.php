@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Models\Account;
-use App\Models\Category;
+use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\Banking\Transaction\TransactionsServices;
+use App\Traits\Banking\Transaction\HasTransaction;
 
 class Transaction extends Model
 {
@@ -15,18 +15,21 @@ class Transaction extends Model
     use HasFactory;
 
     /** Custom */
-    use TransactionsServices;
+    use HasTransaction;
     
     protected $fillable = [
-        'payment_transaction_id',
+        'model_type',
+        'model_id',
         'account_id',
-        'category_id',
+        'income_category_id',
+        'expense_category_id',
+        'category',
         'type',
         'amount',
         'deposit',
         'withdrawal',
         'description',
-        'contact',
+        'contact'
     ];
 
     /**
@@ -40,12 +43,12 @@ class Transaction extends Model
     }
 
     /**
-     * Define an inverse one-to-many relationship with Category class
+     * Define an inverse one-to-many relationship with IncomeCategory class
      *
      * @return BelongsTo
      */
-    public function category(): BelongsTo
+    public function incomeCategory(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(IncomeCategory::class);
     }
 }

@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Traits\Purchase\Bill;
+namespace App\Traits\Purchases\Bill;
 
 use App\Models\Bill;
 use App\Models\Stock;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueBillNotification;
+use App\Traits\Banking\Transaction\HasTransaction;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
 {
+    use HasTransaction;
     
     /**
      * Get latest records of Bills
@@ -118,6 +120,7 @@ trait BillsServices
 
                 $this->updateStatus($bill);
                 
+                /** Transactions */
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
