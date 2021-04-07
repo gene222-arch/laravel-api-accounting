@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Purchases\Vendor\VendorsController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
+use App\Http\Controllers\Api\Purchases\Purchase\PurchasesController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
@@ -202,6 +203,18 @@ Route::prefix('purchases')->group(function ()
         Route::put('/', [BillsController::class, 'update']);
         Route::put('/{bill}', [BillsController::class, 'cancel']);
         Route::delete('/', [BillsController::class, 'destroy']);
+    });
+
+    /**
+     * Purchase
+     */
+    Route::prefix('purchases')->group(function () 
+    {
+        Route::get('/', [PurchasesController::class, 'index']);
+        Route::get('/{id}', [PurchasesController::class, 'show']);
+        Route::post('/', [PurchasesController::class, 'store']);
+        Route::put('/', [PurchasesController::class, 'update']);
+        Route::delete('/', [PurchasesController::class, 'destroy']);
     });
 
     /**
