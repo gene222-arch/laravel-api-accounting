@@ -85,6 +85,7 @@ class CreateBillsTable extends Migration
             $table->foreignId('account_id');
             $table->foreignId('currency_id');
             $table->foreignId('payment_method_id');
+            $table->foreignId('income_category_id');
             $table->timestamp('date');
             $table->unsignedDecimal('amount', 10, 2);
             $table->text('description')->nullable();
@@ -109,6 +110,11 @@ class CreateBillsTable extends Migration
             $table->foreign('payment_method_id')
                 ->references('id')
                 ->on('payment_methods')
+                ->cascadeOnDelete();
+
+            $table->foreign('income_category_id')
+                ->references('id')
+                ->on('income_categories')
                 ->cascadeOnDelete();
         });
     }

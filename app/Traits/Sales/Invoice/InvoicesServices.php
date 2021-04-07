@@ -161,20 +161,21 @@ trait InvoicesServices
     /**
      * Mark an invoice record as paid via id
      *
-     * @param integer $id
+     * @param  integer $id
      * @param  integer $accountId
      * @param  integer $currencyId
      * @param  integer $paymentMethodId
+     * @param  integer $incomeCategoryId
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use ($id, $accountId, $currencyId, $paymentMethodId, $date, $amount, $description, $reference) 
+            DB::transaction(function () use ($id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, $date, $amount, $description, $reference) 
             {
                 $invoice = Invoice::find($id);
 
@@ -189,6 +190,7 @@ trait InvoicesServices
                         'account_id' => $accountId,
                         'currency_id' => $currencyId,
                         'payment_method_id' => $paymentMethodId,
+                        'income_category_id' => $incomeCategoryId,
                         'date' => $date,
                         'amount' => $amount,
                         'description' => $description,
@@ -212,17 +214,18 @@ trait InvoicesServices
      * @param  integer $accountId
      * @param  integer $currencyId
      * @param  integer $paymentMethodId
+     * @param  integer $incomeCategoryId
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, 
+                $id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId,
                 $date, $amount, $description, $reference) 
             {
                 $invoice = Invoice::find($id);
@@ -238,6 +241,7 @@ trait InvoicesServices
                         'account_id' => $accountId,
                         'currency_id' => $currencyId,
                         'payment_method_id' => $paymentMethodId,
+                        'income_category_id' => $incomeCategoryId,
                         'date' => $date,
                         'amount' => $amount,
                         'description' => $description,

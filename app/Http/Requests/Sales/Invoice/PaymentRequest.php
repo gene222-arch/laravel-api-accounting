@@ -18,6 +18,7 @@ class PaymentRequest extends BaseRequest
             'accountId' => ['required', 'integer', 'exists:accounts,id'],
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
+            'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
             'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
@@ -25,15 +26,34 @@ class PaymentRequest extends BaseRequest
         ];
     }
 
+
     /**
      * Rename attributes
      * 
-     * @return array
+     * return $array
      */
     public function attributes()
     {
         return [
-            'paymentMethod' => 'payment method id',
+            'accountId' => 'account id',
+            'currencyId' => 'currency id',
+            'paymentMethodId' => 'payment method id',
+            'incomeCategoryId' => 'income category id',
+        ];
+    }
+
+    /**
+     * Customize the error message
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'accountId.exists' => 'The selected :attribute does not exist.',
+            'currencyId.exists' => 'The selected :attribute does not exist.',
+            'paymentMethodId.exists' => 'The selected :attribute does not exist.',
+            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

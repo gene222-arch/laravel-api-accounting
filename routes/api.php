@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
+use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 
@@ -273,6 +274,7 @@ Route::prefix('sales')->group(function ()
  *  - Account
  *  - Payment methods
  *  - Income categories
+ *  - Expense categories
  *  - Payment methods
  */
 Route::prefix('settings')->group(function () 
@@ -308,6 +310,18 @@ Route::prefix('settings')->group(function ()
         Route::post('/', [IncomeCategoriesController::class, 'store']);
         Route::put('/', [IncomeCategoriesController::class, 'update']);
         Route::delete('/', [IncomeCategoriesController::class, 'destroy']);
+    });
+    
+    /**
+     * Income Categories
+     */
+    Route::prefix('expense-categories')->group(function () 
+    {
+        Route::get('/', [ExpenseCategoriesController::class, 'index']);
+        Route::get('/{id}', [ExpenseCategoriesController::class, 'show']);
+        Route::post('/', [ExpenseCategoriesController::class, 'store']);
+        Route::put('/', [ExpenseCategoriesController::class, 'update']);
+        Route::delete('/', [ExpenseCategoriesController::class, 'destroy']);
     });
 
     /**

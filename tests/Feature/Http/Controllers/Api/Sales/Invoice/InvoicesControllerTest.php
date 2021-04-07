@@ -102,6 +102,7 @@ class InvoicesControllerTest extends TestCase
             'accountId' => 2,
             'currencyId' => 1,
             'paymentMethodId' => 1,
+            'incomeCategoryId' => 2,
             'date' => '2021-05-06',
             'amount' => 20.00,
         ];
@@ -123,6 +124,7 @@ class InvoicesControllerTest extends TestCase
             'accountId' => 2,
             'currencyId' => 1,
             'paymentMethodId' => 1,
+            'incomeCategoryId' => 2,
             'date' => '2021-05-06',
             'amount' => 20.00,
         ];

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Settings\IncomeCategory;
+namespace App\Http\Requests\Settings\ExpenseCategory;
 
 use App\Http\Requests\BaseRequest;
 
@@ -14,8 +14,8 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'unique:income_categories,name'],
-            'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code']
+            'name' => ['required', 'string', 'unique:expense_categories,name'],
+            'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:expense_categories,hex_code']
         ];
     }
 

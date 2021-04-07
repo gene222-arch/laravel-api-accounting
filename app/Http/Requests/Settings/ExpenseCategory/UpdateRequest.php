@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Settings\IncomeCategory;
+namespace App\Http\Requests\Settings\ExpenseCategory;
 
 use App\Http\Requests\BaseRequest;
 
-class StoreRequest extends BaseRequest
+class UpdateRequest extends BaseRequest
 {
-    /**
+   /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -14,8 +14,9 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string', 'unique:income_categories,name'],
-            'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code']
+            'id' => ['required', 'integer', 'exists:expense_categories,id'],
+            'name' => ['required', 'string', 'unique:expense_categories,name,' . $this->id],
+            'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:expense_categories,hex_code,' . $this->id]
         ];
     }
 

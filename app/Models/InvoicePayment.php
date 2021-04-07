@@ -17,6 +17,7 @@ class InvoicePayment extends Model
         'account_id',
         'currency_id',
         'payment_method_id',
+        'income_category_id',
         'date',
         'amount',
         'description',

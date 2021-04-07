@@ -19,4 +19,16 @@ class UpdateRequest extends BaseRequest
             'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code,' . $this->id]
         ];
     }
+
+    /**
+     * Rename attributes
+     * 
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'hexCode' => 'hex code'
+        ];
+    }
 }

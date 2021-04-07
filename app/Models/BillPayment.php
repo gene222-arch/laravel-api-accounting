@@ -14,6 +14,7 @@ class BillPayment extends Model
         'account_id',
         'currency_id',
         'payment_method_id',
+        'expense_category_id',
         'date',
         'amount',
         'description',
