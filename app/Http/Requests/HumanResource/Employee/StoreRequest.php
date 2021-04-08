@@ -14,19 +14,21 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:employees,email'],
+            'firstName' => ['required', 'string'],
+            'lastName' => ['required', 'string'],
+            'email' => ['required', 'email', 'unique:employees,email', 'unique:users,email'],
             'birthDate' => ['required', 'date'],
             'gender' => ['required', 'string', 'in:Male,Female'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:employees,phone'],
             'address' => ['required', 'string'],
-            'roleId' => ['required', 'integeer', 'exists:roles,id'],
-            'enabled' => ['required'],
-            'currencyId' => ['required', 'integeer', 'exists:currencies,id'],
+            'roleId' => ['required', 'integer', 'exists:roles,id'],
+            'enabled' => ['required', 'boolean'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'amount' => ['required', 'numeric', 'min:0'],
-            'taxNumber' => ['required', 'string', 'min:9', 'max:11', 'unique:employees,tax_number'],
-            'bankAccountNumber' => ['required', 'string', 'min:10', 'max:30', 'unique:employees,bank_account_number'],
-            'hiredAt' => ['required', 'date']
+            'taxNumber' => ['required', 'string', 'min:9', 'max:11', 'unique:salaries,tax_number'],
+            'bankAccountNumber' => ['required', 'string', 'min:10', 'max:30', 'unique:salaries,bank_account_number'],
+            'hiredAt' => ['required', 'date'],
+            'createUser' => ['required', 'boolean'],
         ];
     }
     

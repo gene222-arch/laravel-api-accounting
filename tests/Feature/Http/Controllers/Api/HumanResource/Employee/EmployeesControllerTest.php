@@ -17,8 +17,6 @@ class EmployeesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -32,8 +30,6 @@ class EmployeesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -41,19 +37,21 @@ class EmployeesControllerTest extends TestCase
     public function user_can_create_employee()
     {
         $data = [
-            'name' => 'Gene Phillip Artista',
-            'email' => 'genephillip222@gmail.com',
+            'firstName' => 'John Phillip',
+            'lastName' => 'Artista',
+            'email' => 'john@gmail.com',
             'birthDate' => '1998-12-22',
             'gender' => 'Male',
-            'phone' => '111111111',
+            'phone' => '11111111112',
             'address' => 'Laguna',
-            'roleId' => 1,
+            'roleId' => 2,
             'enabled' => true,
             'currencyId' => 1,
             'amount' => 10000,
-            'taxNumber' => '111111111',
-            'bankAccountNumber' => '111111111111',
-            'hiredAt' => '2021-05-05'
+            'taxNumber' => '111111121',
+            'bankAccountNumber' => '11111111112',
+            'hiredAt' => '2021-05-05',
+            'createUser' => true,
         ];
 
         $response = $this->post(
@@ -62,29 +60,29 @@ class EmployeesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_update_employee()
     {
         $data = [
-            'id' => 1,
-            'name' => 'Gene Phillip Artista',
-            'email' => 'genephillip222@gmail.com',
+            'id' => 3,
+            'firstName' => 'Gene Phillip Artista',
+            'lastName' => 'Artista',
+            'email' => 'newemail@gmail.com',
             'birthDate' => '1998-12-22',
             'gender' => 'Male',
-            'phone' => '111111111',
+            'phone' => '33333333333',
             'address' => 'Laguna',
             'roleId' => 1,
             'enabled' => true,
             'currencyId' => 1,
             'amount' => 10000,
-            'taxNumber' => '111111111',
-            'bankAccountNumber' => '111111111111',
-            'hiredAt' => '2021-05-05'
+            'taxNumber' => '333333333',
+            'bankAccountNumber' => '33333333333',
+            'hiredAt' => '2021-05-05',
+            'updateUser' => true
         ];
 
         $response = $this->put(
@@ -93,8 +91,6 @@ class EmployeesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 

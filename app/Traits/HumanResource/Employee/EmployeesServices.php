@@ -3,6 +3,7 @@
 namespace App\Traits\HumanResource\Employee;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -37,7 +38,8 @@ trait EmployeesServices
     /**
      * Create a new record of employee
      *
-     * @param  string $name
+     * @param  string $firstName
+     * @param  string $lastName
      * @param  string $email
      * @param  string $birthDate
      * @param  string $gender
@@ -50,18 +52,29 @@ trait EmployeesServices
      * @param  string $taxNumber
      * @param  string $bankAccountNumber
      * @param  string $hiredAt
+     * @param  bool $createUser
      * @return mixed
      */
-    public function createEmployee (string $name, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt): mixed
+    public function createEmployee (string $firstName, string $lastName, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt, bool $createUser = false): mixed
     {
         try {
             DB::transaction(function () use (
-                $name, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
-                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt
+                $firstName, $lastName, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
+                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt, $createUser
             )
             {
+                $createUser && (
+                    (new User())->createUserWithRoles(
+                        $firstName,
+                        $lastName,
+                        $email,
+                        $firstName,
+                        $roleId
+                ));
+
                 $employee = Employee::create([
-                    'name' => $name,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
                     'email' => $email,
                     'birth_date' => $birthDate,
                     'gender' => $gender,
@@ -77,8 +90,6 @@ trait EmployeesServices
                     'bank_account_number' => $bankAccountNumber,
                     'hired_at' => $hiredAt
                 ]);
-
-                $employee->assignRole($roleId);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -91,7 +102,8 @@ trait EmployeesServices
      * Update an existing record of employee
      *
      * @param  integer $id
-     * @param  string $name
+     * @param  string $firstName
+     * @param  string $lastName
      * @param  string $email
      * @param  string $birthDate
      * @param  string $gender
@@ -104,20 +116,32 @@ trait EmployeesServices
      * @param  string $taxNumber
      * @param  string $bankAccountNumber
      * @param  string $hiredAt
+     * @param  bool $updateUser
      * @return mixed
      */
-    public function updateEmployee (int $id, string $name, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt): mixed
+    public function updateEmployee (int $id, string $firstName, string $lastName, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt, bool $updateUser): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $name, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
-                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt
+                $id, $firstName, $lastName, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
+                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt, $updateUser
             )
             {
                 $employee = Employee::find($id);
 
+                $updateUser && (
+                    (new User())->updateUserWithRolesByEmail(
+                        $employee->email,
+                        $firstName,
+                        $lastName,
+                        $email,
+                        null,
+                        $roleId
+                ));
+
                 $employee->update([
-                    'name' => $name,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
                     'email' => $email,
                     'birth_date' => $birthDate,
                     'gender' => $gender,
@@ -133,8 +157,6 @@ trait EmployeesServices
                     'bank_account_number' => $bankAccountNumber,
                     'hired_at' => $hiredAt
                 ]);
-
-                $employee->syncRole($roleId);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

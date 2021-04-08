@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Jobs\QueuePasswordResetNotification;
+use App\Traits\Auth\User\UsersServices;
 use App\Traits\Settings\AccountServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,7 +18,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens, HasRoles;
 
     /** Custom */
-    use AccountServices;
+    use AccountServices, UsersServices;
 
 
     protected $guard_name = 'api';

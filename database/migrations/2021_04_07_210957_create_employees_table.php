@@ -15,7 +15,8 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email');
             $table->timestamp('birth_date');
             $table->char('gender', 6);
@@ -38,6 +39,7 @@ class CreateEmployeesTable extends Migration
             $table->char('tax_number', 11);
             $table->string('bank_account_number');
             $table->timestamp('hired_at');
+            $table->timestamps();
 
             $table->foreign('employee_id')
                 ->references('id')
@@ -58,7 +60,7 @@ class CreateEmployeesTable extends Migration
      */ 
     public function down()
     {
-        Schema::dropIfExists('salary');
+        Schema::dropIfExists('salaries');
         Schema::dropIfExists('employees');
     }
 }

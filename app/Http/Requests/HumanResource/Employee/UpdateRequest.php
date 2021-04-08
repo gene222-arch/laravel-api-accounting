@@ -14,20 +14,22 @@ class UpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'id' => ['required', 'integeer', 'exists:employees,id'],
-            'name' => ['required', 'string'],
+            'id' => ['required', 'integer', 'exists:employees,id'],
+            'firstName' => ['required', 'string'],
+            'lastName' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:employees,email,' . $this->id],
             'birthDate' => ['required', 'date'],
             'gender' => ['required', 'string', 'in:Male,Female'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:employees,phone,' . $this->id],
             'address' => ['required', 'string'],
-            'roleId' => ['required', 'integeer', 'exists:roles,id'],
-            'enabled' => ['required'],
-            'currencyId' => ['required', 'integeer', 'exists:currencies,id'],
+            'roleId' => ['required', 'integer', 'exists:roles,id'],
+            'enabled' => ['required', 'boolean'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'amount' => ['required', 'numeric', 'min:0'],
-            'taxNumber' => ['required', 'string', 'min:9', 'max:11', 'unique:employees,tax_number,' . $this->id],
-            'bankAccountNumber' => ['required', 'string', 'min:10', 'max:30', 'unique:employees,bank_account_number,' . $this->id],
-            'hiredAt' => ['required', 'date']
+            'taxNumber' => ['required', 'string', 'min:9', 'max:11', 'unique:salaries,tax_number,' . $this->id],
+            'bankAccountNumber' => ['required', 'string', 'min:10', 'max:30', 'unique:salaries,bank_account_number,' . $this->id],
+            'hiredAt' => ['required', 'date'],
+            'updateUser' => ['required', 'boolean'],
         ];
     }
     

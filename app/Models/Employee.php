@@ -6,18 +6,18 @@ use App\Traits\HumanResource\Employee\EmployeesServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Spatie\Permission\Traits\HasRoles;
 
 class Employee extends Model
 {
     /** Libraries or Built-in */
-    use HasFactory, HasRoles;
+    use HasFactory;
 
     /** Custom */
     use EmployeesServices;
 
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'birth_date',
         'gender',

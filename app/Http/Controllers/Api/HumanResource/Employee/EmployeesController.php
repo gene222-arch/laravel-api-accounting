@@ -44,7 +44,8 @@ class EmployeesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->employee->createEmployee(
-            $request->name,
+            $request->firstName,
+            $request->lastName,
             $request->email,
             $request->birthDate,
             $request->gender,
@@ -56,7 +57,8 @@ class EmployeesController extends Controller
             $request->amount,
             $request->taxNumber,
             $request->bankAccountNumber,
-            $request->hiredAt
+            $request->hiredAt,
+            $request->createUser
         );
 
         return $result !== true 
@@ -89,7 +91,8 @@ class EmployeesController extends Controller
     {
         $result = $this->employee->updateEmployee(
             $request->id,
-            $request->name,
+            $request->firstName,
+            $request->lastName,
             $request->email,
             $request->birthDate,
             $request->gender,
@@ -101,7 +104,8 @@ class EmployeesController extends Controller
             $request->amount,
             $request->taxNumber,
             $request->bankAccountNumber,
-            $request->hiredAt
+            $request->hiredAt,
+            $request->updateUser
         );
 
         return $result !== true 
