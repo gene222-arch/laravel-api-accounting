@@ -39,7 +39,7 @@ trait SalaryBenefitsServices
     }
     
     /**
-     * Create a new record of benefits or salaries
+     * Create a new record of benefits of salaries
      *
      * @param  string $type
      * @param  float $amount

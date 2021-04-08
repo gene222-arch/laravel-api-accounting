@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesControlle
 use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
+use App\Http\Controllers\Api\HumanResource\Payroll\SalaryDeduction\SalaryDeductionsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 
 /*
@@ -192,6 +193,18 @@ Route::prefix('human-resources')->group(function ()
             Route::post('/', [SalaryBenefitsController::class, 'store']);
             Route::put('/', [SalaryBenefitsController::class, 'update']);
             Route::delete('/', [SalaryBenefitsController::class, 'destroy']);
+        });
+
+        /**
+        * Salary Deductions
+        */
+        Route::prefix('salary-deductions')->group(function () 
+        {
+            Route::get('/', [SalaryDeductionsController::class, 'index']);
+            Route::get('/{id}', [SalaryDeductionsController::class, 'show']);
+            Route::post('/', [SalaryDeductionsController::class, 'store']);
+            Route::put('/', [SalaryDeductionsController::class, 'update']);
+            Route::delete('/', [SalaryDeductionsController::class, 'destroy']);
         });
     });
 });
