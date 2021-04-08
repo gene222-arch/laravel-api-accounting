@@ -1,38 +1,38 @@
 <?php
 
-namespace App\Traits\Purchases\Purchase;
+namespace App\Traits\Purchases\Payment;
 
-use App\Models\Purchase;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Collection;
 
-trait PurchasesServices
+trait PaymentsServices
 {
     
     /**
-     * Get latest records of purchases
+     * Get latest records of payments
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllPurchases (): Collection
+    public function getAllPayments (): Collection
     {
-        return Purchase::latest()
+        return Payment::latest()
             ->get([
                 'id', 
-                ...(new Purchase())->getFillable()
+                ...(new Payment())->getFillable()
             ]);
     }
     
     /**
-     * Get a record of purchase via id
+     * Get a record of payment via id
      *
      * @param  int $id
-     * @return Purchase|null
+     * @return Payment|null
      */
-    public function getPurchaseById (int $id): Purchase|null
+    public function getPaymentById (int $id): Payment|null
     {
-        return Purchase::select(
+        return Payment::select(
             'id',
-            ...(new Purchase())->getFillable()
+            ...(new Payment())->getFillable()
         )
         ->where('id', $id)
         ->first();
@@ -40,7 +40,7 @@ trait PurchasesServices
     
     
     /**
-     * Create a new record of purchase
+     * Create a new record of payment
      *
      * @param  string|null $number
      * @param  integer $accountId
@@ -54,11 +54,11 @@ trait PurchasesServices
      * @param  string $recurring
      * @param  string|null $reference
      * @param  string|null $file
-     * @return Purchase
+     * @return Payment
      */
-    public function createPurchase (?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): Purchase
+    public function createPayment (?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): Payment
     {
-        return Purchase::create([
+        return Payment::create([
             'number' => $number,
             'account_id' => $accountId,
             'vendor_id' => $vendorId,
@@ -75,7 +75,7 @@ trait PurchasesServices
     }
         
     /**
-     * Update an existing record of purchase
+     * Update an existing record of payment
      *
      * @param  string|null $number
      * @param  integer $accountId
@@ -91,9 +91,9 @@ trait PurchasesServices
      * @param  string|null $file
      * @return bool
      */
-    public function updatePurchase (int $id, ?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): bool
+    public function updatePayment (int $id, ?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): bool
     {
-        return Purchase::where('id', $id)
+        return Payment::where('id', $id)
             ->update([
                 'number' => $number,
                 'account_id' => $accountId,
@@ -111,13 +111,13 @@ trait PurchasesServices
     }
 
     /**
-     * Delete one or multiple records of purchases
+     * Delete one or multiple records of Payments
      *
      * @param  array $ids
      * @return boolean
      */
-    public function deletePurchases (array $ids): bool
+    public function deletePayments (array $ids): bool
     {
-        return Purchase::whereIn('id', $ids)->delete();
+        return Payment::whereIn('id', $ids)->delete();
     }
 }

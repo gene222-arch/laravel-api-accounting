@@ -2,17 +2,17 @@
 
 namespace App\Models;
 
-use App\Traits\Purchases\Purchase\PurchasesServices;
+use App\Traits\Purchases\Payment\PaymentsServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Purchase extends Model
+class Payment extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
 
     /** Custom */
-    use PurchasesServices;
+    use PaymentsServices;
 
     protected $fillable = [
         'number',

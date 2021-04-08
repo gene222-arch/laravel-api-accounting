@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Feature\Http\ControllersApi\Purchases\Purchase;
+namespace Tests\Feature\Http\ControllersApi\Purchases\Payment;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PurchasesControllerTest extends TestCase
+class PaymentsControllerTest extends TestCase
 {
 
     /** test */
-    public function user_can_view_any_purchases()
+    public function user_can_view_any_payments()
     {
         $response = $this->get(
-            '/api/purchases/purchases',
+            '/api/purchases/payments',
             $this->apiHeader()
         );
 
@@ -21,12 +21,12 @@ class PurchasesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_view_purchase()
+    public function user_can_view_payment()
     {
         $id = 1;
 
         $response = $this->get(
-            "/api/purchases/purchases/${id}",
+            "/api/purchases/payments/${id}",
             $this->apiHeader()
         );
 
@@ -36,7 +36,7 @@ class PurchasesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_create_purchase()
+    public function user_can_create_payment()
     {
         $data = [
             'accountId' => 2,
@@ -50,7 +50,7 @@ class PurchasesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/purchases/purchases',
+            '/api/purchases/payments',
             $data,
             $this->apiHeader()
         );
@@ -59,7 +59,7 @@ class PurchasesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_update_purchase()
+    public function user_can_update_payment()
     {
         $data = [
             'id' => 1,
@@ -75,7 +75,7 @@ class PurchasesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/purchases/purchases',
+            '/api/purchases/payments',
             $data,
             $this->apiHeader()
         );
@@ -84,7 +84,7 @@ class PurchasesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_delete_purchases()
+    public function user_can_delete_payments()
     {
         $data = [
             'ids' => [
@@ -93,7 +93,7 @@ class PurchasesControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/purchases/purchases',
+            '/api/purchases/payments',
             $data,
             $this->apiHeader()
         );

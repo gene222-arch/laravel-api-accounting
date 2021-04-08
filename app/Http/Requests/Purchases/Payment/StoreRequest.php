@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Purchases\Purchase;
+namespace App\Http\Requests\Purchases\Payment;
 
 use App\Http\Requests\BaseRequest;
 

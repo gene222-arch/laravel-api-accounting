@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\Purchases\Vendor\VendorsController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
 use App\Http\Controllers\Api\Settings\Company\CompaniesController;
-use App\Http\Controllers\Api\Purchases\Purchase\PurchasesController;
+use App\Http\Controllers\Api\Purchases\Payment\PaymentsController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
@@ -279,7 +279,7 @@ Route::prefix('item')->group(function ()
  * * Purchases
  * 
  *  - Bills
- *  - Purchases
+ *  - Payments
  *  - Vendor
  */
 Route::prefix('purchases')->group(function () 
@@ -301,15 +301,15 @@ Route::prefix('purchases')->group(function ()
     });
 
     /**
-     * Purchases
+     * Payments
      */
-    Route::prefix('purchases')->group(function () 
+    Route::prefix('payments')->group(function () 
     {
-        Route::get('/', [PurchasesController::class, 'index']);
-        Route::get('/{id}', [PurchasesController::class, 'show']);
-        Route::post('/', [PurchasesController::class, 'store']);
-        Route::put('/', [PurchasesController::class, 'update']);
-        Route::delete('/', [PurchasesController::class, 'destroy']);
+        Route::get('/', [PaymentsController::class, 'index']);
+        Route::get('/{id}', [PaymentsController::class, 'show']);
+        Route::post('/', [PaymentsController::class, 'store']);
+        Route::put('/', [PaymentsController::class, 'update']);
+        Route::delete('/', [PaymentsController::class, 'destroy']);
     });
 
     /**

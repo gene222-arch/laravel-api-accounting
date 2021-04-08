@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api\Purchases\Purchase;
+namespace App\Http\Controllers\Api\Purchases\Payment;
 
-use App\Models\Purchase;
+use App\Models\Payment;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Purchases\Purchase\StoreRequest;
-use App\Http\Requests\Purchases\Purchase\DeleteRequest;
-use App\Http\Requests\Purchases\Purchase\UpdateRequest;
+use App\Http\Requests\Purchases\Payment\StoreRequest;
+use App\Http\Requests\Purchases\Payment\DeleteRequest;
+use App\Http\Requests\Purchases\Payment\UpdateRequest;
 
-class PurchasesController extends Controller
+class PaymentsController extends Controller
 {
     use ApiResponser;
 
-    private Purchase $purchase;
+    private Payment $payment;
     
-    public function __construct(Purchase $purchase)
+    public function __construct(Payment $payment)
     {
-        $this->purchase = $purchase;
-        $this->middleware(['auth:api', 'permission:Manage Purchases']);
+        $this->payment = $payment;
+        $this->middleware(['auth:api', 'permission:Manage Payments']);
     }
 
     /**
@@ -28,7 +28,7 @@ class PurchasesController extends Controller
      */
     public function index()
     {
-        $result = $this->purchase->getAllPurchases();
+        $result = $this->payment->getAllPayments();
 
         return !$result->count()
             ? $this->noContent()
@@ -43,7 +43,7 @@ class PurchasesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $purchase = $this->purchase->createPurchase(
+        $payment = $this->payment->createpayment(
             $request->number,
             $request->accountId,
             $request->vendorId,
@@ -58,7 +58,7 @@ class PurchasesController extends Controller
             $request->file
         );
 
-        return $this->success($purchase, 'Purchase created successfully.');
+        return $this->success($payment, 'Payment created successfully.');
     }
 
     /**
@@ -69,7 +69,7 @@ class PurchasesController extends Controller
      */
     public function show($id)
     {
-        $result = $this->purchase->getPurchaseById($id);
+        $result = $this->payment->getpaymentById($id);
 
         return !$result
             ? $this->noContent()
@@ -84,7 +84,7 @@ class PurchasesController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->purchase->updatePurchase(
+        $this->payment->updatePayment(
             $request->id,
             $request->number,
             $request->accountId,
@@ -100,7 +100,7 @@ class PurchasesController extends Controller
             $request->file
         );
 
-        return $this->success(null, 'Purchase updated successfully.');
+        return $this->success(null, 'Payment updated successfully.');
     }
 
     /**
@@ -111,8 +111,8 @@ class PurchasesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->purchase->deletePurchases($request->ids);
+        $this->payment->deletePayments($request->ids);
 
-        return $this->success(null, 'Purchase or purchases deleted successfully.');
+        return $this->success(null, 'Payment or payments deleted successfully.');
     }
 }

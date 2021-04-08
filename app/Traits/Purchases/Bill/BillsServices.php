@@ -10,13 +10,13 @@ use App\Jobs\QueueBillNotification;
 use App\Models\Account;
 use App\Models\ExpenseCategory;
 use App\Traits\Banking\Transaction\HasTransaction;
-use App\Traits\Purchases\Purchase\PurchasesServices;
+use App\Traits\Purchases\Payment\PaymentsServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
 {
-    use HasTransaction, PurchasesServices;
+    use HasTransaction, PaymentsServices;
     
     /**
      * Get latest records of Bills
@@ -133,7 +133,7 @@ trait BillsServices
                     ]);
         
 
-                $this->createPurchase(
+                $this->createPayment(
                     $bill->bill_number,
                     $accountId,
                     $bill->vendor_id,
@@ -220,7 +220,7 @@ trait BillsServices
                     ]);
 
                 /** Purchases */
-                $this->createPurchase(
+                $this->createPayment(
                     $bill->bill_number,
                     $accountId,
                     $bill->vendor_id,

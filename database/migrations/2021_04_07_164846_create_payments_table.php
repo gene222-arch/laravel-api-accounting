@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePurchasesTable extends Migration
+class CreatePaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePurchasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('purchases', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('number')->nullable();
             $table->foreignId('account_id')->nullable();
@@ -56,19 +56,19 @@ class CreatePurchasesTable extends Migration
 
         });
 
-        Schema::create('bill_purchase', function (Blueprint $table) {
+        Schema::create('bill_payment', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id');
+            $table->foreignId('payment_id');
             $table->foreignId('bill_id');
 
             $table->unique([
-                'purchase_id',
+                'payment_id',
                 'bill_id'
             ]);
 
-            $table->foreign('purchase_id')
+            $table->foreign('payment_id')
                 ->references('id')
-                ->on('purchases')
+                ->on('payments')
                 ->cascadeOnDelete();
 
             $table->foreign('bill_id')
@@ -85,7 +85,7 @@ class CreatePurchasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bill_purchase');
-        Schema::dropIfExists('purchases');
+        Schema::dropIfExists('bill_payment');
+        Schema::dropIfExists('payments');
     }
 }
