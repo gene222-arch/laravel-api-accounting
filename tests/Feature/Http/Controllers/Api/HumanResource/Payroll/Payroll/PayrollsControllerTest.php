@@ -17,8 +17,6 @@ class PayrollsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -31,8 +29,6 @@ class PayrollsControllerTest extends TestCase
             "/api/human-resources/payrolls/run-payrolls/${id}",
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
@@ -97,8 +93,6 @@ class PayrollsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -146,8 +140,6 @@ class PayrollsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -160,8 +152,6 @@ class PayrollsControllerTest extends TestCase
             "/api/human-resources/payrolls/run-payrolls/${id}/approve",
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }

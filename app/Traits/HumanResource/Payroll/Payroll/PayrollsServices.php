@@ -24,16 +24,16 @@ trait PayrollsServices
         setSqlModeEmpty();
 
         return Payroll::selectRaw('
-            name,
-            from_date,
-            to_date,
-            payment_date,
+            payrolls.name,
+            payrolls.from_date,
+            payrolls.to_date,
+            payrolls.payment_date,
             COUNT(employee_payroll.employee_id) as employee_count,
-            status,
+            payrolls.status,
             SUM(employee_payroll.total_amount) as amount
         ')
             ->join('employee_payroll', 'employee_payroll.payroll_id', '=', 'payrolls.id')
-            ->groupBy('payroll.id')
+            ->groupBy('payrolls.id')
             ->latest()
             ->get();
     }
@@ -49,7 +49,8 @@ trait PayrollsServices
         return Payroll::where('id', $id)
             ->with([
                 'details',
-                'employeeTaxes'
+                'employeeTaxes',
+                'employeeBenefits'
             ])
             ->first();
     }
