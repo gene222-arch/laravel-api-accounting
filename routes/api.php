@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
+use App\Http\Controllers\Api\HumanResource\Payroll\Payroll\PayrollsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
@@ -32,7 +33,6 @@ use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesControlle
 use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
-use App\Http\Controllers\Api\HumanResource\Payroll\SalaryDeduction\SalaryDeductionsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 
 /*
@@ -172,8 +172,8 @@ Route::prefix('human-resources')->group(function ()
     Route::prefix('payrolls')->group(function () 
     {
         /**
-         * Pay calendars
-         */
+          * Pay calendars
+          */
         Route::prefix('pay-calendars')->group(function () 
         {
             Route::get('/', [PayCalendarsController::class, 'index']);
@@ -184,8 +184,21 @@ Route::prefix('human-resources')->group(function ()
         });
 
         /**
-        * Salary Benefits
-        */
+          * Payroll
+          */
+        Route::prefix('run-payrolls')->group(function () 
+        {
+            Route::get('/', [PayrollsController::class, 'index']);
+            Route::get('/{id}', [PayrollsController::class, 'show']);
+            Route::post('/', [PayrollsController::class, 'store']);
+            Route::put('/', [PayrollsController::class, 'update']);
+            Route::put('/{id}/approve', [PayrollsController::class, 'approve']);
+            Route::delete('/', [PayrollsController::class, 'destroy']);
+        });
+
+        /**
+          * Salary Benefits
+          */
         Route::prefix('salary-benefits')->group(function () 
         {
             Route::get('/', [SalaryBenefitsController::class, 'index']);
@@ -195,17 +208,6 @@ Route::prefix('human-resources')->group(function ()
             Route::delete('/', [SalaryBenefitsController::class, 'destroy']);
         });
 
-        /**
-        * Salary Deductions
-        */
-        Route::prefix('salary-deductions')->group(function () 
-        {
-            Route::get('/', [SalaryDeductionsController::class, 'index']);
-            Route::get('/{id}', [SalaryDeductionsController::class, 'show']);
-            Route::post('/', [SalaryDeductionsController::class, 'store']);
-            Route::put('/', [SalaryDeductionsController::class, 'update']);
-            Route::delete('/', [SalaryDeductionsController::class, 'destroy']);
-        });
     });
 });
 
