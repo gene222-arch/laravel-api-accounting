@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
 use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesController;
+use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsController;
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 
@@ -146,7 +147,10 @@ Route::prefix('banking')->group(function ()
 
 /**
  * * Human Resources
+ * 
  *  - Employees
+ *  - Payroll 
+ *      -- Pay calendars
  */
 Route::prefix('human-resources')->group(function () 
 {
@@ -160,6 +164,21 @@ Route::prefix('human-resources')->group(function ()
         Route::post('/', [EmployeesController::class, 'store']);
         Route::put('/', [EmployeesController::class, 'update']);
         Route::delete('/', [EmployeesController::class, 'destroy']);
+    });
+
+    /**
+     * Pay calendars
+     */
+    /**
+    * Route
+    */
+    Route::prefix('pay-calendars')->group(function () 
+    {
+        Route::get('/', [PayCalendarsController::class, 'index']);
+        Route::get('/{id}', [PayCalendarsController::class, 'show']);
+        Route::post('/', [PayCalendarsController::class, 'store']);
+        Route::put('/', [PayCalendarsController::class, 'update']);
+        Route::delete('/', [PayCalendarsController::class, 'destroy']);
     });
 });
 
