@@ -1,19 +1,19 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api\HumanResource\Payroll\PayCalendar;
+namespace Tests\Feature\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PayCalendarsControllerTest extends TestCase
+class SalaryBenefitsControllerTest extends TestCase
 {
 
-    /** @test */
-    public function user_can_view_any_pay_calendars()
+    /** test */
+    public function user_can_view_any_salary_benefits()
     {
         $response = $this->get(
-            '/api/human-resources/payrolls/pay-calendars',
+            '/api/human-resources/payrolls/salary-benefits',
             $this->apiHeader()
         );
 
@@ -22,13 +22,13 @@ class PayCalendarsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
-    public function user_can_view_pay_calendar()
+    /** @test */
+    public function user_can_view_salary_benefit()
     {
         $id = 1;
 
         $response = $this->get(
-            "/api/human-resources/payrolls/pay-calendars/${id}",
+            "/api/human-resources/payrolls/salary-benefits/${id}",
             $this->apiHeader()
         );
 
@@ -36,42 +36,35 @@ class PayCalendarsControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_create_pay_calendar()
+    public function user_can_create_salary_benefit()
     {
         $data = [
-            'name' => 'February payroll',
-            'type' => 'Monthly',
-            'employeeIds' => [
-                1,
-                2
-            ]
+            'type' => 'Monthly employee',
+            'amount' => 1000.00,
+            'enabled' => false
         ];
 
         $response = $this->post(
-            '/api/human-resources/payrolls/pay-calendars',
+            '/api/human-resources/payrolls/salary-benefits',
             $data,
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
 
     /** test */
-    public function user_can_update_pay_calendar()
+    public function user_can_update_salary_benefit()
     {
         $data = [
-            'id' => 2,
-            'name' => 'February payroll',
-            'type' => 'Weekly',
-            'employeeIds' => [
-                1,
-            ]
+            'id' => 3,
+            'type' => 'Employee of the month',
+            'amount' => 2000.00,
+            'enabled' => false
         ];
 
         $response = $this->put(
-            '/api/human-resources/payrolls/pay-calendars',
+            '/api/human-resources/payrolls/salary-benefits',
             $data,
             $this->apiHeader()
         );
@@ -80,7 +73,7 @@ class PayCalendarsControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_delete_pay_calendars()
+    public function user_can_delete_salary_benefits()
     {
         $data = [
             'ids' => [
@@ -89,7 +82,7 @@ class PayCalendarsControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/human-resources/payrolls/pay-calendars',
+            '/api/human-resources/payrolls/salary-benefits',
             $data,
             $this->apiHeader()
         );

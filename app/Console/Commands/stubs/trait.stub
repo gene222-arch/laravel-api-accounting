@@ -34,8 +34,8 @@ trait {{ class }}
             'id',
             ...(new Model())->getFillable()
         )
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
     }
     
 
