@@ -63,7 +63,7 @@ class EmployeesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_update_employee()
     {
         $data = [

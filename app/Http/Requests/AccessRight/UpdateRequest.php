@@ -17,7 +17,8 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:roles,id'],
             'role' => ['required', 'string', "unique:roles,name,{$this->id}"],
-            'permissions.*' => ['required', 'distinct', 'exists:permissions,name']
+            'permissions.*' => ['required', 'distinct', 'exists:permissions,name'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }

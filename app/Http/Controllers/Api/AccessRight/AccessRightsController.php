@@ -17,7 +17,7 @@ class AccessRightsController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth:api', 'role:Super Admin|super admin']);
+        $this->middleware(['auth:api', 'permission:Manage Access Rights']);
     }
 
     /**
@@ -46,10 +46,11 @@ class AccessRightsController extends Controller
     {
         $this->createAccessRight(
             $request->role,
-            $request->permissions
+            $request->permissions,
+            $request->enabled
         );
 
-        return $this->success([], 'Access right created successfully.');
+        return $this->success(null, 'Access right created successfully.');
     }
 
     /**
@@ -81,10 +82,11 @@ class AccessRightsController extends Controller
         $this->updateAccessRight(
             $request->id,
             $request->role,
-            $request->permissions
+            $request->permissions,
+            $request->enabled
         );
 
-        return $this->success();
+        return $this->success(null, 'Access right updated successfully.');
     }
 
     /**
@@ -97,7 +99,7 @@ class AccessRightsController extends Controller
     {
         $this->deleteAccessRights($request->ids);
 
-        return $this->success();
+        return $this->success(null, 'Access right or rights deleted successfully.');
     }
 
 }

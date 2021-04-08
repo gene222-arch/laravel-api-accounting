@@ -22,7 +22,7 @@ class AccessRightsControllerTest extends TestCase
     /** test */
     public function user_can_view_access_right()
     {
-        $id = 1;
+        $id = 10;
 
         $response = $this->get(
             "/api/access-rights/${id}",
@@ -38,10 +38,11 @@ class AccessRightsControllerTest extends TestCase
     public function user_can_create_access_right()
     {
         $data = [
-            'role' => 'Admin',
+            'role' => 'Manager',
             'permissions' => [
                 'View Dashboard'
-            ]
+            ],
+            'enabled' => true
         ];
 
         $response = $this->post(
@@ -50,18 +51,20 @@ class AccessRightsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        $this->assertResponse($response, 201);
+        $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_update_access_right()
     {
         $data = [
-            'id' => 1,
-            'role' => 'Super Duper Admin',
+            'id' => 4,
+            'role' => 'Super Duper Manager',
             'permissions' => [
                 'View Dashboard',
-            ]
+                'View Transactions'
+            ],
+            'enabled' => true
         ];
 
         $response = $this->put(
@@ -72,7 +75,7 @@ class AccessRightsControllerTest extends TestCase
 
         dd(json_decode($response->getContent()));
         
-        $this->assertResponse($response, 201);
+        $this->assertResponse($response);
     }
 
     /** test */
