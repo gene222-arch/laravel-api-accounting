@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\Purchases\Payment\PaymentsServices;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Account;
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Purchases\Payment\PaymentsServices;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Payment extends Model
 {
@@ -28,4 +34,64 @@ class Payment extends Model
         'reference',
         'file',
     ];
+
+    /**
+     * Define an inverse one-to-many relationship with Account
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with Currency class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+    
+    /**
+     * Define an inverse one-to-many relationship with Customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Define an inverse one-to-many relationship with IncomeCategory
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function expenseCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpenseCategory::class);
+    }
+    
+    /**
+     * Define an inverse one-to-many relationship with PaymentMethod
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function paymentMethod(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with PaymentMethod
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function bills(): BelongsToMany
+    {
+        return $this->belongsToMany(Bill::class);
+    }
 }
