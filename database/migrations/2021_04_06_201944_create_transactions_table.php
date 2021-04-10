@@ -17,9 +17,11 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->string('model_type');
             $table->unsignedBigInteger('model_id');
+            $table->string('number');
             $table->foreignId('account_id');
             $table->foreignId('income_category_id')->nullable();
             $table->foreignId('expense_category_id')->nullable();
+            $table->foreignId('payment_method_id');
             $table->string('category');
             $table->string('type');
             $table->unsignedDecimal('amount', 10, 2);
@@ -28,6 +30,12 @@ class CreateTransactionsTable extends Migration
             $table->text('description')->nullable();
             $table->string('contact')->nullable();
             $table->timestamps();
+       
+
+            $table->foreign('payment_method_id')
+                ->references('id')
+                ->on('payment_methods')
+                ->cascadeOnDelete();
 
             $table->foreign('account_id')
                 ->references('id')

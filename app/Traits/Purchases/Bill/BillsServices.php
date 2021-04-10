@@ -152,9 +152,11 @@ trait BillsServices
                 $this->createTransaction(
                     get_class($bill),
                     $id,
+                    $bill->bill_number,
                     $accountId,
                     null,
                     $expenseCategoryId,
+                    'Cash',
                     ExpenseCategory::find($expenseCategoryId)->name,
                     'Expense',
                     $amount,
@@ -239,9 +241,11 @@ trait BillsServices
                 $this->createTransaction(
                     get_class($bill),
                     $id,
+                    $bill->bill_number,
                     $accountId,
                     null,
                     $expenseCategoryId,
+                    'Cash',
                     ExpenseCategory::find($expenseCategoryId)->name,
                     'Expense',
                     $amount,

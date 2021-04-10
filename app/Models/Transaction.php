@@ -20,9 +20,11 @@ class Transaction extends Model
     protected $fillable = [
         'model_type',
         'model_id',
+        'number',
         'account_id',
         'income_category_id',
         'expense_category_id',
+        'payment_method_id',
         'category',
         'type',
         'amount',
