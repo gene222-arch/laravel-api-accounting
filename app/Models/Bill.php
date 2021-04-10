@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\ExpenseCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Purchases\Bill\BillsServices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use \Illuminate\Database\Eloquent\Relations\belongsToMany;
 
@@ -26,6 +30,36 @@ class Bill extends Model
         'status',
         'recurring'
     ];
+
+    /**
+     * Define a many-to-many relationship with Currency class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with Customer class
+     *
+     * @return BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with IncomeCategory class
+     *
+     * @return BelongsTo
+     */
+    public function expenseCategory(): BelongsTo
+    {
+        return $this->belongsTo(ExpenseCategory::class);
+    }
 
     /**
      * Define a many-to-many relationship with Item class
