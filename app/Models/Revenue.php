@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Models\Invoice;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sales\Revenue\RevenuesServices;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Revenue extends Model
@@ -40,6 +41,16 @@ class Revenue extends Model
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with Currency class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
     
     /**

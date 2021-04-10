@@ -20,7 +20,11 @@ class ItemExport implements FromView
     public function view(): View
     {
         return view('export.excel.items.item', [
-            'items' => Item::all()
+            'items' => Item::with([
+                'category',
+                'stock'
+            ])
+                ->get()
         ]);
     }
 }
