@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\Settings\Contribution\ContributionsController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\HumanResource\Payroll\Payroll\PayrollsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
+use App\Http\Controllers\Api\DoubleEntry\JournalEntry\JournalEntriesController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
 use App\Http\Controllers\Api\DoubleEntry\ChartOfAccount\ChartOfAccountsController;
@@ -161,6 +162,18 @@ Route::prefix('double-entry')->group(function ()
         Route::post('/', [ChartOfAccountsController::class, 'store']);
         Route::put('/', [ChartOfAccountsController::class, 'update']);
         Route::delete('/', [ChartOfAccountsController::class, 'destroy']);
+    });
+
+    /**
+      * Journal Entries
+      */
+    Route::prefix('journal-entries')->group(function () 
+    {
+        Route::get('/', [JournalEntriesController::class, 'index']);
+        Route::get('/{id}', [JournalEntriesController::class, 'show']);
+        Route::post('/', [JournalEntriesController::class, 'store']);
+        Route::put('/', [JournalEntriesController::class, 'update']);
+        Route::delete('/', [JournalEntriesController::class, 'destroy']);
     });
 });
 
