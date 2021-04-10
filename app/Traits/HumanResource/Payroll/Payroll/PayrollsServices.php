@@ -50,7 +50,8 @@ trait PayrollsServices
             ->with([
                 'details',
                 'employeeTaxes',
-                'employeeBenefits'
+                'employeeBenefits',
+                'employeeContributions'
             ])
             ->first();
     }
@@ -110,14 +111,15 @@ trait PayrollsServices
      * @param  array $details
      * @param  array|null $taxes
      * @param  array|null $benefits
+     * @param  array|null $contributions
      * @param  string $approved
      * @return mixed
      */
-    public function createPayroll (string $name, int $accountId, int $expenseCategoryId, int $paymentMethodId, string $fromDate, string $toDate, string $paymentDate, array $details, ?array $taxes, ?array $benefits, string $approved): mixed
+    public function createPayroll (string $name, int $accountId, int $expenseCategoryId, int $paymentMethodId, string $fromDate, string $toDate, string $paymentDate, array $details, ?array $taxes, ?array $benefits, ?array $contributions, string $approved): mixed
     {
         try {
             DB::transaction(function () use (
-                $name, $accountId, $expenseCategoryId, $paymentMethodId, $fromDate, $toDate, $paymentDate, $details, $benefits, $taxes, $approved
+                $name, $accountId, $expenseCategoryId, $paymentMethodId, $fromDate, $toDate, $paymentDate, $details, $benefits, $contributions, $taxes, $approved
             )
             {
                 $payroll = Payroll::create([
@@ -139,6 +141,9 @@ trait PayrollsServices
 
                 /** Employee benefits */
                 $benefits && ( $payroll->employeeBenefits()->attach($benefits) );
+
+                /** Employee contributions */
+                $contributions && ( $payroll->employeeContributions()->attach($contributions) );
 
                 /** Approve payroll */
                 (strtolower($approved) === 'approved') && (  $this->approve($payroll->id) );
@@ -165,14 +170,15 @@ trait PayrollsServices
      * @param  array $details
      * @param  array|null $taxes
      * @param  array|null $benefits
+     * @param  array|null $contributions
      * @param  string $approved
      * @return mixed
      */
-    public function updatePayroll (int $id, string $name, int $accountId, int $expenseCategoryId, int $paymentMethodId, string $fromDate, string $toDate, string $paymentDate, array $details, ?array $taxes, ?array $benefits, string $approved): mixed
+    public function updatePayroll (int $id, string $name, int $accountId, int $expenseCategoryId, int $paymentMethodId, string $fromDate, string $toDate, string $paymentDate, array $details, ?array $taxes, ?array $benefits, ?array $contributions, string $approved): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $name, $accountId, $expenseCategoryId, $paymentMethodId, $fromDate, $toDate, $paymentDate, $details, $taxes, $benefits, $approved
+                $id, $name, $accountId, $expenseCategoryId, $paymentMethodId, $fromDate, $toDate, $paymentDate, $details, $taxes, $benefits, $contributions, $approved
             )
             {
                 $payroll = Payroll::find($id);
@@ -195,7 +201,10 @@ trait PayrollsServices
                 $taxes && ( $payroll->employeeTaxes()->sync($taxes) );
                 
                 /** Employee benefits */
-                $benefits && ( $payroll->employeeBenefits()->attach($benefits) );
+                $benefits && ( $payroll->employeeBenefits()->sync($benefits) );
+
+                /** Employee contributions */
+                $contributions && ( $payroll->employeeContributions()->sync($contributions) );
 
                 /** Approve payroll */
                 (strtolower($approved) === 'approved') && ( $this->approve($id) );

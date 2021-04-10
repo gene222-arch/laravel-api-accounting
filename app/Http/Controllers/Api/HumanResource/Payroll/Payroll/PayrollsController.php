@@ -54,6 +54,7 @@ class PayrollsController extends Controller
             $request->details,
             $request->taxes,
             $request->benefits,
+            $request->contributions,
             $request->approved
         );
 
@@ -112,6 +113,7 @@ class PayrollsController extends Controller
             $request->details,
             $request->taxes,
             $request->benefits,
+            $request->contributions,
             $request->approved
         );
 

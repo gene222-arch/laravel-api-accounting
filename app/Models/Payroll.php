@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Tax;
+use App\Models\Contribution;
 use App\Models\SalaryBenefit;
 use App\Models\SalaryDeduction;
 use Illuminate\Database\Eloquent\Model;
@@ -73,4 +74,17 @@ class Payroll extends Model
             ]);
     }
 
+    /**
+     * Define a many-to-many relationship with Contribution class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function employeeContributions(): BelongsToMany
+    {   
+        return $this->belongsToMany(Contribution::class)
+            ->withPivot([
+                'employee_id',
+                'amount'
+            ]);
+    }
 }

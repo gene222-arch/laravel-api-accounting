@@ -41,11 +41,34 @@ class CreatePayrollsTable extends Migration
                 ->cascadeOnDelete();
         });
 
+        Schema::create('payroll_contribution', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('payroll_id');
+            $table->foreignId('contribution_id');
+            $table->foreignId('employee_id');
+            $table->unsignedDecimal('amount', 10, 2);
+
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees')
+                ->cascadeOnDelete();
+
+            $table->foreign('payroll_id')
+                ->references('id')
+                ->on('payrolls')
+                ->cascadeOnDelete();
+
+            $table->foreign('contribution_id')
+                ->references('id')
+                ->on('contributions')
+                ->cascadeOnDelete();
+        });
+
         Schema::create('payroll_tax', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payroll_id');
-            $table->foreignId('employee_id');
             $table->foreignId('tax_id');
+            $table->foreignId('employee_id');
             $table->unsignedDecimal('amount', 10, 2);
 
             $table->foreign('employee_id')
@@ -67,8 +90,8 @@ class CreatePayrollsTable extends Migration
         Schema::create('payroll_salary_benefit', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payroll_id');
-            $table->foreignId('employee_id');
             $table->foreignId('salary_benefit_id');
+            $table->foreignId('employee_id');
             $table->unsignedDecimal('amount', 10, 2);
 
             $table->foreign('employee_id')
@@ -120,10 +143,10 @@ class CreatePayrollsTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('payroll_contribution');
         Schema::dropIfExists('payroll_salary_benefit');
-        Schema::dropIfExists('payroll_salary_deduction');
-        Schema::dropIfExists('employee_payroll');
         Schema::dropIfExists('payroll_tax');
+        Schema::dropIfExists('employee_payroll');
         Schema::dropIfExists('payrolls');
     }
 }

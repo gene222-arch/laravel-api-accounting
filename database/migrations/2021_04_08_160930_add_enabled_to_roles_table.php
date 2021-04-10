@@ -14,7 +14,7 @@ class AddEnabledToRolesTable extends Migration
     public function up()
     {
         Schema::table('roles', function (Blueprint $table) {
-            // $table->boolean('enabled')->default(false)->after('guard_name');
+            $table->boolean('enabled')->default(false)->after('guard_name');
         });
     }
 

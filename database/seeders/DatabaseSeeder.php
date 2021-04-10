@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\ItemSeeder;
 use Database\Seeders\StockSeeder;
 use Database\Seeders\AccountSeeder;
+use Database\Seeders\CompanySeeder;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\CurrencySeeder;
 use Database\Seeders\CustomerSeeder;
@@ -28,6 +29,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            CompanySeeder::class,
             TaxSeeder::class,
             CurrencySeeder::class,
             AccountSeeder::class,
@@ -35,7 +37,7 @@ class DatabaseSeeder extends Seeder
             ExpenseCategorySeeder::class,
             ContributionSeeder::class,
             PaymentMethodSeeder::class,
-            CategorySeeder::class,
+            // CategorySeeder::class,
             DiscountSeeder::class,
             ItemSeeder::class,
             SupplierSeeder::class,

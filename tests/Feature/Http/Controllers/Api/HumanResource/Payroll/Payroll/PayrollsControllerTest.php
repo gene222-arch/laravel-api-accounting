@@ -85,6 +85,18 @@ class PayrollsControllerTest extends TestCase
                     'amount' => 200.00
                 ]
             ],
+            'contributions' => [
+                [
+                    'employee_id' => 1,
+                    'contribution_id' => 1,
+                    'amount' => 200.00
+                ],
+                [
+                    'employee_id' => 2,
+                    'contribution_id' => 2,
+                    'amount' => 200.00
+                ]
+            ],
         ];
 
         $response = $this->post(
@@ -131,6 +143,13 @@ class PayrollsControllerTest extends TestCase
                     'salary_benefit_id' => 1,
                     'amount' => 200.00
                 ]
+            ],
+            'contributions' => [
+                [
+                    'employee_id' => 1,
+                    'contribution_id' => 1,
+                    'amount' => 200.00
+                ],
             ],
         ];
 

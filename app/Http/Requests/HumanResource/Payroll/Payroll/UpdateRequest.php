@@ -26,6 +26,7 @@ class UpdateRequest extends BaseRequest
             'details.*' => ['required', 'array', 'min:1'],
             'taxes.*' => ['nullable', 'array', 'min:1'],
             'benefits.*' => ['nullable', 'array', 'min:1'],
+            'contributions.*' => ['nullable', 'array', 'min:1'],
         ];
     }
 
