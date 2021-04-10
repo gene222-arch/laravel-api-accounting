@@ -30,7 +30,7 @@ class BankAccountTransfer extends Model
      *
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function sender(): BelongsTo
+    public function from(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'from_account_id');
     }
@@ -40,7 +40,7 @@ class BankAccountTransfer extends Model
      *
      * @return Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function receiver(): BelongsTo
+    public function to(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'to_account_id');
     }
