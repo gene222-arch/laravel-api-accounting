@@ -16,6 +16,7 @@ class StoreRequest extends BaseRequest
         return [
             'customerId' => ['required', 'integer', 'exists:customers,id'],
             'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
             'estimateNumber' => ['required', 'string', 'unique:estimate_invoices,estimate_number'],
             'estimatedAt' => ['required', 'date'],
             'expiredAt' => ['required', 'date'],
@@ -38,6 +39,7 @@ class StoreRequest extends BaseRequest
         return [
             'customerId' => 'customer id',
             'currencyId' => 'currency id',
+            'incomeCategoryId' => 'income category id',
             'estimateNumber' => 'estimate invoice number',
             'estimatedAt' => 'estimated date',
             'expiredAt' => 'expired date',
@@ -58,6 +60,7 @@ class StoreRequest extends BaseRequest
         return [
             'customerId.exists' => 'The selected :attribute does not exist.',
             'currencyId.exists' => 'The selected :attribute does not exist.',
+            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
             'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }

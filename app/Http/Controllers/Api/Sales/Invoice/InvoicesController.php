@@ -50,6 +50,7 @@ class InvoicesController extends Controller
         $result = $this->invoice->createInvoice(
             $request->customerId,
             $request->currencyId,
+            $request->incomeCategoryId,
             $request->invoiceNumber,
             $request->orderNo,
             $request->date,
@@ -116,7 +117,6 @@ class InvoicesController extends Controller
             $invoice, 
             $request->accountId,
             $request->paymentMethodId,
-            $request->incomeCategoryId,
             $request->amount,
             $request->description,
             $request->reference
@@ -138,9 +138,7 @@ class InvoicesController extends Controller
         $result = $this->invoice->payment(
             $request->id,
             $request->accountId,
-            $request->currencyId,
             $request->paymentMethodId,
-            $request->incomeCategoryId,
             $request->date,
             $request->amount,
             $request->description,
@@ -164,6 +162,7 @@ class InvoicesController extends Controller
             $request->id,
             $request->customerId,
             $request->currencyId,
+            $request->incomeCategoryId,
             $request->invoiceNumber,
             $request->orderNo,
             $request->date,

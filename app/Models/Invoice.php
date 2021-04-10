@@ -3,12 +3,16 @@
 namespace App\Models;
 
 use App\Models\Item;
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sales\Invoice\InvoicesServices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Invoice extends Model
 {
@@ -21,6 +25,7 @@ class Invoice extends Model
     protected $fillable = [
         'customer_id',
         'currency_id',
+        'income_category_id',
         'invoice_number',
         'order_no',
         'date',
@@ -29,6 +34,36 @@ class Invoice extends Model
         'recurring'
     ];
     
+    /**
+     * Define a many-to-many relationship with Currency class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with Customer class
+     *
+     * @return BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Define a many-to-many relationship with IncomeCategory class
+     *
+     * @return BelongsTo
+     */
+    public function incomeCategory(): BelongsTo
+    {
+        return $this->belongsTo(IncomeCategory::class);
+    }
+
     /**
      * Define a many-to-many relationship with Item class
      *

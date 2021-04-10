@@ -45,6 +45,7 @@ trait EstimateInvoicesServices
      *
      * @param  integer $customerId
      * @param  integer $currencyId
+     * @param  integer $incomeCategoryId
      * @param  string $estimateNumber
      * @param  string $estimatedAt
      * @param  string $expiredAt
@@ -53,14 +54,15 @@ trait EstimateInvoicesServices
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function createEstimateInvoice (int $customerId, int $currencyId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
+    public function createEstimateInvoice (int $customerId, int $currencyId, int $incomeCategoryId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($customerId, $currencyId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
+            DB::transaction(function () use ($customerId, $currencyId, $incomeCategoryId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
             {
                 $estimateInvoice = EstimateInvoice::create([
                     'customer_id' => $customerId,
                     'currency_id' => $currencyId,
+                    'income_category_id' => $incomeCategoryId,
                     'estimate_number' => $estimateNumber,
                     'estimated_at' => $estimatedAt,
                     'expired_at' => $expiredAt,
@@ -183,6 +185,7 @@ trait EstimateInvoicesServices
      * @param  integer $id
      * @param  integer $currencyId
      * @param  integer $customerId
+     * @param  integer $incomeCategoryId
      * @param  string $estimateNumber
      * @param  string $estimatedAt
      * @param  string $expiredAt
@@ -191,16 +194,17 @@ trait EstimateInvoicesServices
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function updateEstimateInvoice (int $id, int $customerId, $currencyId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
+    public function updateEstimateInvoice (int $id, int $customerId, $currencyId, int $incomeCategoryId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($id, $customerId, $currencyId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
+            DB::transaction(function () use ($id, $customerId, $currencyId, $incomeCategoryId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
             {
                 $estimateInvoice = EstimateInvoice::find($id);
 
                 $estimateInvoice->update([
                     'customer_id' => $customerId,
                     'currency_id' => $currencyId,
+                    'income_category_id' => $incomeCategoryId,
                     'estimate_number' => $estimateNumber,
                     'estimated_at' => $estimatedAt,
                     'expired_at' => $expiredAt,

@@ -38,7 +38,8 @@ use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsContr
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
-use App\Http\Controllers\Api\Exports\Items\Item\ItemExportsController;
+use App\Http\Controllers\Api\Exports\Items\ItemExportsController;
+use App\Http\Controllers\Api\Exports\Sales\InvoiceExportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -193,11 +194,13 @@ Route::prefix('exports')->group(function ()
     Route::prefix('excel')->group(function () 
     {
         Route::get('/items', [ItemExportsController::class, 'excel']);
+        Route::get('/invoices', [InvoiceExportsController::class, 'excel']);
     });
 
     Route::prefix('csv')->group(function () 
     {
         Route::get('/items', [ItemExportsController::class, 'csv']);
+        Route::get('/invoices', [InvoiceExportsController::class, 'csv']);
     });
 });
 

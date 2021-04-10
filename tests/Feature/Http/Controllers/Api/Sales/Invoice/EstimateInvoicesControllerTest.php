@@ -39,6 +39,7 @@ class EstimateInvoicesControllerTest extends TestCase
         $data = [
             'customerId' => 1,
             'currencyId' => 1,
+            'incomeCategoryId' => 1,
             'estimateNumber' => 'EST-00002',
             'estimatedAt' => '2021-05-03',
             'expiredAt' => '2021-06-03',
@@ -128,6 +129,7 @@ class EstimateInvoicesControllerTest extends TestCase
             'id' => 1,
             'customerId' => 1,
             'currencyId' => 1,
+            'incomeCategoryId' => 1,
             'estimateNumber' => 'EST-00004',
             'estimatedAt' => '2021-05-03',
             'expiredAt' => '2021-06-03',

@@ -39,6 +39,7 @@ class InvoicesControllerTest extends TestCase
         $data = [
             'customerId' => 1,
             'currencyId' => 1,
+            'incomeCategoryId' => 2,
             'invoiceNumber' => 'INV-00003',
             'orderNo' => 3,
             'date' => '2021-05-03',
@@ -103,7 +104,6 @@ class InvoicesControllerTest extends TestCase
         $data = [
             'accountId' => 1,
             'paymentMethodId' => 1,
-            'incomeCategoryId' => 2,
             'amount' => 110.00,
         ];
 
@@ -123,7 +123,6 @@ class InvoicesControllerTest extends TestCase
             'id' => 3,
             'accountId' => 1,
             'paymentMethodId' => 1,
-            'incomeCategoryId' => 2,
             'date' => '2021-05-06',
             'amount' => 10.00,
         ];
@@ -144,6 +143,7 @@ class InvoicesControllerTest extends TestCase
             'id' => 2,
             'customerId' => 1,
             'currencyId' => 1,
+            'incomeCategoryId' => 2,
             'invoiceNumber' => 'INV-00002',
             'orderNo' => 2,
             'date' => '2021-05-03',

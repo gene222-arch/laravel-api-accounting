@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\Sales\Invoice\EstimateInvoicesServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use \Illuminate\Database\Eloquent\Relations\belongsToMany;
 
 class EstimateInvoice extends Model
@@ -26,6 +27,16 @@ class EstimateInvoice extends Model
         'expired_at',
         'status'
     ];
+    
+    /**
+     * Define a many-to-many relationship with Item class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
 
     /**
      * Define a many-to-many relationship with Item class

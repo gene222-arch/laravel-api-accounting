@@ -2,7 +2,7 @@
 
 namespace App\Exports\Items;
 
-use App\Traits\Exports\Item\Item\ItemExportable;
+use App\Models\Item;
 use Maatwebsite\Excel\Excel;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class ItemExport implements FromView
 {
-    use Exportable, ItemExportable;
+    use Exportable;
 
     /**
      * view
@@ -20,7 +20,7 @@ class ItemExport implements FromView
     public function view(): View
     {
         return view('export.excel.items.item', [
-            'items' => $this->items()
+            'items' => Item::all()
         ]);
     }
 }

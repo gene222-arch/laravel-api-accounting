@@ -1,46 +1,47 @@
 <?php
 
-namespace App\Http\Controllers\Api\Exports\Items\Item;
+namespace App\Http\Controllers\Api\Exports\Sales;
 
-use App\Http\Controllers\Controller;
-use App\Exports\Items\ItemExport;
+use App\Exports\Sales\InvoiceExport;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Excel;
+use App\Http\Controllers\Controller;
 
-class ItemExportsController extends Controller
+class InvoiceExportsController extends Controller
 {
-    private $item;
+ 
+    private InvoiceExport $invoice;
     
-    public function __construct(ItemExport $item)
+    public function __construct(InvoiceExport $invoice)
     {
-        $this->item = $item;
+        $this->invoice = $invoice;
     }
     
     /**
-     * Export items to csv
+     * Export invoices to csv
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function csv()
     {
-        $fileName = 'time-' . Carbon::now()->toDateTimeString() . '-.csv';
+        $fileName = 'invoice-' . Carbon::now()->toDateTimeString() . '-.csv';
 
-        return $this->item
+        return $this->invoice
             ->download($fileName, Excel::CSV, [
                 'Content-Type' => 'text/xlsx'
             ]);
     }
 
     /**
-     * Export items to excel
+     * Export invoices to excel
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function excel()
     {
-        $fileName = 'time-' . Carbon::now()->toDateTimeString() . '-.xlsx';
+        $fileName = 'invoice-' . Carbon::now()->toDateTimeString() . '-.xlsx';
 
-        return $this->item
+        return $this->invoice
             ->download($fileName, Excel::XLSX, [
                 'Content-Type' => 'text/xlsx'
             ]);
