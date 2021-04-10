@@ -49,6 +49,7 @@ class InvoicesController extends Controller
     {
         $result = $this->invoice->createInvoice(
             $request->customerId,
+            $request->currencyId,
             $request->invoiceNumber,
             $request->orderNo,
             $request->date,
@@ -114,7 +115,6 @@ class InvoicesController extends Controller
         $result = $this->invoice->markAsPaid(
             $invoice, 
             $request->accountId,
-            $request->currencyId,
             $request->paymentMethodId,
             $request->incomeCategoryId,
             $request->amount,
@@ -163,6 +163,7 @@ class InvoicesController extends Controller
         $result = $this->invoice->updateInvoice(
             $request->id,
             $request->customerId,
+            $request->currencyId,
             $request->invoiceNumber,
             $request->orderNo,
             $request->date,

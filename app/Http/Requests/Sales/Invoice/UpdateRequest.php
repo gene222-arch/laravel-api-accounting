@@ -16,6 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:invoices,id'],
             'customerId' => ['required', 'integer', 'exists:customers,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'invoiceNumber' => ['required', 'string', 'unique:invoices,invoice_number,' . $this->id],
             'orderNo' => ['required', 'integer', 'unique:invoices,order_no,' . $this->id],
             'date' => ['required', 'string'],
@@ -39,6 +40,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'customerId' => 'customer id',
+            'currencyId' => 'currency id',
             'invoiceNumber' => 'invoice number',
             'orderNo' => 'order number',
             'dueDate' => 'due date',
@@ -59,6 +61,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'customerId.exists' => 'The selected :attribute does not exist.',
+            'currencyId.exists' => 'The selected :attribute does not exist.',
             'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }

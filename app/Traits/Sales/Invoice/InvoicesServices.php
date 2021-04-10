@@ -50,6 +50,7 @@ trait InvoicesServices
      * Create a new record of invoice
      *
      * @param  integer $customerId
+     * @param  integer $currencyId
      * @param  string $invoiceNumber
      * @param  integer $orderNo
      * @param  string $date
@@ -59,13 +60,14 @@ trait InvoicesServices
      * @param  array $paymentDetails
      * @return mixed
      */
-    public function createInvoice (int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
+    public function createInvoice (int $customerId, int $currencyId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
     {
         try {
-            DB::transaction(function () use ($customerId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
+            DB::transaction(function () use ($customerId, $currencyId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
             {
                 $invoice = Invoice::create([
                     'customer_id' => $customerId,
+                    'currency_id' => $currencyId,
                     'invoice_number' => $invoiceNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
@@ -98,6 +100,7 @@ trait InvoicesServices
      *
      * @param  integer $id
      * @param  integer $customerId
+     * @param  integer $currencyId
      * @param  string $invoiceNumber
      * @param  integer $orderNo
      * @param  string $date
@@ -107,15 +110,16 @@ trait InvoicesServices
      * @param  array $paymentDetails
      * @return mixed
      */
-    public function updateInvoice (int $id, int $customerId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
+    public function updateInvoice (int $id, int $customerId, int $currencyId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
     {
         try {
-            DB::transaction(function () use ($id, $customerId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
+            DB::transaction(function () use ($id, $customerId, $currencyId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
             {
                 $invoice = Invoice::find($id);
 
                 $invoice->update([
                     'customer_id' => $customerId,
+                    'currency_id' => $currencyId,
                     'invoice_number' => $invoiceNumber,
                     'order_no' => $orderNo,
                     'date' => $date,
@@ -208,7 +212,6 @@ trait InvoicesServices
      *
      * @param  Invoice $invoice
      * @param  integer $accountId
-     * @param  integer $currencyId
      * @param  integer $paymentMethodId
      * @param  integer $incomeCategoryId
      * @param  string $date
@@ -217,11 +220,11 @@ trait InvoicesServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (Invoice $invoice, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (Invoice $invoice, int $accountId, int $paymentMethodId, int $incomeCategoryId, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $invoice, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, 
+                $invoice, $accountId, $paymentMethodId, $incomeCategoryId, 
                 $amount, $description, $reference
             ) 
             {
@@ -255,7 +258,7 @@ trait InvoicesServices
                     $invoice->customer_id,
                     $incomeCategoryId,
                     $paymentMethodId,
-                    $currencyId
+                    $invoice->currency_id
                 );
 
                 /** Transactions */
@@ -293,7 +296,6 @@ trait InvoicesServices
      *
      * @param  integer $id
      * @param  integer $accountId
-     * @param  integer $currencyId
      * @param  integer $paymentMethodId
      * @param  integer $incomeCategoryId
      * @param  string $date
@@ -302,11 +304,11 @@ trait InvoicesServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function payment (int $id, int $accountId, int $paymentMethodId, int $incomeCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId,
+                $id, $accountId, $paymentMethodId, $incomeCategoryId,
                 $date, $amount, $description, $reference) 
             {
                 /** Invoice */
@@ -342,7 +344,7 @@ trait InvoicesServices
                     $invoice->customer_id,
                     $incomeCategoryId,
                     $paymentMethodId,
-                    $currencyId
+                    $invoice->currency_id
                 );
 
                 /** Transactions */
