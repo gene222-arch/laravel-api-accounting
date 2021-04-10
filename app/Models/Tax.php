@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\Item\Tax\TaxesServices;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Settings\Tax\TaxesServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

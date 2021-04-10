@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\Api\Item\Tax;
+namespace Tests\Feature\Http\Controllers\Api\Settings\Tax;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -13,7 +13,7 @@ class TaxControllerTest extends TestCase
     public function user_can_view_any_taxes()
     {
         $response = $this->get(
-            '/api/item/taxes',
+            '/api/settings/taxes',
             $this->apiHeader()
         );
   
@@ -26,7 +26,7 @@ class TaxControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/item/taxes/${id}",
+            "/api/settings/taxes/${id}",
             $this->apiHeader()
         );
 
@@ -46,7 +46,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/item/taxes',
+            '/api/settings/taxes',
             $data,
             $this->apiHeader()
         );
@@ -68,7 +68,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            "/api/item/taxes",
+            "/api/settings/taxes",
             $data,
             $this->apiHeader()
         );
@@ -87,7 +87,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/item/taxes',
+            '/api/settings/taxes',
             $data,
             $this->apiHeader()
         );

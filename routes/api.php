@@ -220,7 +220,6 @@ Route::prefix('human-resources')->group(function ()
  *  - Items
  *  - Categories
  *  - Discounts
- *  - Taxes
  */
 Route::prefix('item')->group(function () 
 {
@@ -261,17 +260,6 @@ Route::prefix('item')->group(function ()
         Route::delete('/', [ItemsController::class, 'destroy']);
     });
 
-    /**
-     * Taxes
-     */
-    Route::prefix('taxes')->group(function () 
-    {
-        Route::get('/', [TaxController::class, 'index']);
-        Route::get('/{id}', [TaxController::class, 'show']);
-        Route::post('/', [TaxController::class, 'store']);
-        Route::put('/', [TaxController::class, 'update']);
-        Route::delete('/', [TaxController::class, 'destroy']);
-    });
 });
 
 
@@ -390,6 +378,7 @@ Route::prefix('sales')->group(function ()
  *  - Income categories
  *  - Expense categories
  *  - Payment methods
+ *  - Taxes
  */
 Route::prefix('settings')->group(function () 
 {
@@ -470,6 +459,18 @@ Route::prefix('settings')->group(function ()
         Route::post('/', [PaymentMethodsController::class, 'store']);
         Route::put('/', [PaymentMethodsController::class, 'update']);
         Route::delete('/', [PaymentMethodsController::class, 'destroy']);
+    });
+
+    /**
+     * Taxes
+     */
+    Route::prefix('taxes')->group(function () 
+    {
+        Route::get('/', [TaxController::class, 'index']);
+        Route::get('/{id}', [TaxController::class, 'show']);
+        Route::post('/', [TaxController::class, 'store']);
+        Route::put('/', [TaxController::class, 'update']);
+        Route::delete('/', [TaxController::class, 'destroy']);
     });
 });
 

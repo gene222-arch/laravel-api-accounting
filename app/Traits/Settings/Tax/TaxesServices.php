@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Item\Tax;
+namespace App\Traits\Settings\Tax;
 
 use App\Models\Tax;
 use Illuminate\Database\Eloquent\Collection;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Item\Tax;
+namespace App\Http\Controllers\Api\Settings\Tax;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Item\Tax\DeleteRequest;
