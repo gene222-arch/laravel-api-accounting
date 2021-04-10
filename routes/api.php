@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\Settings\Account\AccountController;
 use App\Http\Controllers\Api\Purchases\Payment\PaymentsController;
 use App\Http\Controllers\Api\Settings\Company\CompaniesController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
+use App\Http\Controllers\Api\Sales\Invoice\EstimateInvoicesController;
 use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
 use App\Http\Controllers\Api\Settings\Contribution\ContributionsController;
@@ -351,6 +352,7 @@ Route::prefix('purchases')->group(function ()
  * 
  *  - Customers
  *  - Invoices
+ *  - Estimate invoices
  *  - Revenues
  */
 Route::prefix('sales')->group(function () 
@@ -368,6 +370,21 @@ Route::prefix('sales')->group(function ()
     });
 
     /**
+      * Estimate Invoices
+      */
+    Route::prefix('estimate-invoices')->group(function () 
+    {
+        Route::get('/', [EstimateInvoicesController::class, 'index']);
+        Route::get('/{id}', [EstimateInvoicesController::class, 'show']);
+        Route::post('/', [EstimateInvoicesController::class, 'store']);
+        Route::post('/{estimateInvoice}/customers/{customer}/mail', [EstimateInvoicesController::class, 'mail']);
+        Route::put('/{estimateInvoice}/mark-as-approved', [EstimateInvoicesController::class, 'markAsApproved']);
+        Route::put('/{estimateInvoice}/mark-as-refused', [EstimateInvoicesController::class, 'markAsRefused']);
+        Route::put('/', [EstimateInvoicesController::class, 'update']);
+        Route::delete('/', [EstimateInvoicesController::class, 'destroy']);
+    });
+
+    /**
      * Invoices
      */
     Route::prefix('invoices')->group(function () 
@@ -375,10 +392,10 @@ Route::prefix('sales')->group(function ()
         Route::get('/', [InvoicesController::class, 'index']);
         Route::get('/{id}', [InvoicesController::class, 'show']);
         Route::post('/', [InvoicesController::class, 'store']);
-        Route::post('/{invoice}/customers/{customer}/mail', [InvoicesController::class, 'email']);
-        Route::post('/{id}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
+        Route::post('/{invoice}/customers/{customer}/mail', [InvoicesController::class, 'mail']);
         Route::post('/payment', [InvoicesController::class, 'payment']);
         Route::put('/', [InvoicesController::class, 'update']);
+        Route::put('/{invoice}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
         Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
         Route::delete('/', [InvoicesController::class, 'destroy']);
     });

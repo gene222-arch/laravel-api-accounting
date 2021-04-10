@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Traits\Api\ApiResponser;
 use App\Traits\Api\ApiServices;
-use App\Traits\Auth\AuthServices;
+use App\Traits\Auth\Auth\AuthServices;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller

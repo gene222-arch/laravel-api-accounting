@@ -11,7 +11,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Traits\Api\ApiServices;
-use App\Traits\Auth\AuthServices;
+use App\Traits\Auth\Auth\AuthServices;
 
 class RegisterController extends Controller
 {

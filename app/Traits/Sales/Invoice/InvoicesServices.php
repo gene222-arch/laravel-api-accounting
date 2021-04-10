@@ -169,32 +169,44 @@ trait InvoicesServices
      * @param  string|null $greeting
      * @param  string|null $note
      * @param  string|null $footer
-     * @return void
+     * @return mixed
      */
-    public function email (Invoice $invoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): void
+    public function mail (Invoice $invoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): mixed
     {
-        $invoice
-            ->histories()
-            ->create([
-                'status' => $invoice->status,
-                'description' => "Invoice marked as sent!"
-            ]);
+        try {
+            DB::transaction(function () use ($invoice, $customer, $subject, $greeting, $note, $footer)
+            {
+                $isCreated = $invoice
+                    ->histories()
+                    ->create([
+                        'status' => 'Mailed',
+                        'description' => "Invoice marked as sent!"
+                    ]);
 
-        dispatch(new QueueInvoiceNotification(
-            $invoice, 
-            $customer, 
-            $subject, 
-            $greeting, 
-            $note, 
-            $footer
-        ))
-        ->delay(now()->addSeconds(5));
+                if ($isCreated)
+                {
+                    dispatch(new QueueInvoiceNotification(
+                        $invoice, 
+                        $customer, 
+                        $subject, 
+                        $greeting, 
+                        $note, 
+                        $footer
+                    ))
+                    ->delay(now()->addSeconds(5));
+                }
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
     }
 
     /**
      * Mark an invoice record as paid via id
      *
-     * @param  integer $id
+     * @param  Invoice $invoice
      * @param  integer $accountId
      * @param  integer $currencyId
      * @param  integer $paymentMethodId
@@ -205,17 +217,14 @@ trait InvoicesServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (Invoice $invoice, int $accountId, int $currencyId, int $paymentMethodId, int $incomeCategoryId, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, 
+                $invoice, $accountId, $currencyId, $paymentMethodId, $incomeCategoryId, 
                 $amount, $description, $reference
             ) 
             {
-                /** Invoice */
-                $invoice = Invoice::find($id);
-
                 /** Invoice payment detail */
                 $invoice->paymentDetail()
                     ->update([
@@ -252,7 +261,7 @@ trait InvoicesServices
                 /** Transactions */
                 $this->createTransaction(
                     get_class($invoice),
-                    $id,
+                    $invoice->id,
                     $accountId,
                     $incomeCategoryId,
                     null,

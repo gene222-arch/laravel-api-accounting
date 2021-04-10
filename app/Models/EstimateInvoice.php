@@ -2,32 +2,30 @@
 
 namespace App\Models;
 
-use App\Models\Item;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\Sales\Invoice\InvoicesServices;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Traits\Sales\Invoice\EstimateInvoicesServices;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use \Illuminate\Database\Eloquent\Relations\belongsToMany;
 
-class Invoice extends Model
+class EstimateInvoice extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
 
     /** Custom */
-    use InvoicesServices;
+    use EstimateInvoicesServices;
 
     protected $fillable = [
         'customer_id',
-        'invoice_number',
-        'order_no',
-        'date',
-        'due_date',
-        'status',
-        'recurring'
+        'estimate_number',
+        'enable_reminder',
+        'estimated_at',
+        'expired_at',
+        'status'
     ];
-    
+
     /**
      * Define a many-to-many relationship with Item class
      *
@@ -35,7 +33,7 @@ class Invoice extends Model
      */
     public function items(): belongsToMany
     {
-        return $this->belongsToMany(Item::class, 'invoice_details')
+        return $this->belongsToMany(Item::class, 'estimate_invoice_details')
             ->withPivot([
                 'item_id',
                 'discount_id',
@@ -50,22 +48,22 @@ class Invoice extends Model
     }
 
     /**
-     * Define a one-to-one relationship with InvoicePaymentDetail class
+     * Define a one-to-one relationship with EstimateInvoicePaymentDetail class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function paymentDetail(): HasOne
     {
-        return $this->hasOne(InvoicePaymentDetail::class);
+        return $this->hasOne(EstimateInvoicePaymentDetail::class);
     }
 
     /**
-     * Define many-to-one relationship with InvoiceHistory class
+     * Define many-to-one relationship with EstimateInvoiceHistory class
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function histories(): HasMany
     {
-        return $this->hasMany(InvoiceHistory::class);
+        return $this->hasMany(EstimateInvoiceHistory::class);
     }
 }

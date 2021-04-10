@@ -86,9 +86,9 @@ class InvoicesController extends Controller
      * @param Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function email(MailRequest $request, Invoice $invoice, Customer $customer)
+    public function mail(MailRequest $request, Invoice $invoice, Customer $customer)
     {
-        $this->invoice->email(
+        $result = $this->invoice->mail(
             $invoice,
             $customer,
             $request->subject,
@@ -97,20 +97,22 @@ class InvoicesController extends Controller
             $request->footer
         );
 
-        return $this->success(null, 'Customer mailed successfully.');
+        return $result !== true
+            ? $this->error($result, 500)
+            : $this->success(null, 'Customer mailed successfully.');
     }
 
    /**
      * Update the specified resource in storage.
      *
-     * @param integer $id
+     * @param Invoice $invoice
      * @param MarkAsPaidRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function markAsPaid(MarkAsPaidRequest $request ,$id)
+    public function markAsPaid(MarkAsPaidRequest $request, Invoice $invoice)
     {
         $result = $this->invoice->markAsPaid(
-            $id, 
+            $invoice, 
             $request->accountId,
             $request->currencyId,
             $request->paymentMethodId,

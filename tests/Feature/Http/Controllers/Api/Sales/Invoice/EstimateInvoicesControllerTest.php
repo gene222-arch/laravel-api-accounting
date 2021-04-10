@@ -6,14 +6,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class InvoicesControllerTest extends TestCase
+class EstimateInvoicesControllerTest extends TestCase
 {
 
     /** test */
-    public function user_can_view_any_invoices()
+    public function user_can_view_any_estimate_invoices()
     {
         $response = $this->get(
-            '/api/sales/invoices',
+            '/api/sales/estimate-invoices',
             $this->apiHeader()
         );
 
@@ -21,12 +21,12 @@ class InvoicesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_view_invoice()
+    public function user_can_view_estimate_invoice()
     {
         $id = 1;
 
         $response = $this->get(
-            "/api/sales/invoices/${id}",
+            "/api/sales/estimate-invoices/${id}",
             $this->apiHeader()
         );
 
@@ -34,18 +34,17 @@ class InvoicesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_create_invoice()
+    public function user_can_create_estimate_invoice()
     {
         $data = [
             'customerId' => 1,
-            'invoiceNumber' => 'INV-00003',
-            'orderNo' => 3,
-            'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
-            'recurring' => 'No',
+            'estimateNumber' => 'EST-00002',
+            'estimatedAt' => '2021-05-03',
+            'expiredAt' => '2021-06-03',
+            'enableReminder' => false,
             'items' => [
                 [
-                    'item_id' => 2,
+                    'item_id' => 1,
                     'discount_id' => null,
                     'item' => 'Dawk',
                     'price' => 5.00,
@@ -60,15 +59,14 @@ class InvoicesControllerTest extends TestCase
                 'total_taxes' => 40.00,
                 'sub_total' => 90.00,
                 'total' => 130.00,
-                'amount_due' => 130.00
             ]
         ];
 
         $response = $this->post(
-            '/api/sales/invoices',
+            '/api/sales/estimate-invoices',
             $data,
             $this->apiHeader()
-        ); 
+        );
 
         $this->assertResponse($response);
     }
@@ -76,17 +74,17 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_mail_customer()
     {
-        $invoice = 3;
+        $estimateNumber = 3;
         $customer = 1;
         $data = [
-            'subject' => 'Your Invoice Receipt',
+            'subject' => 'Your Estimate Invoice Receipt',
             'greeting' => 'Good day sir,',
             'note' => 'We hope you continue using our services.',
             'footer' => ''
         ];
 
         $response = $this->post(
-            "/api/sales/invoices/${invoice}/customers/${customer}/mail",
+            "/api/sales/estimate-invoices/${estimateNumber}/customers/${customer}/mail",
             $data,
             $this->apiHeader()
         ); 
@@ -95,21 +93,13 @@ class InvoicesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_mark_invoice_as_paid()
+    public function user_can_mark_estimate_invoice_as_approved()
     {
-        $id = 3;
-
-        $data = [
-            'accountId' => 1,
-            'currencyId' => 1,
-            'paymentMethodId' => 1,
-            'incomeCategoryId' => 2,
-            'amount' => 110.00,
-        ];
+        $id = 1;
 
         $response = $this->put(
-            "/api/sales/invoices/${id}/mark-as-paid",
-            $data,
+            "/api/sales/estimate-invoices/${id}/mark-as-approved",
+            [],
             $this->apiHeader()
         ); 
 
@@ -117,56 +107,38 @@ class InvoicesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_create_invoice_payment()
+    public function user_can_mark_estimate_invoice_as_refused()
     {
-        $data = [
-            'id' => 3,
-            'accountId' => 1,
-            'currencyId' => 1,
-            'paymentMethodId' => 1,
-            'incomeCategoryId' => 2,
-            'date' => '2021-05-06',
-            'amount' => 10.00,
-        ];
+        $id = 1;
 
-        $response = $this->post(
-            '/api/sales/invoices/payment',
-            $data,
+        $response = $this->put(
+            "/api/sales/estimate-invoices/${id}/mark-as-refused",
+            [],
             $this->apiHeader()
         ); 
 
         $this->assertResponse($response);
     }
+    
 
     /** test */
-    public function user_can_update_invoice()
+    public function user_can_update_estimate_invoice()
     {
         $data = [
-            'id' => 2,
+            'id' => 1,
             'customerId' => 1,
-            'invoiceNumber' => 'INV-00002',
-            'orderNo' => 2,
-            'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
-            'recurring' => 'No',
+            'estimateNumber' => 'EST-00004',
+            'estimatedAt' => '2021-05-03',
+            'expiredAt' => '2021-06-03',
+            'enableReminder' => true,
             'items' => [
                 [
                     'item_id' => 1,
                     'discount_id' => null,
-                    'item' => 'Item one',
+                    'item' => 'Dawk',
                     'price' => 5.00,
-                    'quantity' => 5,
-                    'amount' => 25.00,
-                    'discount' => 0.00,
-                    'tax' => 0.00
-                ],
-                [
-                    'item_id' => 2,
-                    'discount_id' => null,
-                    'item' => 'Item two',
-                    'price' => 5.00,
-                    'quantity' => 5,
-                    'amount' => 25.00,
+                    'quantity' => 1,
+                    'amount' => 255.00,
                     'discount' => 0.00,
                     'tax' => 0.00
                 ],
@@ -175,13 +147,13 @@ class InvoicesControllerTest extends TestCase
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 50.00,
-                'total' => 90.00,
-                'amount_due' => 65.00
+                'total' => 130.00,
             ]
         ];
 
+
         $response = $this->put(
-            '/api/sales/invoices',
+            '/api/sales/estimate-invoices',
             $data,
             $this->apiHeader()
         );
@@ -190,32 +162,16 @@ class InvoicesControllerTest extends TestCase
     }
 
     /** test */
-    public function user_can_cancel_an_invoice()
-    {
-        $id = 2;
-
-        $data = [];
-
-        $response = $this->put(
-            "/api/sales/invoices/${id}",
-            $data,
-            $this->apiHeader()
-        );
-
-        $this->assertResponse($response);
-    }
-
-    /** test */
-    public function user_can_delete_invoices()
+    public function user_can_delete_estimate_invoices()
     {
         $data = [
             'ids' => [
-                5
+                1
             ]
         ];
 
         $response = $this->delete(
-            '/api/sales/invoices',
+            '/api/sales/estimate-invoices',
             $data,
             $this->apiHeader()
         );

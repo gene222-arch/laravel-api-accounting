@@ -2,17 +2,17 @@
 
 namespace App\Notifications;
 
-use App\Models\Invoice;
+use App\Models\EstimateInvoice;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoiceNotification extends Notification implements ShouldQueue
+class EstimateInvoiceNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public Invoice $invoice;
+    public EstimateInvoice $estimateInvoice;
     public ?string $subject;
     public ?string $greeting;
     public ?string $note;
@@ -23,9 +23,9 @@ class InvoiceNotification extends Notification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Invoice $invoice, ?string $subject = 'Invoice Receipt', ?string $greeting = null, ?string $note = null, ?string $footer = null)
+    public function __construct(EstimateInvoice $estimateInvoice, ?string $subject = 'Estimate Invoice Receipt', ?string $greeting = null, ?string $note = null, ?string $footer = null)
     {
-        $this->invoice = $invoice;
+        $this->estimateInvoice = $estimateInvoice;
         $this->subject = $subject;
         $this->greeting = $greeting;
         $this->note = $note;
@@ -55,8 +55,8 @@ class InvoiceNotification extends Notification implements ShouldQueue
             ->subject($this->subject)
             ->greeting($this->greeting ?? "Hi {$notifiable->name},")
             ->line("")
-            ->line("I hope you’re well! This your e-invoice with an id of {$this->invoice->invoice_number}")
-            ->line("Due on {$this->invoice->due_date} Don’t hesitate to reach out if you have any questions,")
+            ->line("I hope you’re well! This your e-estimate-invoice with an id of {$this->estimateInvoice->estimate_number}")
+            ->line("Due on {$this->estimateInvoice->due_date} Don’t hesitate to reach out if you have any questions,")
             ->line('don\'t hesitate to ask.')
             ->line('Thank you for your patronage.!')
             ->line($this->note);
@@ -72,8 +72,8 @@ class InvoiceNotification extends Notification implements ShouldQueue
     {
         return [
             'name' => $notifiable->name, 
-            'type' => 'Invoice',
-            'message' => 'An email was sent through the user\'s gmail account about the invoice details.',
+            'type' => 'Estimate Invoice',
+            'message' => 'An email was sent through the user\'s gmail account about the estimate invoice details.',
             'iconName' => 'ReceiptIcon'
         ];
     }
