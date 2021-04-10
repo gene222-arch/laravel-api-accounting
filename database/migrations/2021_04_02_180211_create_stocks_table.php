@@ -18,6 +18,7 @@ class CreateStocksTable extends Migration
             $table->foreignId('item_id')->unique();
             $table->foreignId('supplier_id')->nullable();
             $table->unsignedBigInteger('in_stock')->default(0);
+            $table->unsignedBigInteger('incoming_stock')->default(0);
             $table->unsignedBigInteger('stock_in')->default(0);
             $table->unsignedBigInteger('stock_out')->default(0);
             $table->unsignedBigInteger('bad_stock')->default(0);    

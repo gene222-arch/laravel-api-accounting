@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsContr
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
+use App\Http\Controllers\Api\Exports\Items\Item\ItemExportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,6 +152,11 @@ Route::prefix('banking')->group(function ()
 
 
 
+/**
+ * * Double entry
+ *  - Chart of accoutns
+ *  - Journal Entry
+ */
 Route::prefix('double-entry')->group(function () 
 {
     /**
@@ -178,6 +184,22 @@ Route::prefix('double-entry')->group(function ()
     });
 });
 
+
+/**
+ * * Exports (EXCEL, CSV, PDF)
+ */
+Route::prefix('exports')->group(function () 
+{
+    Route::prefix('excel')->group(function () 
+    {
+        Route::get('/items', [ItemExportsController::class, 'excel']);
+    });
+
+    Route::prefix('csv')->group(function () 
+    {
+        Route::get('/items', [ItemExportsController::class, 'csv']);
+    });
+});
 
 
 /**

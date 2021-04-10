@@ -19,6 +19,7 @@ class Stock extends Model
         'supplier_id',
         'warehouse_id',
         'in_stock',
+        'incoming_stock',
         'stock_in',
         'stock_out',
         'bad_stock'

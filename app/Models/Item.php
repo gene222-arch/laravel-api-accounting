@@ -6,6 +6,7 @@ use App\Traits\Item\Item\ItemsServices;
 use App\Traits\Upload\UploadServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -30,6 +31,16 @@ class Item extends Model
         'is_for_sale',
         'image'
     ];
+
+    /**
+     * Define an inverse one-to-many relationship Category class
+     *
+     * @return Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 
     /**
      * Define a one-to-many relationship with InvoiceDetail class
