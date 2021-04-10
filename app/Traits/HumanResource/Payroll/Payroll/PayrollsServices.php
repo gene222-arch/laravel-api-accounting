@@ -73,7 +73,7 @@ trait PayrollsServices
 
                 Account::where('id', $payroll->account_id)
                     ->update([
-                        'balance' => DB::raw("balance - {$totalAmount}")
+                        'balance' => DB::raw("balance - ${totalAmount}")
                     ]);
 
                 $this->createTransaction(

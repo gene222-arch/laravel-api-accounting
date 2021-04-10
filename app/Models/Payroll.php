@@ -81,7 +81,7 @@ class Payroll extends Model
      */
     public function employeeContributions(): BelongsToMany
     {   
-        return $this->belongsToMany(Contribution::class)
+        return $this->belongsToMany(Contribution::class, 'payroll_contribution')
             ->withPivot([
                 'employee_id',
                 'amount'
