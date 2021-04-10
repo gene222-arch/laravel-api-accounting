@@ -39,6 +39,7 @@ use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersCon
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 use App\Http\Controllers\Api\Exports\Items\ItemExportsController;
+use App\Http\Controllers\Api\Exports\Sales\CustomerExportsController;
 use App\Http\Controllers\Api\Exports\Sales\InvoiceExportsController;
 use App\Http\Controllers\Api\Exports\Sales\RevenueExportsController;
 
@@ -197,6 +198,7 @@ Route::prefix('exports')->group(function ()
         Route::get('/items', [ItemExportsController::class, 'excel']);
         Route::get('/invoices', [InvoiceExportsController::class, 'excel']);
         Route::get('/revenues', [RevenueExportsController::class, 'excel']);
+        Route::get('/customers', [CustomerExportsController::class, 'excel']);
     });
 
     Route::prefix('csv')->group(function () 
@@ -204,6 +206,7 @@ Route::prefix('exports')->group(function ()
         Route::get('/items', [ItemExportsController::class, 'csv']);
         Route::get('/invoices', [InvoiceExportsController::class, 'csv']);
         Route::get('/revenues', [RevenueExportsController::class, 'csv']);
+        Route::get('/customers', [CustomerExportsController::class, 'csv']);
     });
 });
 

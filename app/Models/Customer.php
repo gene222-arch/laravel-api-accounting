@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Models\Invoice;
 use App\Models\Revenue;
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\Traits\Sales\Customer\CustomersServices;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
@@ -29,6 +31,16 @@ class Customer extends Model
         'reference',
         'enabled'
     ];
+
+    /**
+     * Define a many-to-many relationship with Currency class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
 
     /**
      * Define a one-to-many relationship with Invoice class
