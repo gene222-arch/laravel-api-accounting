@@ -18,11 +18,12 @@ use App\Http\Controllers\Api\Item\Category\CategoriesController;
 use App\Http\Controllers\Api\Purchases\Vendor\VendorsController;
 use App\Http\Controllers\Api\Sales\Customer\CustomersController;
 use App\Http\Controllers\Api\Settings\Account\AccountController;
-use App\Http\Controllers\Api\Settings\Company\CompaniesController;
 use App\Http\Controllers\Api\Purchases\Payment\PaymentsController;
+use App\Http\Controllers\Api\Settings\Company\CompaniesController;
 use App\Http\Controllers\Api\Settings\Currency\CurrenciesController;
 use App\Http\Controllers\Api\Banking\Transaction\TransactionsController;
 use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
+use App\Http\Controllers\Api\Settings\Contribution\ContributionsController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\HumanResource\Payroll\Payroll\PayrollsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
@@ -383,6 +384,7 @@ Route::prefix('sales')->group(function ()
  * 
  *  - Accounts
  *  - Company
+ *  - Contributions
  *  - Currencies
  *  - Payment methods
  *  - Income categories
@@ -401,8 +403,8 @@ Route::prefix('settings')->group(function ()
     });
 
     /**
-     * Company
-     */
+      * Company
+      */
     Route::prefix('company')->group(function () 
     {
         Route::get('/{id}', [CompaniesController::class, 'show']);
@@ -411,8 +413,20 @@ Route::prefix('settings')->group(function ()
     });
 
     /**
-     * Currencies
-     */
+      * Contributions
+      */
+    Route::prefix('contributions')->group(function () 
+    {
+        Route::get('/', [ContributionsController::class, 'index']);
+        Route::get('/{id}', [ContributionsController::class, 'show']);
+        Route::post('/', [ContributionsController::class, 'store']);
+        Route::put('/', [ContributionsController::class, 'update']);
+        Route::delete('/', [ContributionsController::class, 'destroy']);
+    });
+
+    /**
+      * Currencies
+      */
     Route::prefix('currencies')->group(function () 
     {
         Route::get('/', [CurrenciesController::class, 'index']);
@@ -423,8 +437,8 @@ Route::prefix('settings')->group(function ()
     });
 
     /**
-     * Income Categories
-     */
+      * Income Categories
+      */
     Route::prefix('income-categories')->group(function () 
     {
         Route::get('/', [IncomeCategoriesController::class, 'index']);
@@ -435,8 +449,8 @@ Route::prefix('settings')->group(function ()
     });
     
     /**
-     * Expense Categories
-     */
+      * Expense Categories
+      */
     Route::prefix('expense-categories')->group(function () 
     {
         Route::get('/', [ExpenseCategoriesController::class, 'index']);
@@ -447,8 +461,8 @@ Route::prefix('settings')->group(function ()
     });
 
     /**
-     * Payment methods
-     */
+      * Payment methods
+      */
     Route::prefix('payment-methods')->group(function () 
     {
         Route::get('/', [PaymentMethodsController::class, 'index']);

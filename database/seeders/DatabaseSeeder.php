@@ -13,6 +13,7 @@ use Database\Seeders\CurrencySeeder;
 use Database\Seeders\CustomerSeeder;
 use Database\Seeders\DiscountSeeder;
 use Database\Seeders\SupplierSeeder;
+use Database\Seeders\ContributionSeeder;
 use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\IncomeCategorySeeder;
 use Database\Seeders\ExpenseCategorySeeder;
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             IncomeCategorySeeder::class,
             ExpenseCategorySeeder::class,
+            ContributionSeeder::class,
             PaymentMethodSeeder::class,
             CategorySeeder::class,
             DiscountSeeder::class,

@@ -118,7 +118,7 @@ class BillsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_create_bill_payment()
     {
         $data = [

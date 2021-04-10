@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-use App\Traits\HumanResource\Payroll\SalaryDeduction\SalaryDeductionsServices;
+use App\Traits\Settings\Contribution\ContributionsServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SalaryDeduction extends Model
+class Contribution extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
 
     /** Custom */
-    use SalaryDeductionsServices;
+    use ContributionsServices;
 
     protected $fillable = [
-        'type',
+        'name',
         'rate',
         'enabled'
     ];
+    
 }
