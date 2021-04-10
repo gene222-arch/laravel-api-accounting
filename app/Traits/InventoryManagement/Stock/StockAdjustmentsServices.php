@@ -67,7 +67,7 @@ trait StockAdjustmentsServices
 
                 $stockAdjustment->details()->attach($adjustmentDetails);
 
-                (new Stock())->updateStocksBy($reason, $adjustmentDetails);
+                $this->updateStocksBy($reason, $adjustmentDetails);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -99,13 +99,89 @@ trait StockAdjustmentsServices
 
                 $stockAdjustment->details()->sync($adjustmentDetails);
 
-                (new Stock())->updateStocksBy($reason, $adjustmentDetails);
+                $this->updateStocksBy($reason, $adjustmentDetails);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
 
         return true;
+    }
+
+    /**
+     * Update stocks dynamically via reason
+     *
+     * @param  string $reason
+     * @param  array $stocks
+     * @return void
+     */
+    public function updateStocksBy(string $reason, array $stocks): void
+    {
+        $data = []; 
+
+        $uniqueKey = 'id';
+
+        $update = [];
+
+        switch ($reason) 
+        {
+            case StockAdjustment::RECEIVED_ITEMS:
+
+                foreach ($stocks as $stock) 
+                {
+                    $data[] = [
+                        'id' => $stock['stock_id'],
+                        'stock_in' => $stock['quantity']
+                    ];
+                }
+
+                $update = [
+                    'item_id' => DB::raw('item_id'),
+                    'in_stock' => DB::raw('in_stock + values(stock_in)'),
+                    'stock_in' => DB::raw('stock_in + values(stock_in)'),
+                ];
+
+                break;
+
+            case StockAdjustment::LOSS_ITEMS:
+            case StockAdjustment::DAMAGED_ITEMS:
+
+                foreach ($stocks as $stock) 
+                {
+                    $data[] = [
+                        'id' => $stock['stock_id'],
+                        'stock_out' => $stock['quantity']
+                    ];
+                }
+
+                $update = [
+                    'item_id' => DB::raw('item_id'),
+                    'in_stock' => DB::raw('in_stock - values(stock_out)'),
+                    'bad_stock' => DB::raw('bad_stock + values(stock_out)'),
+                    'stock_out' => DB::raw('stock_out + values(stock_out)'),
+                ];
+
+                break;       
+
+            case StockAdjustment::INVENTORY_COUNT:
+
+                foreach ($stocks as $stock) 
+                {
+                    $data[] = [
+                        'id' => $stock['stock_id'],
+                        'in_stock' => $stock['quantity']
+                    ];
+                }
+
+                $update = [
+                    'item_id' => DB::raw('item_id'),
+                    'in_stock'
+                ];
+                
+                break;
+        }
+
+        Stock::upsert($data, $uniqueKey, $update);
     }
 
     /**

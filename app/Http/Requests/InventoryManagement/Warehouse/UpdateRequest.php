@@ -20,7 +20,8 @@ class UpdateRequest extends BaseRequest
             'phone' => ['required', 'string', 'unique:warehouses,phone,' . $this->id],
             'address' => ['required', 'string'],
             'defaultWarehouse' => ['required', 'boolean'],
-            'enabled' => ['required', 'boolean']
+            'enabled' => ['required', 'boolean'],
+            'stocks.*' => ['required', 'array', 'min:1']
         ];
     }
 }

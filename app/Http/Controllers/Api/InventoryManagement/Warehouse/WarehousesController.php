@@ -43,16 +43,19 @@ class WarehousesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->warehouse->createWarehouse(
+        $result = $this->warehouse->createWarehouse(
             $request->name,
             $request->email,
             $request->phone,
             $request->address,
             $request->defaultWarehouse,
             $request->enabled,
+            $request->stocks
         );
 
-        return $this->success($model, 'Warehouse created successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Warehouse created successfully.');
     }
 
     /**
@@ -79,7 +82,7 @@ class WarehousesController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->warehouse->updateWarehouse(
+        $result = $this->warehouse->updateWarehouse(
             $request->id,
             $request->name,
             $request->email,
@@ -87,9 +90,12 @@ class WarehousesController extends Controller
             $request->address,
             $request->defaultWarehouse,
             $request->enabled,
+            $request->stocks
         );
 
-        return $this->success(null, 'Warehouse updated successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Warehouse updated successfully.');
     }
 
     /**

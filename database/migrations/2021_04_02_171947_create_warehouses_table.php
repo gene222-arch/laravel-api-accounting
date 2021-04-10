@@ -29,6 +29,22 @@ class CreateWarehousesTable extends Migration
                 'phone'
             ]);
         });
+
+        Schema::create('stock_warehouse', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('warehouse_id');
+            $table->foreignId('stock_id');
+
+            $table->foreign('warehouse_id')
+                ->references('id')
+                ->on('warehouses')
+                ->cascadeOnDelete();
+
+            $table->foreign('stock_id')
+                ->references('id')
+                ->on('stocks')
+                ->cascadeOnDelete();
+        });
     }
 
     /**
@@ -38,6 +54,7 @@ class CreateWarehousesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('stock_warehouse');
         Schema::dropIfExists('warehouses');
     }
 }

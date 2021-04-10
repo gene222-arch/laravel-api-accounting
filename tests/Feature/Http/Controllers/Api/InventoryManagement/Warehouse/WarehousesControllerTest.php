@@ -17,13 +17,15 @@ class WarehousesControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_view_warehouse()
     {
-        $id = 1;
+        $id = 4;
 
         $response = $this->get(
             "/api/inventory-management/warehouses/${id}",
@@ -33,16 +35,21 @@ class WarehousesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_create_warehouse()
     {
         $data = [
             'name' => 'Warehouse 2',
             'email' => 'warehouse2@mail.com',
-            'phone'=> '2222222222',
+            'phone'=> '22222222',
             'address' => 'Somewhre',
             'defaultWarehouse' => false,
             'enabled' => false,
+            'stocks' => [
+                [
+                    'stock_id' => 1,
+                ]
+            ]
         ];
 
         $response = $this->post(
@@ -58,13 +65,18 @@ class WarehousesControllerTest extends TestCase
     public function user_can_update_warehouse()
     {
         $data = [
-            'id' => 2,
-            'name' => 'Warehouse 2',
-            'email' => 'warehouse2@mail.com',
-            'phone'=> '2222222222',
+            'id' => 4,
+            'name' => 'Main warehouse',
+            'email' => 'main@mail.com',
+            'phone'=> '111111111',
             'address' => 'Somewhre',
             'defaultWarehouse' => false,
             'enabled' => false,
+            'stocks' => [
+                [
+                    'stock_id' => 1,
+                ]
+            ]
         ];
 
         $response = $this->put(

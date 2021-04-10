@@ -3,6 +3,7 @@
 namespace App\Traits\InventoryManagement\Warehouse;
 
 use App\Models\Warehouse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
 trait WarehousesServices
@@ -15,10 +16,9 @@ trait WarehousesServices
      */
     public function getAllWarehouses (): Collection
     {
-        return Warehouse::latest()->get([
-            'id',
-            ...(new Warehouse())->getFillable()
-        ]);
+        return Warehouse::with('stocks.item')
+            ->latest()
+            ->get();
     }
     
     /**
@@ -29,11 +29,8 @@ trait WarehousesServices
      */
     public function getWarehouseById (int $id): Warehouse|null
     {
-        return Warehouse::select(
-            'id', 
-            ...(new Warehouse())->getFillable()
-        )
-            ->where('id', $id)
+        return Warehouse::where('id', $id)
+            ->with('stocks.item')
             ->first();
     }
     
@@ -46,23 +43,35 @@ trait WarehousesServices
      * @param  string $address
      * @param  bool $defaultWarehouse
      * @param  bool $enabled
-     * @return Warehouse
+     * @param  array $stocks
+     * @return mixed
      */
-    public function createWarehouse (string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled): Warehouse
+    public function createWarehouse (string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled, array $stocks): mixed
     {
-        return Warehouse::create([
-            'name' => $name,
-            'email' => $email,
-            'phone' => $phone,
-            'address' => $address,
-            'default_warehouse' => $defaultWarehouse,
-            'updated_at' => null,
-            'enabled' => $enabled
-        ]);
+        try {
+            DB::transaction(function () use ($name, $email, $phone, $address, $defaultWarehouse, $enabled, $stocks)
+            {
+                $warehouse = Warehouse::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'default_warehouse' => $defaultWarehouse,
+                    'updated_at' => null,
+                    'enabled' => $enabled
+                ]);
+
+                $warehouse->stocks()->attach($stocks);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
-     * Update an existing record of warehouse
+     * Create a new record of warehouse
      *
      * @param  integer $id
      * @param  string $name
@@ -71,22 +80,33 @@ trait WarehousesServices
      * @param  string $address
      * @param  bool $defaultWarehouse
      * @param  bool $enabled
-     * @return boolean
+     * @param  array $stocks
+     * @return mixed
      */
-    public function updateWarehouse (int $id, string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled): bool
+    public function updateWarehouse (int $id, string $name, string $email, string $phone, string $address, bool $defaultWarehouse, bool $enabled, array $stocks): mixed
     {
-        $update = Warehouse::where('id', $id)
-            ->update([
-                'name' => $name,
-                'email' => $email,
-                'phone' => $phone,
-                'address' => $address,
-                'default_warehouse' => $defaultWarehouse,
-                'enabled' => $enabled,
-                'updated_at' => now()
-            ]);
+        try {
+            DB::transaction(function () use ($id, $name, $email, $phone, $address, $defaultWarehouse, $enabled, $stocks)
+            {
+                $warehouse = Warehouse::find($id);
 
-        return boolval($update);
+                $warehouse->update([
+                    'name' => $name,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'default_warehouse' => $defaultWarehouse,
+                    'updated_at' => null,
+                    'enabled' => $enabled
+                ]);
+
+                $warehouse->stocks()->sync($stocks);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
