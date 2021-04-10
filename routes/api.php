@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\Payroll\PayrollsController;
 use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
+use App\Http\Controllers\Api\DoubleEntry\ChartOfAccount\ChartOfAccountsController;
 use App\Http\Controllers\Api\InventoryManagement\Stock\StockAdjustmentsController;
 use App\Http\Controllers\Api\Settings\ExpenseCategory\ExpenseCategoriesController;
 use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsController;
@@ -143,6 +144,23 @@ Route::prefix('banking')->group(function ()
         Route::get('/', [TransactionsController::class, 'index']);
         Route::get('/{id}', [TransactionsController::class, 'show']);
         Route::get('/account/{id}', [TransactionsController::class, 'showByAccount']);
+    });
+});
+
+
+
+Route::prefix('double-entry')->group(function () 
+{
+    /**
+      * Chart of accounts
+      */
+    Route::prefix('chart-of-accounts')->group(function () 
+    {
+        Route::get('/', [ChartOfAccountsController::class, 'index']);
+        Route::get('/{id}', [ChartOfAccountsController::class, 'show']);
+        Route::post('/', [ChartOfAccountsController::class, 'store']);
+        Route::put('/', [ChartOfAccountsController::class, 'update']);
+        Route::delete('/', [ChartOfAccountsController::class, 'destroy']);
     });
 });
 
