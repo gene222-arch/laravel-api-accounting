@@ -97,6 +97,7 @@ class EstimateInvoicesController extends Controller
     {
         $result = $this->estimateInvoice->createEstimateInvoice(
             $request->customerId,
+            $request->currencyId,
             $request->estimateNumber,
             $request->estimatedAt,
             $request->expiredAt,
@@ -136,6 +137,7 @@ class EstimateInvoicesController extends Controller
         $result = $this->estimateInvoice->updateEstimateInvoice(
             $request->id,
             $request->customerId,
+            $request->currencyId,
             $request->estimateNumber,
             $request->estimatedAt,
             $request->expiredAt,

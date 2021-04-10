@@ -44,6 +44,7 @@ trait EstimateInvoicesServices
      * Create a new record of estimated invoice
      *
      * @param  integer $customerId
+     * @param  integer $currencyId
      * @param  string $estimateNumber
      * @param  string $estimatedAt
      * @param  string $expiredAt
@@ -52,13 +53,14 @@ trait EstimateInvoicesServices
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function createEstimateInvoice (int $customerId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
+    public function createEstimateInvoice (int $customerId, int $currencyId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($customerId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
+            DB::transaction(function () use ($customerId, $currencyId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
             {
                 $estimateInvoice = EstimateInvoice::create([
                     'customer_id' => $customerId,
+                    'currency_id' => $currencyId,
                     'estimate_number' => $estimateNumber,
                     'estimated_at' => $estimatedAt,
                     'expired_at' => $expiredAt,
@@ -78,7 +80,18 @@ trait EstimateInvoicesServices
         }
         return true;
     }
-
+    
+    /**
+     * Send a mail to a specified customer.
+     *
+     * @param  EstimateInvoice $estimateInvoice
+     * @param  Customer $customer
+     * @param  string $subject
+     * @param  string $greeting
+     * @param  string $note
+     * @param  string $footer
+     * @return mixed
+     */
     public function mail(EstimateInvoice $estimateInvoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): mixed
     {
         try {
@@ -168,6 +181,7 @@ trait EstimateInvoicesServices
      * Update an existing record of estimated invoice
      *
      * @param  integer $id
+     * @param  integer $currencyId
      * @param  integer $customerId
      * @param  string $estimateNumber
      * @param  string $estimatedAt
@@ -177,15 +191,16 @@ trait EstimateInvoicesServices
      * @param  array $paymentDetail
      * @return mixed
      */
-    public function updateEstimateInvoice (int $id, int $customerId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
+    public function updateEstimateInvoice (int $id, int $customerId, $currencyId, string $estimateNumber, string $estimatedAt, string $expiredAt, bool $enableReminder, array $items, array $paymentDetail): mixed
     {
         try {
-            DB::transaction(function () use ($id, $customerId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
+            DB::transaction(function () use ($id, $customerId, $currencyId, $estimateNumber, $estimatedAt, $expiredAt, $enableReminder, $items, $paymentDetail)
             {
                 $estimateInvoice = EstimateInvoice::find($id);
 
                 $estimateInvoice->update([
                     'customer_id' => $customerId,
+                    'currency_id' => $currencyId,
                     'estimate_number' => $estimateNumber,
                     'estimated_at' => $estimatedAt,
                     'expired_at' => $expiredAt,

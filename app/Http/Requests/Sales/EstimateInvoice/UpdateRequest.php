@@ -16,6 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:estimate_invoices,id'],
             'customerId' => ['required', 'integer', 'exists:customers,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'estimateNumber' => ['required', 'string', 'unique:estimate_invoices,estimate_number'],
             'estimatedAt' => ['required', 'date'],
             'expiredAt' => ['required', 'date'],
@@ -37,6 +38,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'customerId' => 'customer id',
+            'currencyId' => 'currency id',
             'estimateInvoiceNumber' => 'estimate invoice number',
             'estimatedAt' => 'estimated date',
             'expiredAt' => 'expired date',
@@ -44,6 +46,20 @@ class UpdateRequest extends BaseRequest
             'paymentDetail.total_taxes' => 'taxes',
             'paymentDetail.sub_total' => 'sub total',
             'paymentDetail.total' => 'total',
+        ];
+    }
+
+     /**
+     * Customize the error message
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'customerId.exists' => 'The selected :attribute does not exist.',
+            'currencyId.exists' => 'The selected :attribute does not exist.',
+            'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }
 }

@@ -15,6 +15,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'customerId' => ['required', 'integer', 'exists:customers,id'],
+            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
             'estimateNumber' => ['required', 'string', 'unique:estimate_invoices,estimate_number'],
             'estimatedAt' => ['required', 'date'],
             'expiredAt' => ['required', 'date'],
@@ -36,6 +37,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'customerId' => 'customer id',
+            'currencyId' => 'currency id',
             'estimateNumber' => 'estimate invoice number',
             'estimatedAt' => 'estimated date',
             'expiredAt' => 'expired date',
@@ -43,6 +45,20 @@ class StoreRequest extends BaseRequest
             'paymentDetail.total_taxes' => 'taxes',
             'paymentDetail.sub_total' => 'sub total',
             'paymentDetail.total' => 'total',
+        ];
+    }
+
+    /**
+     * Customize the error message
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'customerId.exists' => 'The selected :attribute does not exist.',
+            'currencyId.exists' => 'The selected :attribute does not exist.',
+            'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }
 }

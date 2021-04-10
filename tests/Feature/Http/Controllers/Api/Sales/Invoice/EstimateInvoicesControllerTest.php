@@ -38,6 +38,7 @@ class EstimateInvoicesControllerTest extends TestCase
     {
         $data = [
             'customerId' => 1,
+            'currencyId' => 1,
             'estimateNumber' => 'EST-00002',
             'estimatedAt' => '2021-05-03',
             'expiredAt' => '2021-06-03',
@@ -120,13 +121,13 @@ class EstimateInvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
     
-
     /** test */
     public function user_can_update_estimate_invoice()
     {
         $data = [
             'id' => 1,
             'customerId' => 1,
+            'currencyId' => 1,
             'estimateNumber' => 'EST-00004',
             'estimatedAt' => '2021-05-03',
             'expiredAt' => '2021-06-03',

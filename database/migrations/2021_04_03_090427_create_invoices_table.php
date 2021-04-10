@@ -30,7 +30,6 @@ class CreateInvoicesTable extends Migration
                 ->on('customers')
                 ->cascadeOnDelete();
 
-
             $table->foreign('currency_id')
                 ->references('id')
                 ->on('currencies')

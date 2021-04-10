@@ -19,6 +19,7 @@ class EstimateInvoice extends Model
 
     protected $fillable = [
         'customer_id',
+        'currency_id',
         'estimate_number',
         'enable_reminder',
         'estimated_at',
