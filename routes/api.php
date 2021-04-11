@@ -62,6 +62,7 @@ use App\Http\Controllers\Api\Exports\Sales\RevenueExportsController;
 
 /**
  * Auth Module
+ * Todo: Refactored
  */
 Route::middleware(['api'])->group(function () 
 {
@@ -88,6 +89,7 @@ Route::middleware(['api'])->group(function ()
 
 /**
  * Access rights module
+ * Todo: Refactored
  */
 Route::prefix('access-rights')->group(function () 
 {
@@ -103,7 +105,7 @@ Route::prefix('access-rights')->group(function ()
 
 /**
  * * Banking
- * 
+ * Todo: Refactored
  *  - Accounts
  *  - Bank account transfers
  *  - Bank account reconciliations
