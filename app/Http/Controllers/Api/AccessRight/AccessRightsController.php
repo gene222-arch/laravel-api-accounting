@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AccessRight\DestroyRequest;
 use App\Http\Requests\AccessRight\StoreRequest;
 use App\Http\Requests\AccessRight\UpdateRequest;
+use App\Models\Role as ModelsRole;
 use App\Traits\AccessRight\AccessRightServices;
 use App\Traits\Api\ApiResponser;
 use Spatie\Permission\Models\Permission;
@@ -27,12 +28,12 @@ class AccessRightsController extends Controller
      */
     public function index()
     {
-        $result = Role::all(['id', 'name']);
+        $roles = Role::latest()->get(['id', 'name', 'enabled']);
 
-        return !$result->count()
+        return !$roles->count()
             ? $this->noContent()
             : $this->success([
-                'roles' => $result
+                'roles' => $roles
             ]);
     }
 
@@ -44,13 +45,15 @@ class AccessRightsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $this->createAccessRight(
+        $result = $this->createAccessRight(
             $request->role,
             $request->permissions,
             $request->enabled
         );
 
-        return $this->success(null, 'Access right created successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Access right created successfully.');
     }
 
     /**
@@ -59,15 +62,13 @@ class AccessRightsController extends Controller
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(ModelsRole $role)
     {
-        $result = Role::find($id);
-
-        return !$result
+        return !$role
             ? $this->noContent()
             : $this->success([
-                'role' => $result->name,
-                'permissions' => $result->permissions
+                'role' => $role->name,
+                'permissions' => $role->permissions->map->name
             ]);
     }
 
@@ -79,14 +80,16 @@ class AccessRightsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->updateAccessRight(
+        $result = $this->updateAccessRight(
             $request->id,
             $request->role,
             $request->permissions,
             $request->enabled
         );
 
-        return $this->success(null, 'Access right updated successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Access right created successfully.');
     }
 
     /**
@@ -97,7 +100,7 @@ class AccessRightsController extends Controller
      */
     public function destroy(DestroyRequest $request)
     {
-        $this->deleteAccessRights($request->ids);
+        Role::whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Access right or rights deleted successfully.');
     }

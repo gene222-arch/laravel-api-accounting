@@ -19,7 +19,6 @@ trait AccessRightServices
     public function createAccessRight (string $role, array $permissions, bool $enabled): mixed
     {
         try {
-
             DB::transaction(function () use ($role, $permissions, $enabled) 
             {
                 $role = Role::create([
@@ -30,12 +29,11 @@ trait AccessRightServices
         
                 $role->givePermissionTo(...$permissions);
             });
-
-            return true;
-
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
+
+        return true;
     }
 
     /**
@@ -61,23 +59,11 @@ trait AccessRightServices
 
                 $findRole->syncPermissions($permissions);
             });
-
-            return true;
-
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
-    }
-    
-    /**
-     * Delete one or multiple roles with it's associated permissions
-     *
-     * @param  array $ids
-     * @return void
-     */
-    public function deleteAccessRights (array $ids)
-    {
-       return Role::whereIn('id', $ids)->delete();
+
+        return true;
     }
 
 }

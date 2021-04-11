@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class AccessRightsControllerTest extends TestCase
 {
-    /** test */
+    /** @test */
     public function user_can_view_any_access_rights()
     {
         $response = $this->get(
@@ -16,21 +16,21 @@ class AccessRightsControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_view_access_right()
     {
-        $id = 10;
+        $id = 12;
 
         $response = $this->get(
             "/api/access-rights/${id}",
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -83,7 +83,7 @@ class AccessRightsControllerTest extends TestCase
     {
         $data = [
             'ids' => [
-                2
+                4
             ]
         ];
 
