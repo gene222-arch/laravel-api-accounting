@@ -6,16 +6,16 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Reconcile implements Rule
 {
-    public bool $reconciled;
+    public string $status;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct(bool $reconciled)
+    public function __construct(string $status)
     {
-        $this->reconciled = $reconciled;
+        $this->status = $status;
     }   
 
     /**
@@ -27,16 +27,23 @@ class Reconcile implements Rule
      */
     public function passes($attribute, $value)
     {   
-        if ($this->reconciled)
+        $shouldReconcile = false;
+
+        if ($this->status === 'Reconciled' && empty($value))
         {
-            return empty($value);
+            $shouldReconcile = true;
         }
         else 
         {
-            return $value;
+            $shouldReconcile = false;
         }
 
-        return true;
+        if ($this->status === 'Unreconciled') 
+        {
+            $shouldReconcile = true;
+        };
+        
+        return $shouldReconcile;
     }
 
     /**

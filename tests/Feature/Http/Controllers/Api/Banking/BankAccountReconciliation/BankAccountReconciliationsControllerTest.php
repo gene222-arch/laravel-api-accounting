@@ -37,13 +37,13 @@ class BankAccountReconciliationsControllerTest extends TestCase
     public function user_can_create_bank_account_reconciliation()
     {
         $data = [
-            'accountId' => 2,
-            'startedAt' => '2020-01-01',
-            'endedAt' => '2020-02-03',
-            'closingBalance' => 100.00,
-            'clearedAmount' => 100.00,
-            'difference' => 100.00,
-            'reconciled' => false,
+            'account_id' => 1,
+            'started_at' => '2020-01-01',
+            'ended_at' => '2020-02-03',
+            'closing_balance' => 100.00,
+            'cleared_amount' => 100.00,
+            'difference' => 0,
+            'status' => 'Reconciled',
         ];
 
         $response = $this->post(
@@ -58,19 +58,21 @@ class BankAccountReconciliationsControllerTest extends TestCase
     /** test */
     public function user_can_update_bank_account_reconciliation()
     {
+        $reconciliationId = 1;
+
+        $accountId = 1;
+
         $data = [
-            'id' => 3,
-            'accountId' => 3,
-            'startedAt' => '2020-01-01',
-            'endedAt' => '2020-02-03',
-            'closingBalance' => 110.00,
-            'clearedAmount' => -110.00,
-            'difference' => 0.00,
-            'reconciled' => true,
+            'started_at' => '2020-01-01',
+            'ended_at' => '2020-02-03',
+            'closing_balance' => 100.00,
+            'cleared_amount' => 100.00,
+            'difference' => 10,
+            'status' => 'Unreconciled',
         ];
 
         $response = $this->put(
-            '/api/banking/reconciliations',
+            "/api/banking/reconciliations/${reconciliationId}/accounts/${accountId}",
             $data,
             $this->apiHeader()
         );

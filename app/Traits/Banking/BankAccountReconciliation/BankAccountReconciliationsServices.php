@@ -11,62 +11,60 @@ trait BankAccountReconciliationsServices
 {
     
     /**
-     * Get latest records of bank account reconciliations
+     * Create a new record of bank account reconciliation
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array $reconciliationDetails
+     * @param  Account $account
+     * @param  float $closing_balance
+     * @param  float $closing_balance
+     * @param  string $status
+     * @return mixed
      */
-    public function getAllBankAccountReconciliations (): Collection
+    public function createBankAccountReconciliation (array $reconciliationDetails, Account $account, float $closing_balance, float $difference, string $status): mixed
     {
-        return BankAccountReconciliation::with('account')
-            ->latest()
-            ->get();
-    }
-    
-    /**
-     * Get a record of bank account reconciliation via id
-     *
-     * @param  int $id
-     * @return BankAccountReconciliation|null
-     */
-    public function getBankAccountReconciliationById (int $id): BankAccountReconciliation|null
-    {
-        $reconciliation = BankAccountReconciliation::find($id);
+        try {
+            DB::transaction(function () use ($reconciliationDetails, $account, $closing_balance, $difference, $status)
+            {
+                $status = $this->setStatus($status, $difference);
 
-        return !$reconciliation
-            ? null 
-            : $reconciliation->with('account')->first();
+                BankAccountReconciliation::create($reconciliationDetails);
+
+                $status === 'Reconciled' && (
+                    $account->update([
+                        'balance' => DB::raw("balance - ${closing_balance}")
+                    ]));
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
      * Create a new record of bank account reconciliation
      *
-     * @param  integer $accountId
-     * @param  string $startedAt
-     * @param  string $endedAt
-     * @param  float $closingBalance
-     * @param  float $clearedAmount
-     * @param  float $difference
-     * @param  bool $reconciled
+     * @param  BankAccountReconciliation $reconciliation
+     * @param  array $reconciliationDetails
+     * @param  Account $account
+     * @param  float $closing_balance
+     * @param  float $closing_balance
+     * @param  string $status
      * @return mixed
      */
-    public function createBankAccountReconciliation (int $accountId, string $startedAt, string $endedAt, float $closingBalance, float $clearedAmount, float $difference, bool $reconciled): mixed
+    public function updateBankAccountReconciliation (BankAccountReconciliation $reconciliation, array $reconciliationDetails, Account $account, float $closing_balance, float $difference, string $status): mixed
     {
         try {
-            DB::transaction(function () use ($accountId, $startedAt, $endedAt, $closingBalance, $clearedAmount, $difference, $reconciled)
+            DB::transaction(function () use ($reconciliation ,$reconciliationDetails, $account, $closing_balance, $difference, $status)
             {
-                BankAccountReconciliation::create([
-                    'account_id' => $accountId,
-                    'started_at' => $startedAt,
-                    'ended_at' => $endedAt,
-                    'closing_balance' => $closingBalance,
-                    'cleared_amount' => $clearedAmount,
-                    'difference' => $difference,
-                    'status' => $reconciled ? 'Reconciled' : 'Uneconciled'
-                ]);
+                $status = $this->setStatus($status, $difference);
 
-                Account::find($accountId)->update([
-                    'balance' => DB::raw("balance - ${closingBalance}")
-                ]);
+                $reconciliation->update($reconciliationDetails);
+
+                $status === 'Reconciled' && (
+                    $account->update([
+                        'balance' => DB::raw("balance - ${closing_balance}")
+                    ]));
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -76,53 +74,14 @@ trait BankAccountReconciliationsServices
     }
     
     /**
-     * Update an existing record of bank account reconciliation
+     * Set the status of reconciliations
      *
-     * @param  integer $id
-     * @param  integer $accountId
-     * @param  string $startedAt
-     * @param  string $endedAt
-     * @param  float $closingBalance
-     * @param  float $clearedAmount
+     * @param  string $status
      * @param  float $difference
-     * @param  bool $reconciled
-     * @return mixed
+     * @return string
      */
-    public function updateBankAccountReconciliation (int $id, int $accountId, string $startedAt, string $endedAt, float $closingBalance, float $clearedAmount, float $difference, bool $reconciled): mixed
+    public function setStatus (string $status, float $difference): string
     {
-        try {
-            DB::transaction(function () use ($id, $accountId, $startedAt, $endedAt, $closingBalance, $clearedAmount, $difference, $reconciled)
-            {
-                BankAccountReconciliation::find($id)
-                ->update([
-                    'account_id' => $accountId,
-                    'started_at' => $startedAt,
-                    'ended_at' => $endedAt,
-                    'closing_balance' => $closingBalance,
-                    'cleared_amount' => $clearedAmount,
-                    'difference' => $difference,
-                    'status' => $reconciled ? 'Reconciled' : 'Uneconciled'
-                ]);
-
-                Account::find($accountId)->update([
-                    'balance' => DB::raw("balance - ${closingBalance}")
-                ]);
-            });
-        } catch (\Throwable $th) {
-            return $th->getMessage();
-        }
-
-        return true;
-    }
-
-    /**
-     * Delete one or multiple records of BankAccountReconciliations
-     *
-     * @param  array $ids
-     * @return boolean
-     */
-    public function deleteBankAccountReconciliations (array $ids): bool
-    {
-        return BankAccountReconciliation::whereIn('id', $ids)->delete();
+        return !($status === 'Reconciled' && empty($difference)) ? 'Unrenconciled' : $status;
     }
 }

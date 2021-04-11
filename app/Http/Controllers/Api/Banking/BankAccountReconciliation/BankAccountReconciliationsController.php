@@ -5,20 +5,19 @@ namespace App\Http\Controllers\Api\Banking\BankAccountReconciliation;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
 use App\Models\BankAccountReconciliation;
-use App\Http\Requests\Banking\BankAccountReconciliation\StoreRequest;
+use App\Http\Requests\Banking\BankAccountReconciliation\UpdateStoreRequest;
 use App\Http\Requests\Banking\BankAccountReconciliation\DeleteRequest;
-use App\Http\Requests\Banking\BankAccountReconciliation\UpdateRequest;
-
+use App\Models\Account;
 
 class BankAccountReconciliationsController extends Controller
 {
     use ApiResponser;
 
-    private BankAccountReconciliation $bankAccountReconciliation;
+    private BankAccountReconciliation $reconciliation;
     
-    public function __construct(BankAccountReconciliation $bankAccountReconciliation)
+    public function __construct(BankAccountReconciliation $reconciliation)
     {
-        $this->bankAccountReconciliation = $bankAccountReconciliation;
+        $this->reconciliation = $reconciliation;
         $this->middleware(['auth:api', 'permission:Manage Bank Account Reconciliations']);
     }
 
@@ -29,7 +28,10 @@ class BankAccountReconciliationsController extends Controller
      */
     public function index()
     {
-        $result = $this->bankAccountReconciliation->getAllBankAccountReconciliations();
+        $result = $this->reconciliation
+            ->with('account')
+            ->latest()
+            ->get(['id', ...$this->reconciliation->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -39,19 +41,18 @@ class BankAccountReconciliationsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
+     * @param UpdateStoreRequest $request
+     * @param Account $account
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(UpdateStoreRequest $request, Account $account)
     {
-        $result = $this->bankAccountReconciliation->createBankAccountReconciliation(
-            $request->accountId,
-            $request->startedAt,
-            $request->endedAt,
-            $request->closingBalance,
-            $request->clearedAmount,
+        $result = $this->reconciliation->createBankAccountReconciliation(
+            $request->all(),
+            $account,
+            $request->closing_balance,
             $request->difference,
-            $request->reconciled
+            $request->status
         );
 
         return $result !== true 
@@ -62,35 +63,33 @@ class BankAccountReconciliationsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param BankAccountReconciliation $reconciliation
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(BankAccountReconciliation $reconciliation)
     {
-        $result = $this->bankAccountReconciliation->getBankAccountReconciliationById($id);
+        $reconciliation = $reconciliation->with('account')->first();
 
-        return !$result
+        return !$reconciliation
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($reconciliation);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateStoreRequest $request, BankAccountReconciliation $reconciliation, Account $account)
     {
-        $result = $this->bankAccountReconciliation->updateBankAccountReconciliation(
-            $request->id,
-            $request->accountId,
-            $request->startedAt,
-            $request->endedAt,
-            $request->closingBalance,
-            $request->clearedAmount,
+        $result = $this->reconciliation->updateBankAccountReconciliation(
+            $reconciliation,
+            $request->all(),
+            $account,
+            $request->closing_balance,
             $request->difference,
-            $request->reconciled
+            $request->status
         );
 
         return $result !== true 
@@ -106,7 +105,7 @@ class BankAccountReconciliationsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->bankAccountReconciliation->deleteBankAccountReconciliations($request->ids);
+        $this->reconciliation->whereIn('id', $request->ids)->delete();;
 
         return $this->success(null, 'Bank account reconciliation or reconciliations deleted successfully.');
     }

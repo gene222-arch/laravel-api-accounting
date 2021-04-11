@@ -141,9 +141,9 @@ Route::prefix('banking')->group(function ()
     Route::prefix('reconciliations')->group(function () 
     {
         Route::get('/', [BankAccountReconciliationsController::class, 'index']);
-        Route::get('/{id}', [BankAccountReconciliationsController::class, 'show']);
+        Route::get('/{reconciliation}', [BankAccountReconciliationsController::class, 'show']);
         Route::post('/', [BankAccountReconciliationsController::class, 'store']);
-        Route::put('/', [BankAccountReconciliationsController::class, 'update']);
+        Route::put('/{reconciliation}/accounts/{account}', [BankAccountReconciliationsController::class, 'update']);
         Route::delete('/', [BankAccountReconciliationsController::class, 'destroy']);
     });
 
