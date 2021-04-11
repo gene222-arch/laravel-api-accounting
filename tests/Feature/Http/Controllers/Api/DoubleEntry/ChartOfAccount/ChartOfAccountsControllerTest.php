@@ -37,10 +37,10 @@ class ChartOfAccountsControllerTest extends TestCase
     public function user_can_create_chart_of_account()
     {
         $data = [
-            'name' => 'Accounts Receivable',
-            'code' => '0002',
-            'type' => 'Current Asset',
-            'enabled' => false
+            'name' => 'Accounts Payable',
+            'code' => '0003',
+            'type' => 'Current Payable',
+            'enabled' => true
         ];
 
         $response = $this->post(
@@ -57,9 +57,9 @@ class ChartOfAccountsControllerTest extends TestCase
     {
         $data = [
             'id' => 2,
-            'name' => 'Accounts Receivable',
-            'code' => '0002',
-            'type' => 'Current Asset',
+            'name' => 'Accounts Payable',
+            'code' => '0001',
+            'type' => 'Current Payable',
             'enabled' => true
         ];
 

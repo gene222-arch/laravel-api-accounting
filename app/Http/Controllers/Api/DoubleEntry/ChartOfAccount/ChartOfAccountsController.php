@@ -28,7 +28,9 @@ class ChartOfAccountsController extends Controller
      */
     public function index()
     {
-        $result = $this->chartOfAccount->getAllChartOfAccounts();
+        $result = $this->chartOfAccount
+            ->latest()
+            ->get(['id', ...$this->chartOfAccount->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,13 +45,7 @@ class ChartOfAccountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $chartOfAccount = $this->chartOfAccount->createChartOfAccount(
-            $request->name,
-            $request->code,
-            $request->type,
-            $request->description,
-            $request->enabled
-        );
+        $chartOfAccount = $this->chartOfAccount->create($request->all());
 
         return $this->success($chartOfAccount, 'Chart of account created successfully.');
     }
@@ -57,16 +53,14 @@ class ChartOfAccountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param ChartOfAccount $chartOfAccount
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(ChartOfAccount $chartOfAccount)
     {
-        $result = $this->chartOfAccount->getChartOfAccountById($id);
-
-        return !$result
+        return !$chartOfAccount
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($chartOfAccount);
     }
 
     /**
@@ -77,14 +71,7 @@ class ChartOfAccountsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->chartOfAccount->updateChartOfAccount(
-            $request->id,
-            $request->name,
-            $request->code,
-            $request->type,
-            $request->description,
-            $request->enabled
-        );
+        $this->chartOfAccount->where('id', $request->id)->update($request->all());
 
         return $this->success(null, 'Chart of account updated successfully.');
     }
@@ -97,7 +84,7 @@ class ChartOfAccountsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->chartOfAccount->deleteChartOfAccounts($request->ids);
+        $this->chartOfAccount->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Chart of account or accounts deleted successfully.');
     }

@@ -175,7 +175,7 @@ Route::prefix('double-entry')->group(function ()
     Route::prefix('chart-of-accounts')->group(function () 
     {
         Route::get('/', [ChartOfAccountsController::class, 'index']);
-        Route::get('/{id}', [ChartOfAccountsController::class, 'show']);
+        Route::get('/{chartOfAccount}', [ChartOfAccountsController::class, 'show']);
         Route::post('/', [ChartOfAccountsController::class, 'store']);
         Route::put('/', [ChartOfAccountsController::class, 'update']);
         Route::delete('/', [ChartOfAccountsController::class, 'destroy']);
