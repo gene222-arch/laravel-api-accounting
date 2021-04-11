@@ -23,7 +23,7 @@ class JournalEntriesControllerTest extends TestCase
     /** test */
     public function user_can_view_journal_entry()
     {
-        $id = 2;
+        $id = 3;
 
         $response = $this->get(
             "/api/double-entry/journal-entries/${id}",
@@ -42,7 +42,7 @@ class JournalEntriesControllerTest extends TestCase
             'items' => [
                 [
                     'item_id' => 1,
-                    'chart_of_account_id' => 2,
+                    'chart_of_account_id' => 1,
                     'debit' => 10.00,
                     'credit' => 0.00
                 ]
@@ -61,13 +61,14 @@ class JournalEntriesControllerTest extends TestCase
     /** test */
     public function user_can_update_journal_entry()
     {
+        $id = 3;
+
         $data = [
-            'id' => 2,
             'date' => '2021-05-05',
-            'description' => 'First journal entry',
+            'description' => 'Third journal entry',
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'chart_of_account_id' => 2,
                     'debit' => 10.00,
                     'credit' => 0.00
@@ -76,7 +77,7 @@ class JournalEntriesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/double-entry/journal-entries',
+            "/api/double-entry/journal-entries/${id}",
             $data,
             $this->apiHeader()
         );

@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\DoubleEntry\JournalEntry;
 use App\Models\JournalEntry;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DoubleEntry\JournalEntry\StoreRequest;
 use App\Http\Requests\DoubleEntry\JournalEntry\DeleteRequest;
-use App\Http\Requests\DoubleEntry\JournalEntry\UpdateRequest;
+use App\Http\Requests\DoubleEntry\JournalEntry\UpdateStoreRequest;
 
 class JournalEntriesController extends Controller
 {
@@ -28,7 +27,10 @@ class JournalEntriesController extends Controller
      */
     public function index()
     {
-        $result = $this->journalEntry->getAllJournalEntries();
+        $result = $this->journalEntry
+            ->with('items')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -38,15 +40,13 @@ class JournalEntriesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(UpdateStoreRequest $request)
     {
         $result = $this->journalEntry->createJournalEntry(
-            $request->date,
-            $request->reference,
-            $request->description,
+            $request->except('items'),
             $request->items
         );
 
@@ -58,31 +58,30 @@ class JournalEntriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param JournalEntry $journalEntry
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(JournalEntry $journalEntry)
     {
-        $result = $this->journalEntry->getJournalEntryById($id);
+        $journalEntry = $journalEntry->with('items')->first();
 
-        return !$result
+        return !$journalEntry
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($journalEntry);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param UpdateStoreRequest $request
+     * @param JournalEntry $journalEntry
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateStoreRequest $request, JournalEntry $journalEntry)
     {
         $result = $this->journalEntry->updateJournalEntry(
-            $request->id,
-            $request->date,
-            $request->reference,
-            $request->description,
+            $journalEntry,
+            $request->except('items'),
             $request->items
         );
 
@@ -99,7 +98,7 @@ class JournalEntriesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->journalEntry->deleteJournalEntries($request->ids);
+        $this->journalEntry->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Journal entry  or entries deleted successfully.');
     }

@@ -187,9 +187,9 @@ Route::prefix('double-entry')->group(function ()
     Route::prefix('journal-entries')->group(function () 
     {
         Route::get('/', [JournalEntriesController::class, 'index']);
-        Route::get('/{id}', [JournalEntriesController::class, 'show']);
+        Route::get('/{journalEntry}', [JournalEntriesController::class, 'show']);
         Route::post('/', [JournalEntriesController::class, 'store']);
-        Route::put('/', [JournalEntriesController::class, 'update']);
+        Route::put('/{journalEntry}', [JournalEntriesController::class, 'update']);
         Route::delete('/', [JournalEntriesController::class, 'destroy']);
     });
 });

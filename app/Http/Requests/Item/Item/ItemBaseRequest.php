@@ -40,7 +40,7 @@ class ItemBaseRequest extends BaseRequest
     {
         return [
             'item.category_id.exists' => 'The selected :attribute does not exist.',
-            'taxes.*.exists' => 'The selected :attribute does not exist.',
+            'taxes.*.tax_id.exists' => 'The selected :attribute does not exist.',
             'stock.vendor_id.exists' => 'The selected :attribute does not exist.',
         ];
     }
