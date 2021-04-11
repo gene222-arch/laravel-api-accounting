@@ -573,24 +573,11 @@ Route::prefix('settings')->group(function ()
 /**
  * * Inventory Management
  * 
- *  - Suppliers
  *  - Stock adjustments
  *  - Warehouses
  */
 Route::prefix('inventory-management')->group(function () 
 {
-    /**
-     * Suppliers
-     */
-    Route::prefix('suppliers')->group(function () 
-    {
-        Route::get('/', [SuppliersController::class, 'index']);
-        Route::get('/{id}', [SuppliersController::class, 'show']);
-        Route::post('/', [SuppliersController::class, 'store']);
-        Route::put('/', [SuppliersController::class, 'update']);
-        Route::delete('/', [SuppliersController::class, 'destroy']);
-    });
-
     /**
      * Stock adjustments
      */
