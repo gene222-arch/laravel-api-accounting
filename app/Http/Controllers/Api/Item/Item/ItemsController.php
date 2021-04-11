@@ -29,7 +29,9 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        $result = $this->item->getAllItems();
+        $result = $this->item
+            ->latest()
+            ->get(['id', ...$this->item->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -37,7 +39,6 @@ class ItemsController extends Controller
                 'data' => $result
             ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -50,7 +51,8 @@ class ItemsController extends Controller
         $result = $this->item->createItem(
             $request->item,
             $request->stock,
-            $request->trackStock
+            $request->taxes,
+            $request->track_stock,
         );
 
         return $result !== true 
@@ -64,13 +66,11 @@ class ItemsController extends Controller
      * @param integer $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Item $item)
     {
-        $result = $this->item->getItemById($id);
-
-        return !$result
+        return !$item
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($item);
     }
 
     /**
@@ -82,13 +82,15 @@ class ItemsController extends Controller
     public function update(UpdateRequest $request)
     {
         $result = $this->item->updateItem(
+            $request->id,
             $request->item,
             $request->stock,
-            $request->trackStock
+            $request->taxes,
+            $request->track_stock,
         );
 
         return $result !== true 
-            ? $this->error(null, $result, 500)
+            ? $this->error($result, 500)
             : $this->success(null, 'Item updated successfully.');
     }
 
@@ -116,7 +118,7 @@ class ItemsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->item->deleteItems($request->ids);
+        $this->item->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Item or items deleted successfully.');
     }

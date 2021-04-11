@@ -16,7 +16,7 @@ class CreateStocksTable extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->unique();
-            $table->foreignId('supplier_id')->nullable();
+            $table->foreignId('vendor_id')->nullable();
             $table->unsignedBigInteger('in_stock')->default(0);
             $table->unsignedBigInteger('incoming_stock')->default(0);
             $table->unsignedBigInteger('stock_in')->default(0);
@@ -30,9 +30,9 @@ class CreateStocksTable extends Migration
                 ->on('items')
                 ->cascadeOnDelete();
 
-            $table->foreign('supplier_id')
+            $table->foreign('vendor_id')
                 ->references('id')
-                ->on('suppliers')
+                ->on('vendors')
                 ->nullOnDelete();
         });
     }

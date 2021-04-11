@@ -331,7 +331,7 @@ Route::prefix('item')->group(function ()
     Route::prefix('items')->group(function () 
     {
         Route::get('/', [ItemsController::class, 'index']);
-        Route::get('/{id}', [ItemsController::class, 'show']);
+        Route::get('/{item}', [ItemsController::class, 'show']);
         Route::post('/', [ItemsController::class, 'store']);
         Route::post('/upload', [ItemsController::class, 'upload']);
         Route::put('/', [ItemsController::class, 'update']);
@@ -616,13 +616,6 @@ Route::prefix('inventory-management')->group(function ()
     });
 });
 
-Route::get('users', function () {
-    return \App\Models\User::all([
-        'first_name',
-        'last_name',
-        'email'
-    ]);
-});
 
 
 

@@ -6,7 +6,6 @@ use App\Http\Requests\BaseRequest;
 
 class UpdateRequest extends BaseRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,67 +14,22 @@ class UpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'item.id' => ['required', 'integer', 'exists:items,id'],
-            'item.categoryId' => ['required', 'integer', 'exists:categories,id'],
-            'item.sku' => ['required', 'string', 'min:8', 'max:12', 'unique:items,sku,' . $this->item['id']],
-            'item.barcode' => ['required', 'string', 'min:3', 'max:12', 'unique:items,barcode,' . $this->item['id']],
-            'item.name' => ['required', 'string', 'unique:items,name,' . $this->item['id']],
+            'id' => ['required', 'integer', 'exists:items,id'],
+            'item.category_id' => ['required', 'integer', 'exists:categories,id'],
+            'item.sku' => ['required', 'string', 'min:8', 'max:12', 'unique:items,sku,' . $this->id],
+            'item.barcode' => ['required', 'string', 'min:3', 'max:12', 'unique:items,barcode,' . $this->id],
+            'item.name' => ['required', 'string', 'unique:items,name,' . $this->id],
             'item.description' => ['nullable', 'string'],
             'item.price' => ['nullable', 'numeric', 'min:0'],
             'item.cost' => ['required', 'numeric', 'min:0'],
-            'item.soldBy' => ['required', 'string', 'in:each,weight'],
-            'item.isForSale' => ['required', 'boolean'],
+            'item.sold_by' => ['required', 'string', 'in:each,weight'],
+            'item.is_for_sale' => ['required', 'boolean'],
             'item.image' => ['nullable', 'string'],
-            'item.taxes.*' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
-
-            'trackStock' => ['required', 'boolean'],
-
-            'stock.supplierId' => ['nullable', 'integer', 'exists:suppliers,id'],
+            'stock.vendor_id' => ['nullable', 'integer', 'exists:vendors,id'],
             'stock.in_stock' => ['nullable', 'integer', 'min:0'],
-            'stock.minimumStock' => ['nullable', 'integer', 'min:0'],
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'item.id' => 'id',
-            'item.categoryId' => 'category id',
-            'item.sku' => 'sku',
-            'item.barcode' => 'barcode',
-            'item.name' => 'name',
-            'item.description' => 'description',
-            'item.price' => 'price',
-            'item.cost' => 'cost',
-            'item.soldBy' => 'sold by',
-            'item.isForSale' => 'is for sale',
-            'item.image' => 'image',
-            'item.taxes' => 'taxes',
-
-            'stock.supplierId' => 'supplier id',
-            'stock.inStock' => 'in stock',
-            'stock.minimumStock' => 'minimum stock',
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'item.id.exists' => 'The selected :attribute does not exist.',
-            'item.categoryId.exists' => 'The selected :attribute does not exist.',
-            'item.taxes' => 'The selected :attribute does not exist.',
-            'stock.id.exists' => 'The selected :attribute does not exist.',
-            'stock.supplierId.exists' => 'The selected :attribute does not exist.',
+            'stock.minimum_stock' => ['nullable', 'integer', 'min:0'],
+            'track_stock' => ['required', 'boolean'],
+            'taxes.*' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
         ];
     }
 }

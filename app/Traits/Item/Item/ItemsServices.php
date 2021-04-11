@@ -11,74 +11,24 @@ trait ItemsServices
 {
     
     /**
-     * Get all latest records if items
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllItems (): Collection
-    {
-        return Item::latest()->get([
-            'id',
-            ...(new Item())->getFillable()
-        ]);
-    }
-
-    /**
-     * Get a record of item via id
-     *
-     * @param  int $id
-     * @return Item|null
-     */
-    public function getItemById (int $id): Item|null
-    {
-        return Item::select(
-            'id',
-            ...(new Item())->getFillable()
-        )
-        ->where('id', $id)
-        ->first();
-    }
-    
-
-    /**
      * Create a new record of item
      *
      * @param  array $itemData
      * @param  array|null $stockData
+     * @param  array|null $taxes
      * @param  bool $trackStock
      * @return mixed
      */
-    public function createItem (array $itemData, ?array $stockData, bool $trackStock): mixed
+    public function createItem (array $itemData, ?array $stockData, array $taxes, bool $trackStock): mixed
     {
         try {
-            DB::transaction(function () use ($itemData, $stockData, $trackStock) 
+            DB::transaction(function () use ($itemData, $stockData, $trackStock, $taxes) 
             {
-                $item = Item::create([
-                    'category_id' => $itemData['categoryId'],
-                    'sku' => $itemData['sku'],
-                    'barcode' => $itemData['barcode'],
-                    'name' => $itemData['name'],
-                    'description' => $itemData['description'],
-                    'price' => $itemData['price'],
-                    'cost' => $itemData['cost'],
-                    'sold_by' => $itemData['soldBy'],
-                    'is_for_sale' => $itemData['isForSale'],
-                    'image' => $itemData['image']
-                ]);
+                $item = Item::create($itemData);
 
-                if ($itemData['taxes'])
-                {
-                    $item->taxes()->attach($itemData['taxes']);
-                }
+                if ($taxes) $item->taxes()->attach($taxes);
         
-                if ($trackStock)
-                {
-                    $item->stock()->create([
-                        'supplier_id' => $stockData['supplierId'],
-                        'in_stock' => $stockData['inStock'],
-                        'minimum_stock' => $stockData['minimumStock']
-                    ]);
-                }
+                if ($trackStock)  $item->stock()->create($stockData);
 
             });
         } catch (\Throwable $th) {
@@ -91,44 +41,25 @@ trait ItemsServices
     /**
      * Update an existing record of item
      *
+     * @param  integer $id
      * @param  array $itemData
      * @param  array|null $stockData
+     * @param  array|null $taxes
      * @param  bool $trackStock
      * @return mixed
      */
-    public function updateItem (array $itemData, ?array $stockData, bool $trackStock): mixed
-    {   
+    public function updateItem (int $id, array $itemData, ?array $stockData, array $taxes, bool $trackStock): mixed
+    {
         try {
-            DB::transaction(function () use ($itemData, $stockData, $trackStock)
+            DB::transaction(function () use ($id, $itemData, $stockData, $trackStock, $taxes) 
             {
-                $item = Item::find($itemData['id']);
+                $item = Item::find($id);
 
-                $item->update([
-                    'category_id' => $itemData['categoryId'],
-                    'sku' => $itemData['sku'],
-                    'barcode' => $itemData['barcode'],
-                    'name' => $itemData['name'],
-                    'description' => $itemData['description'],
-                    'price' => $itemData['price'],
-                    'cost' => $itemData['cost'],
-                    'sold_by' => $itemData['soldBy'],
-                    'is_for_sale' => $itemData['isForSale'],
-                    'image' => $itemData['image']
-                ]);
+                $item->update($itemData);
 
-                if ($itemData['taxes'])
-                {
-                    $item->taxes()->attach($itemData['taxes']);
-                }
-
-                if ($trackStock)
-                {
-                    $item->stock()->updateOrCreate([
-                        'supplier_id' => $stockData['supplierId'],
-                        'in_stock' => $stockData['inStock'],
-                        'minimum_stock' => $stockData['minimumStock']
-                    ]);
-                }
+                if ($taxes) $item->taxes()->sync($taxes);
+        
+                if ($trackStock)  $item->stock()->update($stockData);
 
             });
         } catch (\Throwable $th) {
@@ -136,17 +67,6 @@ trait ItemsServices
         }
 
         return true;
-    }
-    
-    /**
-     * Delete one or multiple existing records of taxes
-     *
-     * @param  array $ids
-     * @return boolean
-     */
-    public function deleteItems (array $ids): bool
-    {
-        return Item::whereIn('id', $ids)->delete();
     }
     
 }

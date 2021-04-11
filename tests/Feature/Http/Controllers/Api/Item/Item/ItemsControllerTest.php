@@ -25,7 +25,7 @@ class ItemsControllerTest extends TestCase
     /** test */
     public function user_can_view_item()
     {
-        $id = 1;
+        $id = 2;
 
         $response = $this->get(
             "/api/item/items/${id}",
@@ -40,24 +40,24 @@ class ItemsControllerTest extends TestCase
     {
         $data = [
             'item' => [
-                'categoryId' => 1,
+                'category_id' => 1,
                 'sku' => 'AAAAAAAA',
-                'barcode' => 'AAA',
-                'name' => 'Item one',
-                'description' => 'Some itme one',
+                'barcode' => 'AAAAAAAAA',
+                'name' => 'Bag',
+                'description' => 'two',
                 'price' => 5.00,
                 'cost' => 10.00,
-                'soldBy' => 'each',
-                'isForSale' => true,
-                'image' => '',
-                'taxes' => []
+                'sold_by' => 'each',
+                'is_for_sale' => true,
+                'image' => ''
             ],
             'stock' => [
-                'supplierId' => 1,
-                'inStock' => 1,
-                'minimumStock' => 10,
+                'vendor_id' => 1,
+                'in_stock' => 1,
+                'minimum_stock' => 10,
             ],
-            'trackStock' => false,
+            'taxes' => [],
+            'track_stock' => true,
         ];
 
         $response = $this->post(
@@ -73,29 +73,28 @@ class ItemsControllerTest extends TestCase
     public function user_can_update_item()
     {
         $data = [
+            'id' => 2,
             'item' => [
-                'id' => 1,
-                'categoryId' => 1,
-                'sku' => 'AAAAAAAA',
-                'barcode' => 'AAA',
-                'name' => 'Item one',
-                'description' => 'Some itme one',
+                'category_id' => 1,
+                'sku' => 'CCCCCCCC',
+                'barcode' => 'CCCCCCCCC',
+                'name' => 'New Bag',
+                'description' => 'item two',
                 'price' => 5.00,
                 'cost' => 10.00,
-                'soldBy' => 'each',
-                'isForSale' => true,
-                'image' => '',
-                'taxes' => [
-                    1
-                ]
+                'sold_by' => 'each',
+                'is_for_sale' => true,
+                'image' => ''
             ],
             'stock' => [
-                'supplierId' => 1,
-                'warehouseId' => 1,
-                'inStock' => 12,
-                'minimumStock' => 10,
+                'vendor_id' => 1,
+                'in_stock' => 1,
+                'minimum_stock' => 10,
             ],
-            'trackStock' => true,
+            'taxes' => [
+                1
+            ],
+            'track_stock' => true,
         ];
 
 
@@ -104,7 +103,7 @@ class ItemsControllerTest extends TestCase
             $data,
             $this->apiHeader()
         );
- 
+
         $this->assertResponse($response);
     }
 
@@ -113,7 +112,7 @@ class ItemsControllerTest extends TestCase
     {
         Storage::fake('avatars');
 
-        $image = UploadedFile::fake()->create('document.pdf');
+        $image = UploadedFile::fake()->create('document.png');
 
         $data = [
             'image' => $image
@@ -133,7 +132,7 @@ class ItemsControllerTest extends TestCase
     {
         $data = [
             'ids' => [
-                4
+                5
             ]
         ];
 

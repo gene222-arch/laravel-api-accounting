@@ -15,8 +15,8 @@ class StockSeeder extends Seeder
     public function run()
     {
         Stock::create([
-            'item_id' => 1,
-            'supplier_id' => 1,
+            'item_id' => 2,
+            'vendor_id' => 1,
             'in_stock' => 10,
             'stock_in' => 0,
             'stock_out' => 0,

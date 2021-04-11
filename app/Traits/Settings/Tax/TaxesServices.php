@@ -29,7 +29,11 @@ trait TaxesServices
      */
     public function getTaxById (int $id): Tax|null
     {
-        return Tax::select('id', ...(new Tax())->getFillable())->where('id', $id)->first();
+        return Tax::select(
+            'id', 
+            ...(new Tax())->getFillable()
+        )
+            ->where('id', $id)->first();
     }
 
     /**
@@ -58,19 +62,17 @@ trait TaxesServices
      * @param  string $name
      * @param  float $rate
      * @param  string $type
-     * @return bool
+     * @return boolean
      */
     public function updateTax (int $id, string $name, float $rate, string $type, bool $enabled): bool
     {
-        $update = Tax::where('id', $id)
+        return Tax::where('id', $id)
             ->update([
                 'name' => $name,
                 'rate' => $rate,
                 'type' => $type,
                 'enabled' => $enabled
             ]);
-
-        return boolval($update);
     }
         
     /**

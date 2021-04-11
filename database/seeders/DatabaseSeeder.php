@@ -43,13 +43,12 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             DiscountSeeder::class,
             ItemSeeder::class,
-            SupplierSeeder::class,
             CustomerSeeder::class,
             VendorSeeder::class,
             StockSeeder::class,
             EmployeeSeeder::class,
             SalaryBenefitSeeder::class,
-            UserSeeder::class
+            // UserSeeder::class
         ]);
     }
 }

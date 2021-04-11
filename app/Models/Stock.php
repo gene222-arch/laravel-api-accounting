@@ -16,7 +16,7 @@ class Stock extends Model
     use StocksServices;
 
     protected $fillable = [
-        'supplier_id',
+        'vendor_id',
         'warehouse_id',
         'in_stock',
         'incoming_stock',
@@ -33,5 +33,15 @@ class Stock extends Model
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
+    }
+
+    /**
+     * Define an inverse one-to-one or many relationship with Vendor class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }
