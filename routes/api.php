@@ -153,8 +153,8 @@ Route::prefix('banking')->group(function ()
     Route::prefix('transactions')->group(function () 
     {
         Route::get('/', [TransactionsController::class, 'index']);
-        Route::get('/{id}', [TransactionsController::class, 'show']);
-        Route::get('/account/{id}', [TransactionsController::class, 'showByAccount']);
+        Route::get('/{transaction}', [TransactionsController::class, 'show']);
+        Route::get('/accounts/{id}', [TransactionsController::class, 'showByAccount']);
     });
 });
 

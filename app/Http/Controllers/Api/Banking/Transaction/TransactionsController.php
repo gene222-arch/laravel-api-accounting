@@ -25,7 +25,14 @@ class TransactionsController extends Controller
      */
     public function index()
     {
-        $result = $this->transaction->getAllTransactions();
+        $result = $this->transaction
+            ->with([
+                'account',
+                'incomeCategory',
+                'expenseCategory'
+            ])
+            ->latest()
+            ->get(['id', ...$this->transaction->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -35,16 +42,22 @@ class TransactionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Transaction $transaction
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Transaction $transaction)
     {
-        $result = $this->transaction->getTransactionById($id);
+        $transaction = $transaction->with([
+            'account',
+            'incomeCategory',
+            'expenseCategory'
+        ])
+            ->latest()
+            ->get(['id', ...$transaction->getFillable()]);
 
-        return !$result
+        return !$transaction
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($transaction);
     }
 
     /**
@@ -55,7 +68,15 @@ class TransactionsController extends Controller
      */
     public function showByAccount($id)
     {
-        $result = $this->transaction->getTransactionByAccountId($id);
+        $result = $this->transaction
+            ->where('account_id', $id)
+            ->with([
+                'account',
+                'incomeCategory',
+                'expenseCategory'
+            ])
+            ->latest()
+            ->get(['id', ...$this->transaction->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()

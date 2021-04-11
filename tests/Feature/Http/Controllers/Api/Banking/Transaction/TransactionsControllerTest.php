@@ -33,17 +33,15 @@ class TransactionsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_view_transaction_by_account()
     {
-        $id = 2;
+        $id = 1;
 
         $response = $this->get(
-            "/api/banking/transactions/account/${id}",
+            "/api/banking/transactions/accounts/${id}",
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }

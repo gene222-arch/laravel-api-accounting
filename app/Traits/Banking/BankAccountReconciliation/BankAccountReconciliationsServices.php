@@ -26,7 +26,7 @@ trait BankAccountReconciliationsServices
             DB::transaction(function () use ($reconciliationDetails, $account, $closing_balance, $difference, $status)
             {
                 $status = $this->setStatus($status, $difference);
-
+                
                 BankAccountReconciliation::create($reconciliationDetails);
 
                 $status === 'Reconciled' && (

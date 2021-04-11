@@ -9,67 +9,15 @@ trait HasTransaction
 {
     
     /**
-     * Get latest records of transactions
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllTransactions (): Collection
-    {
-        return Transaction::with([
-            'account',
-            'incomeCategory',
-            'expenseCategory'
-        ])
-            ->latest()
-            ->get();
-    }
-    
-    /**
-     * Get a record of transaction via id
-     *
-     * @param  int $id
-     * @return \Illuminate\Database\Eloquent\Collection|null
-     */
-    public function getTransactionById (int $id): Collection|null
-    {
-        return Transaction::where('id', $id)
-            ->with([
-                'account',
-                'incomeCategory',
-                'expenseCategory'
-            ])
-            ->latest()
-            ->get();
-    }
-
-    /**
-     * Get a record of transaction via account id
-     *
-     * @param  int $id
-     * @return \Illuminate\Database\Eloquent\Collection|null
-     */
-    public function getTransactionByAccountId (int $id): Collection|null
-    {
-        return Transaction::where('account_id', $id)
-            ->with([
-                'account',
-                'incomeCategory',
-                'expenseCategory'
-            ])
-            ->latest()
-            ->get();
-    }
-    
-    /**
      * Create a new record of transaction
      *
-     * @param  string $modelType
-     * @param  integer $modelId
+     * @param  string $model_type
+     * @param  integer $model_id
      * @param  string $number
-     * @param  integer $accountId
-     * @param  integer $incomeCategoryId
-     * @param  integer $expenseCategoryId
-     * @param  integer $paymentMethodId
+     * @param  integer $account_id
+     * @param  integer $income_category_id
+     * @param  integer $expense_category_id
+     * @param  integer $payment_method_id
      * @param  string $category
      * @param  string $type
      * @param  float $amount
@@ -79,16 +27,16 @@ trait HasTransaction
      * @param  string $contact
      * @return Transaction
      */
-    public function createTransaction (string $modelType, int $modelId, string $number, int $accountId, ?int $incomeCategoryId, ?int $expenseCategoryId, int $paymentMethodId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
+    public function createTransaction (string $model_type, int $model_id, string $number, int $account_id, ?int $income_category_id, ?int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
     {
         return Transaction::create([
-            'model_type' => $modelType,
-            'model_id' => $modelId,
+            'model_type' => $model_type,
+            'model_id' => $model_id,
             'number' => $number,
-            'account_id' => $accountId,
-            'income_category_id' => $incomeCategoryId,
-            'expense_category_id' => $expenseCategoryId,
-            'payment_method_id' => $paymentMethodId,
+            'account_id' => $account_id,
+            'income_category_id' => $income_category_id,
+            'expense_category_id' => $expense_category_id,
+            'payment_method_id' => $payment_method_id,
             'category' => $category,
             'type' => $type,
             'amount' => $amount,
@@ -103,13 +51,13 @@ trait HasTransaction
      * Update an existing record of transaction
      *
      * @param  integer $id 
-     * @param  string $modelType
-     * @param  integer $modelId
+     * @param  string $model_type
+     * @param  integer $model_id
      * @param  string $number
-     * @param  integer $accountId
-     * @param  integer $incomeCategoryId
-     * @param  integer $expenseCategoryId
-     * @param  integer $paymentMethodId
+     * @param  integer $account_id
+     * @param  integer $income_category_id
+     * @param  integer $expense_category_id
+     * @param  integer $payment_method_id
      * @param  string $category
      * @param  string $type
      * @param  float $amount
@@ -119,17 +67,17 @@ trait HasTransaction
      * @param  string $contact
      * @return boolean
      */
-    public function updateTransaction (int $id, string $modelType, int $modelId, string $number, int $accountId, int $incomeCategoryId, int $expenseCategoryId, int $paymentMethodId, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
+    public function updateTransaction (int $id, string $model_type, int $model_id, string $number, int $account_id, int $income_category_id, int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
     {
         return Transaction::find($id)
             ->update([
-                'model_type' => $modelType,
-                'model_id' => $modelId,
-                'account_id' => $accountId,
+                'model_type' => $model_type,
+                'model_id' => $model_id,
+                'account_id' => $account_id,
                 'number' => $number,
-                'income_category_id' => $incomeCategoryId,
-                'expense_category_id' => $expenseCategoryId,
-                'payment_method_id' => $paymentMethodId,
+                'income_category_id' => $income_category_id,
+                'expense_category_id' => $expense_category_id,
+                'payment_method_id' => $payment_method_id,
                 'category' => $category,
                 'type' => $type,
                 'amount' => $amount,
