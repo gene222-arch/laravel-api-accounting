@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Auth\LoginController;
-use App\Http\Controllers\Api\Item\Tax\TaxController;
+use App\Http\Controllers\Api\Settings\Tax\TaxController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Item\Item\ItemsController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
@@ -614,6 +614,14 @@ Route::prefix('inventory-management')->group(function ()
         Route::put('/', [WarehousesController::class, 'update']);
         Route::delete('/', [WarehousesController::class, 'destroy']);
     });
+});
+
+Route::get('users', function () {
+    return \App\Models\User::all([
+        'first_name',
+        'last_name',
+        'email'
+    ]);
 });
 
 

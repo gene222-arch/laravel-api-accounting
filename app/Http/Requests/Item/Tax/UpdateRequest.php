@@ -17,7 +17,7 @@ class UpdateRequest extends BaseRequest
             'id' => ['required', 'integer', 'exists:taxes,id'],
             'name' => ['required', 'string', 'unique:taxes,name,' . $this->id],
             'rate' => ['required', 'numeric', 'min:0', 'max:100'],
-            'type' => ['required', 'string', 'in:Normal,Compound,Fixed,Inclusive'],
+            'type' => ['required', 'string', 'in:Normal,Compound,Fixed,Inclusive,Withholding'],
             'enabled' => ['required', 'boolean']
         ];
     }

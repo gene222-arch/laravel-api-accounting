@@ -6,6 +6,7 @@ use App\Models\Tax;
 use Database\Seeders\TaxSeeder;
 use Illuminate\Database\Seeder;
 use Database\Seeders\ItemSeeder;
+use Database\Seeders\UserSeeder;
 use Database\Seeders\StockSeeder;
 use Database\Seeders\AccountSeeder;
 use Database\Seeders\CompanySeeder;
@@ -47,7 +48,8 @@ class DatabaseSeeder extends Seeder
             VendorSeeder::class,
             StockSeeder::class,
             EmployeeSeeder::class,
-            SalaryBenefitSeeder::class
+            SalaryBenefitSeeder::class,
+            UserSeeder::class
         ]);
     }
 }

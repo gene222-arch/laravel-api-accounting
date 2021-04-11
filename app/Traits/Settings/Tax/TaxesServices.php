@@ -38,6 +38,7 @@ trait TaxesServices
      * @param  string $name
      * @param  float $rate
      * @param  string $type
+     * @param  bool $enabled
      * @return \App\Models\Tax
      */
     public function createTax (string $name, float $rate, string $type, bool $enabled): Tax
@@ -46,8 +47,7 @@ trait TaxesServices
             'name' => $name,
             'rate' => $rate,
             'type' => $type,
-            'enabled' => $enabled,
-            'updated_at' => null
+            'enabled' => $enabled
         ]);
     }
         
@@ -67,8 +67,7 @@ trait TaxesServices
                 'name' => $name,
                 'rate' => $rate,
                 'type' => $type,
-                'enabled' => $enabled,
-                'updated_at' => now()
+                'enabled' => $enabled
             ]);
 
         return boolval($update);
