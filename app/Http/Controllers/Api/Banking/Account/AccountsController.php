@@ -28,7 +28,9 @@ class AccountsController extends Controller
      */
     public function index()
     {
-        $result = $this->account->getAllAccounts();
+        $result = $this->account
+            ->latest()
+            ->get(['id', ...$this->account->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,13 +45,7 @@ class AccountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $account = $this->account->createAccount(
-            $request->currencyId,
-            $request->name,
-            $request->number,
-            $request->openingBalance,
-            $request->enabled,
-        );
+        $account = $this->account->create($request->all());
 
         return $this->success($account, 'Account created successfully.');
     }
@@ -57,16 +53,14 @@ class AccountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Account $account
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Account $account)
     {
-        $result = $this->account->getAccountById($id);
-
-        return !$result
+        return !$account
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($account);
     }
 
     /**
@@ -77,14 +71,9 @@ class AccountsController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->account->updateAccount(
-            $request->id,
-            $request->currencyId,
-            $request->name,
-            $request->number,
-            $request->openingBalance,
-            $request->enabled,
-        );
+        $this->account
+            ->where('id', $request->id)
+            ->update($request->except('id'));
 
         return $this->success(null, 'Account updated successfully.');
     }
@@ -97,7 +86,7 @@ class AccountsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->account->deleteAccounts($request->ids);
+        $this->account->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Account or accounts deleted successfully.');
     }

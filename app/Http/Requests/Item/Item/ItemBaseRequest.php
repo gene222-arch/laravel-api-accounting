@@ -14,7 +14,7 @@ class ItemBaseRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'item.category_id' => 'category id',
+            'item.category_id' => 'category',
             'item.sku' => 'sku',
             'item.barcode' => 'barcode',
             'item.name' => 'name',
@@ -24,7 +24,7 @@ class ItemBaseRequest extends BaseRequest
             'item.sold_by' => 'sold by',
             'item.is_for_sale' => 'is for sale',
             'item.image' => 'image',
-            'stock.vendor_id' => 'supplier id',
+            'stock.vendor_id' => 'supplier',
             'stock.in_stock' => 'in stock',
             'stock.minimum_stock' => 'minimum stock',
             'taxes.*' => 'taxes',

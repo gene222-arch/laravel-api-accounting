@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Banking\Account;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Banking\Account\AccountBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends AccountBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,10 +14,11 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:accounts,name'],
             'number' => ['required', 'integer', 'min:5', 'unique:accounts,number'],
-            'openingBalance' => ['required', 'numeric', 'min:0'],
+            'opening_balance' => ['required', 'numeric', 'min:0'],
+            'balance' => ['required', 'numeric', 'min:0'],
             'enabled' => ['required', 'boolean']
         ];
     }

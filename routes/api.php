@@ -117,7 +117,7 @@ Route::prefix('banking')->group(function ()
     Route::prefix('accounts')->group(function () 
     {
         Route::get('/', [AccountsController::class, 'index']);
-        Route::get('/{id}', [AccountsController::class, 'show']);
+        Route::get('/{account}', [AccountsController::class, 'show']);
         Route::post('/', [AccountsController::class, 'store']);
         Route::put('/', [AccountsController::class, 'update']);
         Route::delete('/', [AccountsController::class, 'destroy']);

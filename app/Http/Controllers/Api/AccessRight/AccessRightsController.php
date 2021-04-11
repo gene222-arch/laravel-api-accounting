@@ -9,7 +9,6 @@ use App\Http\Requests\AccessRight\UpdateRequest;
 use App\Models\Role as ModelsRole;
 use App\Traits\AccessRight\AccessRightServices;
 use App\Traits\Api\ApiResponser;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class AccessRightsController extends Controller
@@ -59,7 +58,7 @@ class AccessRightsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param ModelsRole $role
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(ModelsRole $role)

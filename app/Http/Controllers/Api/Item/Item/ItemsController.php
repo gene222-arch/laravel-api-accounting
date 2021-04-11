@@ -63,7 +63,7 @@ class ItemsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Item $item
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Item $item)
