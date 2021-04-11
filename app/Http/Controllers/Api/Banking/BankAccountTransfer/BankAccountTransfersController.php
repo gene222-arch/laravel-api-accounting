@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\Banking\BankAccountTransfer;
 use App\Traits\Api\ApiResponser;
 use App\Models\BankAccountTransfer;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Banking\BankAccountTransfer\StoreRequest;
+use App\Http\Requests\Banking\BankAccountTransfer\UpdateStoreRequest;
 use App\Http\Requests\Banking\BankAccountTransfer\DeleteRequest;
-use App\Http\Requests\Banking\BankAccountTransfer\UpdateRequest;
 
 class BankAccountTransfersController extends Controller
 {
@@ -38,19 +37,16 @@ class BankAccountTransfersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(UpdateStoreRequest $request)
     {
         $result = $this->bankAccountTransfer->createBankAccountTransfer(
-            $request->fromAccountId,
-            $request->toAccountId,
-            $request->paymentMethodId,
-            $request->amount,
-            $request->transferredAt,
-            $request->description,
-            $request->reference
+            $request->all(),
+            $request->from_account_id,
+            $request->to_account_id,
+            $request->amount
         );
 
         return $result !== true
@@ -61,35 +57,33 @@ class BankAccountTransfersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param BankAccountTransfer $transfer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(BankAccountTransfer $transfer)
     {
-        $result = $this->bankAccountTransfer->getBankAccountTransferById($id);
+        $transfer = $transfer->with(['from', 'to', 'paymentMethod'])->firstOrFail();
 
-        return !$result
+        return !$transfer
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($transfer);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param UpdateStoreRequest $request
+     * @param BankAccountTransfer $transfer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateStoreRequest $request, BankAccountTransfer $transfer)
     {
         $result = $this->bankAccountTransfer->updateBankAccountTransfer(
-            $request->id,
-            $request->fromAccountId,
-            $request->toAccountId,
-            $request->paymentMethodId,
-            $request->amount,
-            $request->transferredAt,
-            $request->description,
-            $request->reference
+            $transfer,
+            $request->all(),
+            $request->from_account_id,
+            $request->to_account_id,
+            $request->amount
         );
 
         return $result !== true
@@ -105,7 +99,7 @@ class BankAccountTransfersController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->bankAccountTransfer->deleteBankAccountTransfers($request->ids);
+        $this->bankAccountTransfer->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Bank account transfer or transfers deleted successfully.');
     }

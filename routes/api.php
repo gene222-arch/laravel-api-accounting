@@ -129,9 +129,9 @@ Route::prefix('banking')->group(function ()
     Route::prefix('transfers')->group(function () 
     {
         Route::get('/', [BankAccountTransfersController::class, 'index']);
-        Route::get('/{id}', [BankAccountTransfersController::class, 'show']);
+        Route::get('/{transfer}', [BankAccountTransfersController::class, 'show']);
         Route::post('/', [BankAccountTransfersController::class, 'store']);
-        Route::put('/', [BankAccountTransfersController::class, 'update']);
+        Route::put('/{transfer}', [BankAccountTransfersController::class, 'update']);
         Route::delete('/', [BankAccountTransfersController::class, 'destroy']);
     });
 

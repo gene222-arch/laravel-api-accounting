@@ -23,7 +23,7 @@ class BankAccountTransfersControllerTest extends TestCase
     /** test */
     public function user_can_view_bank_account_transfer()
     {
-        $id = 2;
+        $id = 1;
 
         $response = $this->get(
             "/api/banking/transfers/${id}",
@@ -37,11 +37,11 @@ class BankAccountTransfersControllerTest extends TestCase
     public function user_can_create_bank_account_transfer()
     {
         $data = [
-            'fromAccountId' => 2,
-            'toAccountId' => 3,
-            'paymentMethodId' => 1,
+            'from_account_id' => 1,
+            'to_account_id' => 2,
+            'payment_method_id' => 1,
             'amount' => 100.00,
-            'transferredAt' => '2022-05-05',
+            'transferred_at' => '2022-05-05',
         ];
 
         $response = $this->post(
@@ -53,20 +53,21 @@ class BankAccountTransfersControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_update_bank_account_transfer()
     {
+        $id = 1;
+
         $data = [
-            'id' => 2,
-            'fromAccountId' => 2,
-            'toAccountId' => 3,
-            'paymentMethodId' => 1,
-            'amount' => 5.00,
-            'transferredAt' => '2022-05-05',
+            'from_account_id' => 2,
+            'to_account_id' => 1,
+            'payment_method_id' => 1,
+            'amount' => 100.00,
+            'transferred_at' => '2022-05-05',
         ];
 
         $response = $this->put(
-            '/api/banking/transfers',
+            "/api/banking/transfers/${id}",
             $data,
             $this->apiHeader()
         );

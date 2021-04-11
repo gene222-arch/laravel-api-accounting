@@ -25,64 +25,28 @@ trait BankAccountTransfersServices
             ->latest()
             ->get();
     }
-    
-    /**
-     * Get a record of bank account transfer via id
-     *
-     * @param  int $id
-     * @return BankAccountTransfer|null
-     */
-    public function getBankAccountTransferById (int $id): BankAccountTransfer|null
-    {
-        $transfer = BankAccountTransfer::find($id);
-
-        return !$transfer
-            ? null 
-            : $transfer->with([
-                'sender',
-                'receiver',
-                'paymentMethod'
-            ])
-            ->first();
-    }
-    
-    
+      
     /**
      * Create a new record of bank account transfer
      *
-     * @param  integer $fromAccountId
-     * @param  integer $toAccountId
-     * @param  integer $paymentMethodId
+     * @param  array $transfer_details
+     * @param  integer $from_account_id
+     * @param  integer $to_account_id
      * @param  float $amount
-     * @param  string $transferredAt
-     * @param  string|null $description
-     * @param  string|null $reference
      * @return mixed
      */
-    public function createBankAccountTransfer (int $fromAccountId, int $toAccountId, int $paymentMethodId, float $amount, string $transferredAt, ?string $description, ?string $reference): mixed
+    public function createBankAccountTransfer (array $transfer_details, int $from_account_id, int $to_account_id, float $amount): mixed
     {
         try {
-            DB::transaction(function () use ($fromAccountId, $toAccountId, $paymentMethodId, $amount, $transferredAt, $description, $reference)
+            DB::transaction(function () use ($transfer_details, $from_account_id, $to_account_id, $amount)
             {
-                BankAccountTransfer::create([
-                    'from_account_id' => $fromAccountId,
-                    'to_account_id' => $toAccountId,
-                    'payment_method_id' => $paymentMethodId,
-                    'amount' => $amount,
-                    'transferred_at' => $transferredAt,
-                    'description' => $description,
-                    'reference' => $reference
-                ]);
+                BankAccountTransfer::create($transfer_details);
 
-                Account::find($fromAccountId)
-                    ->update([
-                        'balance' => DB::raw("balance - ${amount}")
-                    ]);
+                Account::where('id', $from_account_id)
+                    ->update(['balance' => DB::raw("balance - ${amount}")]);
 
-                Account::find($toAccountId)
-                    ->update([
-                        'balance' => DB::raw("balance + ${amount}")
-                    ]);
+                Account::where('id', $to_account_id)
+                    ->update(['balance' => DB::raw("balance + ${amount}")]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -94,41 +58,25 @@ trait BankAccountTransfersServices
     /**
      * Update an existing record of bank account transfer
      *
-     * @param  integer $id
-     * @param  integer $fromAccountId
-     * @param  integer $toAccountId
-     * @param  integer $paymentMethodId
+     * @param  BankAccountTransfer $transfer
+     * @param  array $transfer
+     * @param  integer $from_account_id
+     * @param  integer $to_account_id
      * @param  float $amount
-     * @param  string $transferredAt
-     * @param  string|null $description
-     * @param  string|null $reference
      * @return mixed
      */
-    public function updateBankAccountTransfer (int $id, int $fromAccountId, int $toAccountId, int $paymentMethodId, float $amount, string $transferredAt, ?string $description, ?string $reference): mixed
+    public function updateBankAccountTransfer (BankAccountTransfer $transfer, array $transfer_details, int $from_account_id, int $to_account_id, float $amount): mixed
     {
         try {
-            DB::transaction(function () use ($id, $fromAccountId, $toAccountId, $paymentMethodId, $amount, $transferredAt, $description, $reference)
+            DB::transaction(function () use ($transfer, $transfer_details, $from_account_id, $to_account_id, $amount)
             {
-                BankAccountTransfer::where('id', $id)
-                    ->update([
-                        'from_account_id' => $fromAccountId,
-                        'to_account_id' => $toAccountId,
-                        'payment_method_id' => $paymentMethodId,
-                        'amount' => $amount,
-                        'transferred_at' => $transferredAt,
-                        'description' => $description,
-                        'reference' => $reference
-                    ]);
+                $transfer->update($transfer_details);
 
-                Account::find($fromAccountId)
-                    ->update([
-                        'balance' => DB::raw("balance - ${amount}")
-                    ]);
+                Account::where('id', $from_account_id)
+                    ->update(['balance' => DB::raw("balance - ${amount}")]);
 
-                Account::find($toAccountId)
-                    ->update([
-                        'balance' => DB::raw("balance + ${amount}")
-                    ]);
+                Account::where('id', $to_account_id)
+                ->update(['balance' => DB::raw("balance + ${amount}")]);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
