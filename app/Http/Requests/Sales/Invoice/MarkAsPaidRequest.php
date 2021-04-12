@@ -15,9 +15,8 @@ class MarkAsPaidRequest extends BaseRequest
     {
         return [
             'amount' => ['required', 'numeric', 'min:0'],
-            'accountId' => ['required', 'integer', 'exists:accounts,id'],
-            'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
-            'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
+            'account_id' => ['required', 'integer', 'exists:accounts,id'],
+            'payment_method_id' => ['required', 'integer', 'exists:payment_methods,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'reference' => ['nullable', 'string']
@@ -32,9 +31,9 @@ class MarkAsPaidRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'accountId' => 'account id',
-            'paymentMethodId' => 'payment method id',
-            'incomeCategoryId' => 'income category id',
+            'account_id' => 'account id',
+            'payment_method_id' => 'payment method id',
+            'income_category_id' => 'income category id',
         ];
     }
 
@@ -46,9 +45,9 @@ class MarkAsPaidRequest extends BaseRequest
     public function messages()
     {
         return [
-            'accountId.exists' => 'The selected :attribute does not exist.',
-            'paymentMethodId.exists' => 'The selected :attribute does not exist.',
-            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
+            'account_id.exists' => 'The selected :attribute does not exist.',
+            'payment_method_id.exists' => 'The selected :attribute does not exist.',
+            'income_category_id.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

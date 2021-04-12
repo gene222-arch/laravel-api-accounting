@@ -73,7 +73,7 @@ class EstimateInvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_mail_customer()
     {
         $estimate_number = 1;

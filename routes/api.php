@@ -436,13 +436,13 @@ Route::prefix('sales')->group(function ()
     Route::prefix('invoices')->group(function () 
     {
         Route::get('/', [InvoicesController::class, 'index']);
-        Route::get('/{id}', [InvoicesController::class, 'show']);
+        Route::get('/{invoice}', [InvoicesController::class, 'show']);
         Route::post('/', [InvoicesController::class, 'store']);
         Route::post('/{invoice}/customers/{customer}/mail', [InvoicesController::class, 'mail']);
-        Route::post('/payment', [InvoicesController::class, 'payment']);
-        Route::put('/', [InvoicesController::class, 'update']);
+        Route::post('/{invoice}/payment', [InvoicesController::class, 'payment']);
+        Route::put('/{invoice}', [InvoicesController::class, 'update']);
         Route::put('/{invoice}/mark-as-paid', [InvoicesController::class, 'markAsPaid']);
-        Route::put('/{invoice}', [InvoicesController::class, 'cancel']);
+        Route::put('/{invoice}/cancel-order', [InvoicesController::class, 'cancel']);
         Route::delete('/', [InvoicesController::class, 'destroy']);
     });
 

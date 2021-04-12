@@ -23,7 +23,7 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_view_invoice()
     {
-        $id = 1;
+        $id = 2;
 
         $response = $this->get(
             "/api/sales/invoices/${id}",
@@ -37,13 +37,13 @@ class InvoicesControllerTest extends TestCase
     public function user_can_create_invoice()
     {
         $data = [
-            'customerId' => 1,
-            'currencyId' => 1,
-            'incomeCategoryId' => 2,
-            'invoiceNumber' => 'INV-00003',
-            'orderNo' => 3,
+            'customer_id' => 1,
+            'currency_id' => 1,
+            'income_category_id' => 1,
+            'invoice_number' => 'INV-00002',
+            'order_no' => 2,
             'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
+            'due_date' => '2021-06-03',
             'recurring' => 'No',
             'items' => [
                 [
@@ -57,7 +57,7 @@ class InvoicesControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 90.00,
@@ -102,9 +102,9 @@ class InvoicesControllerTest extends TestCase
         $id = 3;
 
         $data = [
-            'accountId' => 1,
-            'paymentMethodId' => 1,
-            'amount' => 110.00,
+            'account_id' => 1,
+            'payment_method_id' => 1,
+            'amount' => 55.00,
         ];
 
         $response = $this->put(
@@ -119,16 +119,18 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_create_invoice_payment()
     {
+        $id = 3;
+
         $data = [
             'id' => 3,
-            'accountId' => 1,
-            'paymentMethodId' => 1,
+            'account_id' => 1,
+            'payment_method_id' => 1,
             'date' => '2021-05-06',
             'amount' => 10.00,
         ];
 
         $response = $this->post(
-            '/api/sales/invoices/payment',
+            "/api/sales/invoices/${id}/payment",
             $data,
             $this->apiHeader()
         ); 
@@ -139,27 +141,19 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_update_invoice()
     {
+        $id = 3;
+
         $data = [
-            'id' => 2,
-            'customerId' => 1,
-            'currencyId' => 1,
-            'incomeCategoryId' => 2,
-            'invoiceNumber' => 'INV-00002',
-            'orderNo' => 2,
+            'id' => 3,
+            'customer_id' => 1,
+            'currency_id' => 1,
+            'income_category_id' => 2,
+            'invoice_number' => 'INV-00003',
+            'order_no' => 3,
             'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
+            'due_date' => '2021-06-03',
             'recurring' => 'No',
             'items' => [
-                [
-                    'item_id' => 1,
-                    'discount_id' => null,
-                    'item' => 'Item one',
-                    'price' => 5.00,
-                    'quantity' => 5,
-                    'amount' => 25.00,
-                    'discount' => 0.00,
-                    'tax' => 0.00
-                ],
                 [
                     'item_id' => 2,
                     'discount_id' => null,
@@ -171,7 +165,7 @@ class InvoicesControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 50.00,
@@ -181,7 +175,7 @@ class InvoicesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/sales/invoices',
+            "/api/sales/invoices/${id}",
             $data,
             $this->apiHeader()
         );

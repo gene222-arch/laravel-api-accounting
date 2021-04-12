@@ -14,24 +14,24 @@ trait EstimateInvoicesServices
     /**
      * Create a new record of estimated invoice
      *
-     * @param  array $estimate_invoice_details
+     * @param  array $estimateInvoiceDetails
      * @param  string $estimate_number
      * @param  array $items
      * @param  array $payment_details
      * @return mixed
      */
-    public function createEstimateInvoice (array $estimate_invoice_details, string $estimate_number, array $items, array $payment_details): mixed
+    public function createEstimateInvoice (array $estimateInvoiceDetails, string $estimate_number, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($estimate_invoice_details, $estimate_number, $items, $payment_details)
+            DB::transaction(function () use ($estimateInvoiceDetails, $estimate_number, $items, $payment_details)
             {
-                $estimate_invoice = EstimateInvoice::create($estimate_invoice_details);
+                $estimateInvoice = EstimateInvoice::create($estimateInvoiceDetails);
 
-                $estimate_invoice->items()->attach($items);
+                $estimateInvoice->items()->attach($items);
 
-                $estimate_invoice->paymentDetail()->create($payment_details);
+                $estimateInvoice->paymentDetail()->create($payment_details);
 
-                $estimate_invoice->histories()->create([
+                $estimateInvoice->histories()->create([
                     'description' => "${estimate_number} added!"
                 ]);
             });
@@ -44,7 +44,7 @@ trait EstimateInvoicesServices
     /**
      * Send a mail to a specified customer.
      *
-     * @param  EstimateInvoice $estimate_invoice
+     * @param  EstimateInvoice $estimateInvoice
      * @param  Customer $customer
      * @param  string $subject
      * @param  string $greeting
@@ -52,12 +52,12 @@ trait EstimateInvoicesServices
      * @param  string $footer
      * @return mixed
      */
-    public function mail(EstimateInvoice $estimate_invoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): mixed
+    public function mail(EstimateInvoice $estimateInvoice, Customer $customer, ?string $subject, ?string $greeting, ?string $note, ?string $footer): mixed
     {
         try {
-            DB::transaction(function () use ($estimate_invoice, $customer, $subject, $greeting, $note, $footer)
+            DB::transaction(function () use ($estimateInvoice, $customer, $subject, $greeting, $note, $footer)
             {
-                $isCreated = $estimate_invoice->histories()
+                $isCreated = $estimateInvoice->histories()
                     ->create([
                         'status' => 'Mailed',
                         'description' => "Invoice marked as sent!"
@@ -66,7 +66,7 @@ trait EstimateInvoicesServices
                 if ($isCreated)
                 {
                     dispatch(new QueueEstimateInvoiceNotification(
-                        $estimate_invoice, 
+                        $estimateInvoice, 
                         $customer, 
                         $subject, 
                         $greeting, 
@@ -86,20 +86,20 @@ trait EstimateInvoicesServices
     /**
      * Mark an estimated invoice as approve
      *
-     * @param  EstimateInvoice $estimate_invoice
+     * @param  EstimateInvoice $estimateInvoice
      * @return mixed
      */
-    public function markAsApproved(EstimateInvoice $estimate_invoice): mixed
+    public function markAsApproved(EstimateInvoice $estimateInvoice): mixed
     {
         try {
-            DB::transaction(function () use ($estimate_invoice)
+            DB::transaction(function () use ($estimateInvoice)
             {
-                $estimate_invoice->histories()->create([
+                $estimateInvoice->histories()->create([
                     'status' => 'Approved',
-                    'description' => "{$estimate_invoice->estimate_number} marked as approved!"
+                    'description' => "{$estimateInvoice->estimate_number} marked as approved!"
                 ]);
 
-                $estimate_invoice->update([
+                $estimateInvoice->update([
                     'status' => 'Approved'
                 ]);
             });
@@ -113,20 +113,20 @@ trait EstimateInvoicesServices
     /**
      * Mark an estimated invoice as refused
      *
-     * @param  EstimateInvoice $estimate_invoice
+     * @param  EstimateInvoice $estimateInvoice
      * @return mixed
      */
-    public function markAsRefused(EstimateInvoice $estimate_invoice): mixed
+    public function markAsRefused(EstimateInvoice $estimateInvoice): mixed
     {
         try {
-            DB::transaction(function () use ($estimate_invoice)
+            DB::transaction(function () use ($estimateInvoice)
             {
-                $estimate_invoice->histories()->create([
+                $estimateInvoice->histories()->create([
                     'status' => 'Refused',
-                    'description' => "{$estimate_invoice->estimate_number} marked as refused!"
+                    'description' => "{$estimateInvoice->estimate_number} marked as refused!"
                 ]);
 
-                $estimate_invoice->update([
+                $estimateInvoice->update([
                     'status' => 'Refused'
                 ]);
             });
@@ -140,25 +140,25 @@ trait EstimateInvoicesServices
     /**
      * Update an existing record of estimated invoice
      *
-     * @param  EstimateInvoice $estimate_invoice
-     * @param  array $estimate_invoice_details
+     * @param  EstimateInvoice $estimateInvoice
+     * @param  array $estimateInvoiceDetails
      * @param  string $estimate_number
      * @param  array $items
      * @param  array $payment_details
      * @return mixed
      */
-    public function updateEstimateInvoice (EstimateInvoice $estimate_invoice, array $estimate_invoice_details, string $estimate_number, array $items, array $payment_details): mixed
+    public function updateEstimateInvoice (EstimateInvoice $estimateInvoice, array $estimateInvoiceDetails, string $estimate_number, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($estimate_invoice, $estimate_invoice_details, $estimate_number, $items, $payment_details)
+            DB::transaction(function () use ($estimateInvoice, $estimateInvoiceDetails, $estimate_number, $items, $payment_details)
             {
-                $estimate_invoice->update($estimate_invoice_details);
+                $estimateInvoice->update($estimateInvoiceDetails);
 
-                $estimate_invoice->items()->sync($items);
+                $estimateInvoice->items()->sync($items);
 
-                $estimate_invoice->paymentDetail()->update($payment_details);
+                $estimateInvoice->paymentDetail()->update($payment_details);
 
-                $estimate_invoice->histories()->create([
+                $estimateInvoice->histories()->create([
                     'status' => DB::raw('status'),
                     'description' => "${estimate_number} updated!"
                 ]);

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Sales\Invoice;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Sales\Invoice\InvoiceBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends InvoiceBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,57 +14,20 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'customerId' => ['required', 'integer', 'exists:customers,id'],
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
-            'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
-            'invoiceNumber' => ['required', 'string', 'unique:invoices,invoice_number'],
-            'orderNo' => ['required', 'integer', 'unique:invoices,order_no'],
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'income_category_id' => ['required', 'integer', 'exists:income_categories,id'],
+            'invoice_number' => ['required', 'string', 'unique:invoices,invoice_number'],
+            'order_no' => ['required', 'integer', 'unique:invoices,order_no'],
             'date' => ['required', 'string'],
-            'dueDate' => ['required', 'string'],
+            'due_date' => ['required', 'string'],
             'recurring' => ['required', 'string', 'in:No,Daily,Weekly,Monthly,Yearly'],
             'items.*' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
-            'paymentDetail.total_discounts' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total_taxes' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.sub_total' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total' => ['required', 'numeric', 'min:0'],
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'customerId' => 'customer id',
-            'currencyId' => 'currency id',
-            'incomeCategoryId' => 'income category id',
-            'invoiceNumber' => 'invoice number',
-            'orderNo' => 'order number',
-            'dueDate' => 'due date',
-            'items.*.item_id' => 'item',
-            'paymentDetail.total_discounts' => 'discounts',
-            'paymentDetail.total_taxes' => 'taxes',
-            'paymentDetail.sub_total' => 'sub total',
-            'paymentDetail.total' => 'total',
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'customerId.exists' => 'The selected :attribute does not exist.',
-            'currencyId.exists' => 'The selected :attribute does not exist.',
-            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
-            'items.*.item_id.exists' => 'The selected :attribute does not exist.'
+            'payment_details.total_discounts' => ['required', 'numeric', 'min:0'],
+            'payment_details.total_taxes' => ['required', 'numeric', 'min:0'],
+            'payment_details.sub_total' => ['required', 'numeric', 'min:0'],
+            'payment_details.total' => ['required', 'numeric', 'min:0'],
         ];
     }
 }

@@ -6,80 +6,37 @@ use Carbon\Carbon;
 use App\Models\Stock;
 use App\Models\Account;
 use App\Models\Invoice;
+use App\Models\Revenue;
 use App\Models\Customer;
 use App\Models\IncomeCategory;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
 use Illuminate\Database\Eloquent\Collection;
-use App\Traits\Sales\Revenue\RevenuesServices;
 use App\Traits\Banking\Transaction\HasTransaction;
 
 trait InvoicesServices
 {    
-    use HasTransaction, RevenuesServices;
-
-    /**
-     * Get all records of invoices
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllInvoices (): Collection
-    {
-        return Invoice::with('paymentDetail')
-            ->latest()
-            ->get();
-    }
-    
-    /**
-     * Get a record of invoice via id
-     *
-     * @param  int $id
-     * @return Invoice
-     */
-    public function getInvoiceById (int $id): Invoice
-    {
-        return Invoice::find($id)
-            ->with([
-                'items' => fn($q) => $q->select('name'),
-                'paymentDetail'
-            ])
-            ->first();
-    }
+    use HasTransaction;
     
     /**
      * Create a new record of invoice
      *
-     * @param  integer $customerId
-     * @param  integer $currencyId
-     * @param  integer $incomeCategoryId
-     * @param  string $invoiceNumber
-     * @param  integer $orderNo
-     * @param  string $date
-     * @param  string $dueDate
-     * @param  string $recurring
+     * @param  array $invoiceDetails
+     * @param  string $invoice_number
      * @param  array $items
-     * @param  array $paymentDetails
+     * @param  array $payment_details
      * @return mixed
      */
-    public function createInvoice (int $customerId, int $currencyId, int $incomeCategoryId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
+    public function createInvoice (array $invoiceDetails, string $invoice_number, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($customerId, $currencyId, $incomeCategoryId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
+            DB::transaction(function () use ($invoiceDetails, $invoice_number, $items, $payment_details)
             {
-                $invoice = Invoice::create([
-                    'customer_id' => $customerId,
-                    'currency_id' => $currencyId,
-                    'income_category_id' => $incomeCategoryId,
-                    'invoice_number' => $invoiceNumber,
-                    'order_no' => $orderNo,
-                    'date' => $date,
-                    'due_date' => $dueDate,
-                    'recurring' => $recurring
-                ]);
+                $invoice = Invoice::create($invoiceDetails);
 
                 $invoice->items()->attach($items);
 
-                $invoice->paymentDetail()->create($paymentDetails);
+                $invoice->paymentDetail()->create($payment_details);
 
                 (new Stock())->stockOut($items);
 
@@ -87,7 +44,7 @@ trait InvoicesServices
                     ->histories()
                     ->create([
                         'status' => 'Draft',
-                        'description' => "${invoiceNumber} added!"
+                        'description' => "${invoice_number} added!"
                     ]);
             });
         } catch (\Throwable $th) {
@@ -100,46 +57,29 @@ trait InvoicesServices
     /**
      * Update an existing record of invoice
      *
-     * @param  integer $id
-     * @param  integer $customerId
-     * @param  integer $currencyId
-     * @param  integer $incomeCategoryId
-     * @param  string $invoiceNumber
-     * @param  integer $orderNo
-     * @param  string $date
-     * @param  string $dueDate
-     * @param  string $recurring
+     * @param  Invoice $invoice
+     * @param  array $invoiceDetails
+     * @param  string $invoice_number
      * @param  array $items
-     * @param  array $paymentDetails
+     * @param  array $payment_details
      * @return mixed
      */
-    public function updateInvoice (int $id, int $customerId, int $currencyId, int $incomeCategoryId, string $invoiceNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetails): mixed
+    public function updateInvoice (Invoice $invoice, array $invoiceDetails, string $invoice_number, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($id, $customerId, $currencyId, $incomeCategoryId, $invoiceNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetails)
+            DB::transaction(function () use ($invoice, $invoiceDetails, $invoice_number, $items, $payment_details)
             {
-                $invoice = Invoice::find($id);
-
-                $invoice->update([
-                    'customer_id' => $customerId,
-                    'currency_id' => $currencyId,
-                    'income_category_id' => $incomeCategoryId,
-                    'invoice_number' => $invoiceNumber,
-                    'order_no' => $orderNo,
-                    'date' => $date,
-                    'due_date' => $dueDate,
-                    'recurring' => $recurring
-                ]);
+                $invoice->update($invoiceDetails);
 
                 $invoice->items()->sync($items);
 
-                $invoice->paymentDetail()->update($paymentDetails);
+                $invoice->paymentDetail()->update($payment_details);
 
                 $invoice
                     ->histories()
                     ->create([
                         'status' => 'Draft',
-                        'description' => "$invoiceNumber updated"
+                        'description' => "$invoice_number updated"
                     ]);
             });
         } catch (\Throwable $th) {
@@ -215,21 +155,18 @@ trait InvoicesServices
      * Mark an invoice record as paid via id
      *
      * @param  Invoice $invoice
-     * @param  integer $accountId
-     * @param  integer $paymentMethodId
+     * @param  integer $account_id
+     * @param  integer $payment_method_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (Invoice $invoice, int $accountId, int $paymentMethodId, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (Invoice $invoice, int $account_id, int $payment_method_id, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use (
-                $invoice, $accountId, $paymentMethodId, 
-                $amount, $description, $reference
-            ) 
+            DB::transaction(function () use ($invoice, $account_id, $payment_method_id, $amount, $description, $reference) 
             {
                 /** Invoice payment detail */
                 $invoice->paymentDetail()
@@ -249,31 +186,33 @@ trait InvoicesServices
                     ]);
 
                 /** Revenue */
-                $this->createRevenue(
-                    $invoice->invoice_number,
-                    Carbon::now(),
-                    $amount,
-                    $description,
-                    $invoice->recurring,
-                    $reference,
-                    null,
-                    $accountId,
-                    $invoice->customer_id,
-                    $invoice->income_category_id,
-                    $paymentMethodId,
-                    $invoice->currency_id
-                );
+                $revenue = Revenue::create([
+                    'number' => $invoice->invoice_number,
+                    'account_id' => $account_id,
+                    'customer_id' => $invoice->customer_id,
+                    'income_category_id' => $invoice->income_category_id,
+                    'payment_method_id' => $payment_method_id,
+                    'currency_id' => $invoice->currency_id,
+                    'date' => Carbon::now(),
+                    'amount' => $amount,
+                    'description' => $description,
+                    'recurring' => $invoice->recurring,
+                    'reference' => $reference,
+                    'file' => null
+                ]);
+
+                $revenue->invoices()->attach($invoice);
 
                 /** Transactions */
                 $this->createTransaction(
                     get_class($invoice),
                     $invoice->id,
                     $invoice->invoice_number,
-                    $accountId,
+                    $account_id,
                     $invoice->income_category_id,
                     null,
+                    $payment_method_id,
                     IncomeCategory::find($invoice->income_category_id)->name,
-                    'Cash',
                     'Income',
                     $amount,
                     $amount,
@@ -283,7 +222,7 @@ trait InvoicesServices
                 );
 
                 /** Account */
-                Account::where('id', $accountId)
+                Account::where('id', $account_id)
                     ->update([
                         'balance' => DB::raw("balance - ${amount}")
                     ]);
@@ -299,25 +238,20 @@ trait InvoicesServices
     /**
      * Create a new record of invoice payment
      *
-     * @param  integer $id
-     * @param  integer $accountId
-     * @param  integer $paymentMethodId
+     * @param  Invoice $invoice
+     * @param  integer $account_id
+     * @param  integer $payment_method_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (int $id, int $accountId, int $paymentMethodId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function payment (Invoice $invoice, int $account_id, int $payment_method_id, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
-            DB::transaction(function () use (
-                $id, $accountId, $paymentMethodId,
-                $date, $amount, $description, $reference) 
+            DB::transaction(function () use ($invoice, $account_id, $payment_method_id, $date, $amount, $description, $reference) 
             {
-                /** Invoice */
-                $invoice = Invoice::find($id);
-
                 /** Invoice payment detail */
                 $invoice->paymentDetail()
                     ->update([
@@ -336,31 +270,33 @@ trait InvoicesServices
                     ]);
                 
                 /** Revenue */
-                $this->createRevenue(
-                    $invoice->invoice_number,
-                    $date,
-                    $amount,
-                    $description,
-                    $invoice->recurring,
-                    $reference,
-                    null,
-                    $accountId,
-                    $invoice->customer_id,
-                    $invoice->income_category_id,
-                    $paymentMethodId,
-                    $invoice->currency_id
-                );
+                $revenue = Revenue::create([
+                    'number' => $invoice->invoice_number,
+                    'account_id' => $account_id,
+                    'customer_id' => $invoice->customer_id,
+                    'income_category_id' => $invoice->income_category_id,
+                    'payment_method_id' => $payment_method_id,
+                    'currency_id' => $invoice->currency_id,
+                    'date' => $date,
+                    'amount' => $amount,
+                    'description' => $description,
+                    'recurring' => $invoice->recurring,
+                    'reference' => $reference,
+                    'file' => null
+                ]);
+
+                $revenue->invoices()->attach($invoice);
 
                 /** Transactions */
                 $this->createTransaction(
                     get_class($invoice),
-                    $id,
+                    $invoice->id,
                     $invoice->invoice_number,
-                    $accountId,
+                    $account_id,
                     $invoice->income_category_id,
                     null,
+                    $payment_method_id,
                     IncomeCategory::find($invoice->income_category_id)->name,
-                    'Cash',
                     'Income',
                     $amount,
                     $amount,
@@ -370,7 +306,7 @@ trait InvoicesServices
                 );
 
                 /** Account */
-                Account::where('id', $accountId)
+                Account::where('id', $account_id)
                     ->update([
                         'balance' => DB::raw("balance - ${amount}")
                     ]);
@@ -399,17 +335,5 @@ trait InvoicesServices
                 'description' => 'Invoice marked as cancelled!'
             ]);
     }
-
-    /**
-     * Delete one or multiple records of invoices
-     *
-     * @param  mixed $ids
-     * @return boolean
-     */
-    public function deleteInvoices (array $ids): bool
-    {
-        return Invoice::whereIn('id', $ids)->delete();
-    }
-
 
 }
