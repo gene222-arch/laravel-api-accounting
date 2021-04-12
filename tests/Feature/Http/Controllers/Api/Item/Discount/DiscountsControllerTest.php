@@ -54,6 +54,8 @@ class DiscountsControllerTest extends TestCase
     /** test */
     public function user_can_update_discount()
     {
+        $id = 3;
+
         $data = [
             'id' => 3,
             'name' => 'New discount',
@@ -62,7 +64,7 @@ class DiscountsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/item/discounts',
+            "/api/item/discounts/${id}",
             $data,
             $this->apiHeader()
         );

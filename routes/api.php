@@ -320,9 +320,9 @@ Route::prefix('item')->group(function ()
     Route::prefix('discounts')->group(function () 
     {
         Route::get('/', [DiscountsController::class, 'index']);
-        Route::get('/{id}', [DiscountsController::class, 'show']);
+        Route::get('/{discount}', [DiscountsController::class, 'show']);
         Route::post('/', [DiscountsController::class, 'store']);
-        Route::put('/', [DiscountsController::class, 'update']);
+        Route::put('/{discount}', [DiscountsController::class, 'update']);
         Route::delete('/', [DiscountsController::class, 'destroy']);
     });
 

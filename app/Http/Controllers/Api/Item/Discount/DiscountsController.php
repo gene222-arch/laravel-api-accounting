@@ -28,7 +28,9 @@ class DiscountsController extends Controller
      */
     public function index()
     {
-        $result = $this->discount->getAllDiscounts();
+        $result = $this->discount
+            ->latest()
+            ->get(['id', ...(new Discount())->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,11 +45,7 @@ class DiscountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->discount->createDiscount(
-            $request->name,
-            $request->rate,
-            $request->enabled,
-        );
+        $model = $this->discount->create($request->all());
 
         return $this->success($model, 'Discount created successfully.');
     }
@@ -55,32 +53,26 @@ class DiscountsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Discount $discount
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Discount $discount)
     {
-        $result = $this->discount->getDiscountById($id);
-
-        return !$result
+        return !$discount
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($discount);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Discount $discount
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Discount $discount)
     {
-        $this->discount->updateDiscount(
-            $request->id,
-            $request->name,
-            $request->rate,
-            $request->enabled,
-        );
+        $discount->update($request->except('id'));
 
         return $this->success(null, 'Discount updated successfully.');
     }
@@ -93,7 +85,7 @@ class DiscountsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->discount->deleteDiscounts($request->ids);
+        $this->discount->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Discount or discounts deleted successfully.');
     }
