@@ -335,7 +335,7 @@ Route::prefix('item')->group(function ()
         Route::get('/{item}', [ItemsController::class, 'show']);
         Route::post('/', [ItemsController::class, 'store']);
         Route::post('/upload', [ItemsController::class, 'upload']);
-        Route::put('/', [ItemsController::class, 'update']);
+        Route::put('/{item}', [ItemsController::class, 'update']);
         Route::delete('/', [ItemsController::class, 'destroy']);
     });
 

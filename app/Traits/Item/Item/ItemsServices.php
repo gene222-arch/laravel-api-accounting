@@ -41,20 +41,18 @@ trait ItemsServices
     /**
      * Update an existing record of item
      *
-     * @param  integer $id
+     * @param  Item $item
      * @param  array $itemData
      * @param  array|null $stockData
      * @param  array|null $taxes
      * @param  bool $trackStock
      * @return mixed
      */
-    public function updateItem (int $id, array $itemData, ?array $stockData, array $taxes, bool $trackStock): mixed
+    public function updateItem (Item $item, array $itemData, ?array $stockData, array $taxes, bool $trackStock): mixed
     {
         try {
-            DB::transaction(function () use ($id, $itemData, $stockData, $trackStock, $taxes) 
+            DB::transaction(function () use ($item, $itemData, $stockData, $trackStock, $taxes) 
             {
-                $item = Item::find($id);
-
                 $item->update($itemData);
 
                 if ($taxes) $item->taxes()->sync($taxes);

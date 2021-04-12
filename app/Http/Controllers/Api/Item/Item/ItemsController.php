@@ -77,12 +77,13 @@ class ItemsController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Item $item
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Item $item)
     {
         $result = $this->item->updateItem(
-            $request->id,
+            $item,
             $request->item,
             $request->stock,
             $request->taxes,

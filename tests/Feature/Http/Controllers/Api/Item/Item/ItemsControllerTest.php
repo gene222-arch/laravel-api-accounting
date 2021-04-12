@@ -72,6 +72,8 @@ class ItemsControllerTest extends TestCase
     /** test */
     public function user_can_update_item()
     {
+        $id = 2;
+
         $data = [
             'id' => 2,
             'item' => [
@@ -99,7 +101,7 @@ class ItemsControllerTest extends TestCase
 
 
         $response = $this->put(
-            '/api/item/items',
+            "/api/item/items/${id}",
             $data,
             $this->apiHeader()
         );
