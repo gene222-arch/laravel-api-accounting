@@ -28,7 +28,22 @@ class PayrollsController extends Controller
      */
     public function index()
     {
-        $result = $this->payroll->getAllPayrolls();
+        setSqlModeEmpty();
+
+        $result = $this->payroll
+            ->selectRaw('
+                payrolls.name,
+                payrolls.from_date,
+                payrolls.to_date,
+                payrolls.payment_date,
+                COUNT(employee_payroll.employee_id) as employee_count,
+                payrolls.status,
+                SUM(employee_payroll.total_amount) as amount
+            ')
+            ->join('employee_payroll', 'employee_payroll.payroll_id', '=', 'payrolls.id')
+            ->groupBy('payrolls.id')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -44,18 +59,12 @@ class PayrollsController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->payroll->createPayroll(
-            $request->name,
-            $request->accountId,
-            $request->expenseCategoryId,
-            $request->paymentMethodId,
-            $request->fromDate,
-            $request->toDate,
-            $request->paymentDate,
+            $request->except('details', 'benefits', 'contributions'),
+            $request->status,
             $request->details,
             $request->taxes,
             $request->benefits,
-            $request->contributions,
-            $request->approved
+            $request->contributions
         );
 
         return $result !== true 
@@ -66,55 +75,56 @@ class PayrollsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Payroll $payroll
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Payroll $payroll)
     {
-        $result = $this->payroll->getPayrollById($id);
+        $payroll = $payroll->with([
+            'details',
+            'employeeTaxes',
+            'employeeBenefits',
+            'employeeContributions'
+        ])
+            ->first();
 
-        return !$result
+        return !$payroll
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($payroll);
     }
 
     /**
      * Update a specified resource storage as approve.
      *
-     * @param integer $id
+     * @param Payroll $payroll
      * @return \Illuminate\Http\JsonResponse
      */
-    public function approve($id)
+    public function approve(Payroll $payroll)
     {
-        $result = $this->payroll->approve($id);
+        $result = $this->payroll->approve($payroll);
 
         return $result !== true 
             ? $this->error($result, 500)
-            : $this->success(null, 'Payroll approved successfully.');
+            : $this->success(null, 'Payroll status successfully.');
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Payroll $payroll
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Payroll $payroll)
     {
         $result = $this->payroll->updatePayroll(
-            $request->id,
-            $request->name,
-            $request->accountId,
-            $request->expenseCategoryId,
-            $request->paymentMethodId,
-            $request->fromDate,
-            $request->toDate,
-            $request->paymentDate,
+            $payroll,
+            $request->except('details', 'benefits', 'contributions'),
+            $request->status,
             $request->details,
             $request->taxes,
             $request->benefits,
-            $request->contributions,
-            $request->approved
+            $request->contributions
         );
 
         return $result !== true 

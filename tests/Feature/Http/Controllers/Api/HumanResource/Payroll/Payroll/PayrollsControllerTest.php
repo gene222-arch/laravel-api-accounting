@@ -37,28 +37,28 @@ class PayrollsControllerTest extends TestCase
     public function user_can_create_payroll()
     {
         $data = [
-            'name' => 'PR-00001',
-            'accountId' => 1,
-            'expenseCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'fromDate' => '2021-05-05',
-            'toDate' => '2021-05-06',
-            'paymentDate' => '2021-05-07',
-            'approved' => 'Unapproved',
+            'name' => 'PR-00013',
+            'account_id' => 1,
+            'expense_category_id' => 1,
+            'payment_method_id' => 1,
+            'from_date' => '2021-05-05',
+            'to_date' => '2021-05-06',
+            'payment_date' => '2021-05-07',
+            'status' => 'Approved',
             'details' => [
                 [
                     'employee_id' => 1,
                     'salary' => 10000.00,
                     'benefit' => 200.00,
                     'deduction' => 100.00,
-                    'total_amount' => 10050.00
+                    'total_amount' => 100.00
                 ],
                 [
                     'employee_id' => 2,
                     'salary' => 10000.00,
                     'benefit' => 200.00,
                     'deduction' => 100.00,
-                    'total_amount' => 10050.00
+                    'total_amount' => 100.00
                 ]
             ],
             'taxes' => [
@@ -111,23 +111,25 @@ class PayrollsControllerTest extends TestCase
     /** test */
     public function user_can_update_payroll()
     {
+        $id = 2;
+
         $data = [
-            'id' => 1,
-            'name' => 'PR-00003',
-            'accountId' => 1,
-            'expenseCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'fromDate' => '2021-05-05',
-            'toDate' => '2021-05-06',
-            'paymentDate' => '2021-05-07',
-            'approved' => 'Unapproved',
+            'id' => 2,
+            'name' => 'PR-00002',
+            'account_id' => 1,
+            'expense_category_id' => 1,
+            'payment_method_id' => 1,
+            'from_date' => '2021-05-05',
+            'to_date' => '2021-05-06',
+            'payment_date' => '2021-05-07',
+            'status' => 'Approved',
             'details' => [
                 [
                     'employee_id' => 1,
                     'salary' => 10000.00,
                     'benefit' => 200.00,
                     'deduction' => 100.00,
-                    'total_amount' => 10050.00
+                    'total_amount' => 100.00
                 ],
             ],
             'taxes' => [
@@ -154,7 +156,7 @@ class PayrollsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/human-resources/payrolls/run-payrolls',
+            "/api/human-resources/payrolls/run-payrolls/${id}",
             $data,
             $this->apiHeader()
         );
@@ -165,7 +167,7 @@ class PayrollsControllerTest extends TestCase
     /** test */
     public function user_can_approve_payroll()
     {
-        $id = 2;
+        $id = 3;
 
         $response = $this->put(
             "/api/human-resources/payrolls/run-payrolls/${id}/approve",

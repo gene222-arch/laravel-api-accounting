@@ -269,10 +269,10 @@ Route::prefix('human-resources')->group(function ()
         Route::prefix('run-payrolls')->group(function () 
         {
             Route::get('/', [PayrollsController::class, 'index']);
-            Route::get('/{id}', [PayrollsController::class, 'show']);
+            Route::get('/{payroll}', [PayrollsController::class, 'show']);
             Route::post('/', [PayrollsController::class, 'store']);
-            Route::put('/', [PayrollsController::class, 'update']);
-            Route::put('/{id}/approve', [PayrollsController::class, 'approve']);
+            Route::put('/{payroll}', [PayrollsController::class, 'update']);
+            Route::put('/{payroll}/approve', [PayrollsController::class, 'approve']);
             Route::delete('/', [PayrollsController::class, 'destroy']);
         });
 
