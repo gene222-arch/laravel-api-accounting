@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Settings\Account;
 
 use App\Http\Requests\BaseRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateRequest extends BaseRequest
 {
@@ -14,10 +15,9 @@ class UpdateRequest extends BaseRequest
     public function rules()
     {
         return [
-            'userId' => ['required', 'integer', 'exists:users,id'],
-            'firstName' => ['required', 'string', 'max:255'],
-            'lastName' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', "unique:users,email,{$this->userId}"],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . Auth::user()->id],
             'password' => ['required', 'string', 'min:8'],
         ];
     }

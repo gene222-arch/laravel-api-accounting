@@ -17,6 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->id();
             $table->foreignId('customer_id');
             $table->foreignId('currency_id');
+            $table->foreignId('income_category_id');
             $table->string('invoice_number');
             $table->unsignedBigInteger('order_no');
             $table->timestamp('date')->default(now());
@@ -33,6 +34,11 @@ class CreateInvoicesTable extends Migration
             $table->foreign('currency_id')
                 ->references('id')
                 ->on('currencies')
+                ->cascadeOnDelete();
+
+            $table->foreign('income_category_id')
+                ->references('id')
+                ->on('income_categories')
                 ->cascadeOnDelete();
         });
 

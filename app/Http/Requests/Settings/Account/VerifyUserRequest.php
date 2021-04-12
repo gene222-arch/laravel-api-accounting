@@ -14,7 +14,6 @@ class VerifyUserRequest extends BaseRequest
     public function rules()
     {
         return [
-            'userId' => ['required', 'integer', 'exists:users,id'],
             'password' => ['required', 'string']
         ];
     }

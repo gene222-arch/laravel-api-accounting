@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Settings\Account;
 use App\Models\User;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Settings\Account\UpdateRequest;
 use App\Http\Requests\Settings\Account\VerifyUserRequest;
 
@@ -28,16 +30,12 @@ class AccountController extends Controller
      */
     public function verify(VerifyUserRequest $request)
     {
-        $result = $this->user->verifyAccountViaPassword(
-            $request->userId,
-            $request->password 
-        );
+        $result = Hash::check($request->password, Auth::user()->password);
 
         return !$result
             ? $this->noContent()
             : $this->success(null, 'Account verified successfully.');
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -47,13 +45,7 @@ class AccountController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        $this->user->updateAccount(
-            $request->userId,
-            $request->firstName,
-            $request->lastName,
-            $request->email,
-            $request->password
-        );
+        Auth::user()->update($request->all());
 
         return $this->success(null, 'Account updated successfully.');
     }
