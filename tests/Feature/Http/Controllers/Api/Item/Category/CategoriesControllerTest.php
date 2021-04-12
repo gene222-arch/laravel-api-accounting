@@ -37,8 +37,8 @@ class CategoriesControllerTest extends TestCase
     public function user_can_create_category()
     {
         $data = [
-            'name' => 'Guitar',
-            'hexCode' => '#000002',
+            'name' => 'Furniture',
+            'hex_code' => '#000006',
             'enabled' => true,
         ];
 
@@ -54,15 +54,17 @@ class CategoriesControllerTest extends TestCase
     /** test */
     public function user_can_update_category()
     {
+        $id = 1;
+
         $data = [
-            'id' => 2,
-            'name' => 'Guitar',
-            'hexCode' => '#000002',
+            'id' => 1,
+            'name' => 'E Guitar',
+            'hex_code' => '#000001',
             'enabled' => true,
         ];
 
         $response = $this->put(
-            '/api/item/categories',
+            "/api/item/categories/${id}",
             $data,
             $this->apiHeader()
         );

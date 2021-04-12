@@ -28,7 +28,9 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $result = $this->category->getAllCategories();
+        $result = $this->category
+            ->latest()
+            ->get(['id', ...(new Category())->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -36,7 +38,6 @@ class CategoriesController extends Controller
                 'data' => $result
             ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -46,11 +47,7 @@ class CategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $category = $this->category->createCategory(
-            $request->name,
-            $request->hexCode,
-            $request->enabled,
-        );
+        $category = $this->category->create($request->all());
 
         return $this->success($category,'Category created successfully.' );
     }
@@ -58,32 +55,26 @@ class CategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Category $category
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        $result = $this->category->getCategoryById($id);
-
-        return !$result
+        return !$category
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  UpdateRequest  $request
+     * @param Category $category
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Category $category)
     {
-        $this->category->updateCategory(
-            $request->id,
-            $request->name,
-            $request->hexCode,
-            $request->enabled,
-        );
+        $category->update($request->except('id'));
 
         return $this->success(null, 'Category updated successfully.');
     }
@@ -96,7 +87,7 @@ class CategoriesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->category->deleteCategories($request->ids);
+        $this->category->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Category or categories deleted successfully.');
     }

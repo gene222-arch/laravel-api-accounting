@@ -308,9 +308,9 @@ Route::prefix('item')->group(function ()
     Route::prefix('categories')->group(function () 
     {
         Route::get('/', [CategoriesController::class, 'index']);
-        Route::get('/{id}', [CategoriesController::class, 'show']);
+        Route::get('/{category}', [CategoriesController::class, 'show']);
         Route::post('/', [CategoriesController::class, 'store']);
-        Route::put('/', [CategoriesController::class, 'update']);
+        Route::put('/{category}', [CategoriesController::class, 'update']);
         Route::delete('/', [CategoriesController::class, 'destroy']);
     });
 
