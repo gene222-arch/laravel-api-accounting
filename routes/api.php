@@ -27,7 +27,6 @@ use App\Http\Controllers\Api\HumanResource\Employee\EmployeesController;
 use App\Http\Controllers\Api\Settings\Contribution\ContributionsController;
 use App\Http\Controllers\Api\Settings\PaymentMethod\PaymentMethodsController;
 use App\Http\Controllers\Api\HumanResource\Payroll\Payroll\PayrollsController;
-use App\Http\Controllers\Api\InventoryManagement\Supplier\SuppliersController;
 use App\Http\Controllers\Api\DoubleEntry\JournalEntry\JournalEntriesController;
 use App\Http\Controllers\Api\InventoryManagement\Warehouse\WarehousesController;
 use App\Http\Controllers\Api\Settings\IncomeCategory\IncomeCategoriesController;
@@ -374,9 +373,9 @@ Route::prefix('purchases')->group(function ()
     Route::prefix('payments')->group(function () 
     {
         Route::get('/', [PaymentsController::class, 'index']);
-        Route::get('/{id}', [PaymentsController::class, 'show']);
+        Route::get('/{payment}', [PaymentsController::class, 'show']);
         Route::post('/', [PaymentsController::class, 'store']);
-        Route::put('/', [PaymentsController::class, 'update']);
+        Route::put('/{payment}', [PaymentsController::class, 'update']);
         Route::delete('/', [PaymentsController::class, 'destroy']);
     });
 

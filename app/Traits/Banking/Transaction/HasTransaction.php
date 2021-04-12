@@ -13,10 +13,10 @@ trait HasTransaction
      *
      * @param  string $model_type
      * @param  integer $model_id
-     * @param  string $number
+     * @param  string|null $number
      * @param  integer $account_id
-     * @param  integer $income_category_id
-     * @param  integer $expense_category_id
+     * @param  integer|null $income_category_id
+     * @param  integer|null $expense_category_id
      * @param  integer $payment_method_id
      * @param  string $category
      * @param  string $type
@@ -27,7 +27,7 @@ trait HasTransaction
      * @param  string $contact
      * @return Transaction
      */
-    public function createTransaction (string $model_type, int $model_id, string $number, int $account_id, ?int $income_category_id, ?int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
+    public function createTransaction (string $model_type, int $model_id, ?string $number, int $account_id, ?int $income_category_id, ?int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): Transaction
     {
         return Transaction::create([
             'model_type' => $model_type,
@@ -50,13 +50,12 @@ trait HasTransaction
     /**
      * Update an existing record of transaction
      *
-     * @param  integer $id 
      * @param  string $model_type
      * @param  integer $model_id
-     * @param  string $number
+     * @param  string|null $number
      * @param  integer $account_id
-     * @param  integer $income_category_id
-     * @param  integer $expense_category_id
+     * @param  integer|null $income_category_id
+     * @param  integer|null $expense_category_id
      * @param  integer $payment_method_id
      * @param  string $category
      * @param  string $type
@@ -67,9 +66,10 @@ trait HasTransaction
      * @param  string $contact
      * @return boolean
      */
-    public function updateTransaction (int $id, string $model_type, int $model_id, string $number, int $account_id, int $income_category_id, int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
+    public function updateTransaction (string $model_type, int $model_id, ?string $number, int $account_id, ?int $income_category_id, ?int $expense_category_id, int $payment_method_id, string $category, string $type, float $amount, float $deposit, float $withdrawal, ?string $description, ?string $contact): bool
     {
-        return Transaction::find($id)
+        return Transaction::where('model_type', $model_type)
+            ->where('model_id', $model_id)
             ->update([
                 'model_type' => $model_type,
                 'model_id' => $model_id,

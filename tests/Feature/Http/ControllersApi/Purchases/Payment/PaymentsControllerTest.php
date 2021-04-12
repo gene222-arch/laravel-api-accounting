@@ -23,14 +23,12 @@ class PaymentsControllerTest extends TestCase
     /** test */
     public function user_can_view_payment()
     {
-        $id = 1;
+        $id = 2;
 
         $response = $this->get(
             "/api/purchases/payments/${id}",
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
@@ -39,13 +37,13 @@ class PaymentsControllerTest extends TestCase
     public function user_can_create_payment()
     {
         $data = [
-            'accountId' => 2,
-            'vendorId' => 1,
-            'expenseCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'currencyId' => 1,
+            'account_id' => 1,
+            'vendor_id' => 1,
+            'expense_category_id' => 1,
+            'payment_method_id' => 1,
+            'currency_id' => 1,
             'date' => '2021-04-04',
-            'amount' => 200.00,
+            'amount' => 10.00,
             'recurring' => 'No',
         ];
 
@@ -61,21 +59,22 @@ class PaymentsControllerTest extends TestCase
     /** test */
     public function user_can_update_payment()
     {
+        $id = 6;
+
         $data = [
-            'id' => 1,
-            'number' => 'BILL-00002',
-            'accountId' => 2,
-            'vendorId' => 1,
-            'expenseCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'currencyId' => 1,
+            'id' => 6,
+            'account_id' => 1,
+            'vendor_id' => 1,
+            'expense_category_id' => 1,
+            'payment_method_id' => 1,
+            'currency_id' => 1,
             'date' => '2021-04-04',
-            'amount' => 120.00,
+            'amount' => 20.00,
             'recurring' => 'No',
         ];
 
         $response = $this->put(
-            '/api/purchases/payments',
+            "/api/purchases/payments/${id}",
             $data,
             $this->apiHeader()
         );

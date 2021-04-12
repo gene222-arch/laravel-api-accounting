@@ -28,7 +28,9 @@ class PaymentsController extends Controller
      */
     public function index()
     {
-        $result = $this->payment->getAllPayments();
+        $result = $this->payment
+            ->latest()
+            ->get(['id', ...$this->payment->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,13 +45,12 @@ class PaymentsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $payment = $this->payment->createpayment(
-            $request->number,
-            $request->accountId,
-            $request->vendorId,
-            $request->expenseCategoryId,
-            $request->paymentMethodId,
-            $request->currencyId,
+        $result = $this->payment->createpayment(
+            $request->account_id,
+            $request->vendor_id,
+            $request->expense_category_id,
+            $request->payment_method_id,
+            $request->currency_id,
             $request->date,
             $request->amount,
             $request->description,
@@ -58,40 +59,39 @@ class PaymentsController extends Controller
             $request->file
         );
 
-        return $this->success($payment, 'Payment created successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Payment created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Payment $payment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Payment $payment)
     {
-        $result = $this->payment->getpaymentById($id);
-
-        return !$result
+        return !$payment
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($payment);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param Payment $payment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Payment $payment)
     {
-        $this->payment->updatePayment(
-            $request->id,
-            $request->number,
-            $request->accountId,
-            $request->vendorId,
-            $request->expenseCategoryId,
-            $request->paymentMethodId,
-            $request->currencyId,
+        $result = $this->payment->updatePayment(
+            $payment,
+            $request->account_id,
+            $request->vendor_id,
+            $request->expense_category_id,
+            $request->payment_method_id,
+            $request->currency_id,
             $request->date,
             $request->amount,
             $request->description,
@@ -100,7 +100,9 @@ class PaymentsController extends Controller
             $request->file
         );
 
-        return $this->success(null, 'Payment updated successfully.');
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Payment updated successfully.');
     }
 
     /**
@@ -111,7 +113,7 @@ class PaymentsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->payment->deletePayments($request->ids);
+        $this->payment->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Payment or payments deleted successfully.');
     }

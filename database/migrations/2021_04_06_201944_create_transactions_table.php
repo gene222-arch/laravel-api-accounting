@@ -17,7 +17,7 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->string('model_type');
             $table->unsignedBigInteger('model_id');
-            $table->string('number');
+            $table->string('number')->nullable();
             $table->foreignId('account_id');
             $table->foreignId('income_category_id')->nullable();
             $table->foreignId('expense_category_id')->nullable();
