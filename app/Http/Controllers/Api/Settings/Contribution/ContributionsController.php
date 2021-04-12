@@ -28,7 +28,9 @@ class ContributionsController extends Controller
      */
     public function index()
     {
-        $result = $this->contribution->getAllContributions();
+        $result = $this->contribution
+            ->latest()
+            ->get(['id', ...$this->contribution->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,11 +45,7 @@ class ContributionsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $contribution = $this->contribution->createContribution(
-            $request->name,
-            $request->rate,
-            $request->enabled
-        );
+        $contribution = $this->contribution->create($request->all());
 
         return $this->success($contribution, 'Contribution created successfully.');
     }
@@ -55,32 +53,26 @@ class ContributionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Contribution $contribution
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Contribution $contribution)
     {
-        $result = $this->contribution->getContributionById($id);
-
-        return !$result
+        return !$contribution
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($contribution);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Contribution $contribution
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Contribution $contribution)
     {
-        $this->contribution->updateContribution(
-            $request->id,
-            $request->name,
-            $request->rate,
-            $request->enabled
-        );
+        $contribution->update($request->all());
 
         return $this->success(null, 'Contribution updated successfully.');
     }
@@ -93,7 +85,7 @@ class ContributionsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->contribution->deleteContributions($request->ids);
+        $this->contribution->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Contribution or contributions deleted successfully.');
     }

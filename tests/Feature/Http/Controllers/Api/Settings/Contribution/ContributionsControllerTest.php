@@ -30,8 +30,6 @@ class ContributionsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -39,7 +37,7 @@ class ContributionsControllerTest extends TestCase
     public function user_can_create_contribution()
     {
         $data = [
-            'name' => 'GSIS',
+            'name' => 'S',
             'rate' => 9,
             'enabled' => false
         ];
@@ -56,15 +54,17 @@ class ContributionsControllerTest extends TestCase
     /** test */
     public function user_can_update_contribution()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
-            'name' => 'Pag ibig',
+            'name' => 'Pag ibigs',
             'rate' => 2,
             'enabled' => true
         ];
 
         $response = $this->put(
-            '/api/settings/contributions',
+            "/api/settings/contributions/${id}",
             $data,
             $this->apiHeader()
         );

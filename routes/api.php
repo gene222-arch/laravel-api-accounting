@@ -501,9 +501,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('contributions')->group(function () 
     {
         Route::get('/', [ContributionsController::class, 'index']);
-        Route::get('/{id}', [ContributionsController::class, 'show']);
+        Route::get('/{contribution}', [ContributionsController::class, 'show']);
         Route::post('/', [ContributionsController::class, 'store']);
-        Route::put('/', [ContributionsController::class, 'update']);
+        Route::put('/{contribution}', [ContributionsController::class, 'update']);
         Route::delete('/', [ContributionsController::class, 'destroy']);
     });
 
