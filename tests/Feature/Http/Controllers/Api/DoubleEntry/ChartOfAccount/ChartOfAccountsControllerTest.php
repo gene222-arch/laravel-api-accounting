@@ -55,6 +55,8 @@ class ChartOfAccountsControllerTest extends TestCase
     /** test */
     public function user_can_update_chart_of_account()
     {
+        $id = 2;
+        
         $data = [
             'id' => 2,
             'name' => 'Accounts Payable',
@@ -64,7 +66,7 @@ class ChartOfAccountsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/double-entry/chart-of-accounts',
+            "/api/double-entry/chart-of-accounts/${id}",
             $data,
             $this->apiHeader()
         );

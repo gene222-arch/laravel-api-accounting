@@ -43,26 +43,26 @@ trait UsersServices
     /**
      * Create a new record of user with roles
      *
-     * @param  string $firstName
-     * @param  string $lastName
+     * @param  string $first_name
+     * @param  string $last_name
      * @param  string $email
      * @param  string $password
-     * @param  integer $roleId
+     * @param  integer $role_id
      * @return mixed
      */
-    public function createUserWithRoles (string $firstName, string $lastName, string $email, string $password, int $roleId): mixed
+    public function createUserWithRoles (string $first_name, string $last_name, string $email, string $password, int $role_id): mixed
     {
         try {
-            DB::transaction(function () use ($firstName, $lastName, $email, $password, $roleId)
+            DB::transaction(function () use ($first_name, $last_name, $email, $password, $role_id)
             {
                 $user = User::create([
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
                     'email' => $email,
                     'password' => Hash::make($password)
                 ]);
 
-                $user->assignRole($roleId);
+                $user->assignRole($role_id);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -75,30 +75,29 @@ trait UsersServices
      * Update an existing record of user via id
      *
      * @param  integer $id
-     * @param  string $firstName
-     * @param  string $lastName
+     * @param  string $first_name
+     * @param  string $last_name
      * @param  string $email
      * @param  string|null $password
-     * @param  integer $roleId
+     * @param  integer $role_id
      * @param  bool $updatePassword
      * @return mixed
      */
-    public function updateUserWithRolesById (int $id, string $firstName, string $lastName, string $email, ?string $password, int $roleId, bool $updatePassword): mixed
+    public function updateUserWithRolesById (int $id, string $first_name, string $last_name, string $email, ?string $password, int $role_id, bool $updatePassword): mixed
     {
         try {
-            DB::transaction(function () use ($id, $firstName, $lastName, $email, $password, $roleId, $updatePassword)
+            DB::transaction(function () use ($id, $first_name, $last_name, $email, $password, $role_id, $updatePassword)
             {
                 $user = User::find($id);
 
-                $user
-                    ->update([
-                        'first_name' => $firstName,
-                        'last_name' => $lastName,
-                        'email' => $email,
-                        'password' => !$updatePassword ? DB::raw('password') : $password
-                    ]);
+                $user->update([
+                    'first_name' => $first_name,
+                    'last_name' => $last_name,
+                    'email' => $email,
+                    'password' => !$updatePassword ? DB::raw('password') : $password
+                ]);
 
-                $user->syncRoles($roleId);
+                $user->syncRoles($role_id);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -111,30 +110,30 @@ trait UsersServices
      * Update an existing record of user via email
      *
      * @param  string $emailToFind
-     * @param  string $firstName
-     * @param  string $lastName
+     * @param  string $first_name
+     * @param  string $last_name
      * @param  string $email
      * @param  string|null $password
-     * @param  integer $roleId
+     * @param  integer $role_id
      * @param  bool $updatePassword
      * @return mixed
      */
-    public function updateUserWithRolesByEmail (string $emailToFind, string $firstName, string $lastName, string $email, ?string $password, int $roleId, bool $updatePassword = false): mixed
+    public function updateUserWithRolesByEmail (string $emailToFind, string $first_name, string $last_name, string $email, ?string $password, int $role_id, bool $updatePassword = false): mixed
     {
         try {
-            DB::transaction(function () use ($emailToFind, $firstName, $lastName, $email, $password, $roleId, $updatePassword)
+            DB::transaction(function () use ($emailToFind, $first_name, $last_name, $email, $password, $role_id, $updatePassword)
             {
                 $user = User::where('email', $emailToFind)->first();
 
                 $user
                     ->update([
-                        'first_name' => $firstName,
-                        'last_name' => $lastName,
+                        'first_name' => $first_name,
+                        'last_name' => $last_name,
                         'email' => $email,
                         'password' => !$updatePassword ? DB::raw('password') : $password
                     ]);
 
-                $user->syncRoles($roleId);
+                $user->syncRoles($role_id);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

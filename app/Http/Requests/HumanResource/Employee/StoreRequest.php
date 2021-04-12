@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\HumanResource\Employee;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\HumanResource\Employee\EmployeeBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends EmployeeBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,52 +14,21 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'firstName' => ['required', 'string'],
-            'lastName' => ['required', 'string'],
-            'email' => ['required', 'email', 'unique:employees,email', 'unique:users,email'],
-            'birthDate' => ['required', 'date'],
-            'gender' => ['required', 'string', 'in:Male,Female'],
-            'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:employees,phone'],
-            'address' => ['required', 'string'],
-            'roleId' => ['required', 'integer', 'exists:roles,id'],
-            'enabled' => ['required', 'boolean'],
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
-            'amount' => ['required', 'numeric', 'min:0'],
-            'taxNumber' => ['required', 'string', 'min:9', 'max:11', 'unique:salaries,tax_number'],
-            'bankAccountNumber' => ['required', 'string', 'min:10', 'max:30', 'unique:salaries,bank_account_number'],
-            'hiredAt' => ['required', 'date'],
-            'createUser' => ['required', 'boolean'],
-        ];
-    }
-    
-    /**
-     * Rename attributes
-     * 
-     * return $array
-     */
-    public function attributes()
-    {
-        return [
-            'birthDate' => 'birth date',
-            'roleId' => 'role id',
-            'enabled' => 'enabled',
-            'currencyId' => 'currency id',
-            'taxNumber' => 'tax number',
-            'bankAccountNumber' => 'bank account number',
-            'hiredAt' => 'hire date'
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'roleId.exists' => 'The selected :attribute does not exist.',
-            'currencyId.exists' => 'The selected :attribute does not exist.',
+            'employee_details.first_name' => ['required', 'string'],
+            'employee_details.last_name' => ['required', 'string'],
+            'employee_details.email' => ['required', 'email', 'unique:employees,email', 'unique:users,email'],
+            'employee_details.birth_date' => ['required', 'date'],
+            'employee_details.gender' => ['required', 'string', 'in:Male,Female'],
+            'employee_details.phone' => ['required', 'string', 'min:11', 'max:15', 'unique:employees,phone'],
+            'employee_details.address' => ['required', 'string'],
+            'employee_details.enabled' => ['required', 'boolean'],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
+            'salary_details.currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'salary_details.amount' => ['required', 'numeric', 'min:0'],
+            'salary_details.tax_number' => ['required', 'string', 'min:9', 'max:11', 'unique:salaries,tax_number'],
+            'salary_details.bank_account_number' => ['required', 'string', 'min:10', 'max:30', 'unique:salaries,bank_account_number'],
+            'salary_details.hired_at' => ['required', 'date'],
+            'create_user' => ['required', 'boolean'],
         ];
     }
 }

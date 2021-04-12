@@ -11,168 +11,84 @@ trait EmployeesServices
 {
     
     /**
-     * Get latest records of Employees
+     * Create a new record of employee
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array $employee_details
+     * @param  integer $role_id
+     * @param  array $salary_details
+     * @param  bool $create_user
+     * @return mixed
      */
-    public function getAllEmployees (): Collection
+    public function createEmployee (array $employee_details, int $role_id, array $salary_details, bool $create_user = false): mixed
     {
-        return Employee::with('salary')
-            ->latest()
-            ->get();
-    }
-    
-    /**
-     * Get a record of employee via id
-     *
-     * @param  int $id
-     * @return Employee|null
-     */
-    public function getEmployeeById (int $id): Employee|null
-    {
-        return Employee::where('id', $id)
-            ->with('salary')
-            ->first();
+        try {
+            DB::transaction(function () use ($employee_details, $role_id, $salary_details, $create_user)
+            {
+                $create_user && (
+                    (new User())->createUserWithRoles(
+                        $employee_details['first_name'],
+                        $employee_details['last_name'],
+                        $employee_details['email'],
+                        $employee_details['first_name'],
+                        $role_id
+                ));
+
+                $employee = Employee::create($employee_details);
+
+                $employee->salary()->create($salary_details);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+
+        return true;
     }
     
     /**
      * Create a new record of employee
      *
-     * @param  string $firstName
-     * @param  string $lastName
-     * @param  string $email
-     * @param  string $birthDate
-     * @param  string $gender
-     * @param  string $phone
-     * @param  string $address
-     * @param  integer $roleId
-     * @param  bool $enabled
-     * @param  integer $currencyId
-     * @param  float $amount
-     * @param  string $taxNumber
-     * @param  string $bankAccountNumber
-     * @param  string $hiredAt
-     * @param  bool $createUser
+     * @param  Employee $employee
+     * @param  array $employee_details
+     * @param  integer $role_id
+     * @param  array $salary_details
+     * @param  bool $create_user
      * @return mixed
      */
-    public function createEmployee (string $firstName, string $lastName, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt, bool $createUser = false): mixed
+    public function updateEmployee (Employee $employee, array $employee_details, int $role_id, array $salary_details, bool $create_user = false): mixed
     {
         try {
-            DB::transaction(function () use (
-                $firstName, $lastName, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
-                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt, $createUser
-            )
+            DB::transaction(function () use ($employee, $employee_details, $role_id, $salary_details, $create_user)
             {
-                $createUser && (
-                    (new User())->createUserWithRoles(
-                        $firstName,
-                        $lastName,
-                        $email,
-                        $firstName,
-                        $roleId
-                ));
+                $user = User::where('email', $employee->email)->first();
 
-                $employee = Employee::create([
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'email' => $email,
-                    'birth_date' => $birthDate,
-                    'gender' => $gender,
-                    'phone' => $phone,
-                    'address' => $address,
-                    'enabled' => $enabled
-                ]);
+                /** Delete user if it exists else create*/
+                if (!$user)
+                {
+                    if ($create_user)
+                    {
+                        ((new User())->updateUserWithRolesByEmail(
+                            $employee_details['email'],
+                            $employee_details['first_name'],
+                            $employee_details['last_name'],
+                            $employee_details['email'],
+                            $employee_details['first_name'],
+                            $role_id
+                        ));
+                    }
+                }
+                else 
+                {
+                    if (!$create_user) $user->delete();
+                }
 
-                $employee->salary()->create([
-                    'currency_id' => $currencyId,
-                    'amount' => $amount,
-                    'tax_number' => $taxNumber,
-                    'bank_account_number' => $bankAccountNumber,
-                    'hired_at' => $hiredAt
-                ]);
+                $employee->update($employee_details);
+
+                $employee->salary()->update($salary_details);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
 
         return true;
-    }
-    
-    /**
-     * Update an existing record of employee
-     *
-     * @param  integer $id
-     * @param  string $firstName
-     * @param  string $lastName
-     * @param  string $email
-     * @param  string $birthDate
-     * @param  string $gender
-     * @param  string $phone
-     * @param  string $address
-     * @param  integer $roleId
-     * @param  bool $enabled
-     * @param  integer $currencyId
-     * @param  float $amount
-     * @param  string $taxNumber
-     * @param  string $bankAccountNumber
-     * @param  string $hiredAt
-     * @param  bool $updateUser
-     * @return mixed
-     */
-    public function updateEmployee (int $id, string $firstName, string $lastName, string $email, string $birthDate, string $gender, string $phone, string $address, int $roleId, bool $enabled, int $currencyId, float $amount, string $taxNumber, string $bankAccountNumber, string $hiredAt, bool $updateUser): mixed
-    {
-        try {
-            DB::transaction(function () use (
-                $id, $firstName, $lastName, $email, $birthDate, $gender, $phone, $address, $roleId, $enabled,
-                $currencyId, $amount, $taxNumber, $bankAccountNumber, $hiredAt, $updateUser
-            )
-            {
-                $employee = Employee::find($id);
-
-                $updateUser && (
-                    (new User())->updateUserWithRolesByEmail(
-                        $employee->email,
-                        $firstName,
-                        $lastName,
-                        $email,
-                        null,
-                        $roleId
-                ));
-
-                $employee->update([
-                    'first_name' => $firstName,
-                    'last_name' => $lastName,
-                    'email' => $email,
-                    'birth_date' => $birthDate,
-                    'gender' => $gender,
-                    'phone' => $phone,
-                    'address' => $address,
-                    'enabled' => $enabled
-                ]);
-
-                $employee->salary()->update([
-                    'currency_id' => $currencyId,
-                    'amount' => $amount,
-                    'tax_number' => $taxNumber,
-                    'bank_account_number' => $bankAccountNumber,
-                    'hired_at' => $hiredAt
-                ]);
-            });
-        } catch (\Throwable $th) {
-            return $th->getMessage();
-        }
-
-        return true;
-    }
-
-    /**
-     * Delete one or multiple records of employees
-     *
-     * @param  array $ids
-     * @return boolean
-     */
-    public function deleteEmployees (array $ids): bool
-    {
-        return Employee::whereIn('id', $ids)->delete();
     }
 }

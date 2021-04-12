@@ -62,7 +62,6 @@ use App\Http\Controllers\Api\Exports\Sales\RevenueExportsController;
 
 /**
  * Auth Module
- * Todo: Refactored
  */
 Route::middleware(['api'])->group(function () 
 {
@@ -89,14 +88,13 @@ Route::middleware(['api'])->group(function ()
 
 /**
  * Access rights module
- * Todo: Refactored
  */
 Route::prefix('access-rights')->group(function () 
 {
     Route::get('/', [AccessRightsController::class, 'index']);
     Route::get('/{role}', [AccessRightsController::class, 'show']);
     Route::post('/', [AccessRightsController::class, 'store']);
-    Route::put('/', [AccessRightsController::class, 'update']);
+    Route::put('/{role}', [AccessRightsController::class, 'update']);
     Route::delete('/', [AccessRightsController::class, 'destroy']);
 });
 
@@ -105,7 +103,7 @@ Route::prefix('access-rights')->group(function ()
 
 /**
  * * Banking
- * Todo: Refactored
+ * 
  *  - Accounts
  *  - Bank account transfers
  *  - Bank account reconciliations
@@ -121,7 +119,7 @@ Route::prefix('banking')->group(function ()
         Route::get('/', [AccountsController::class, 'index']);
         Route::get('/{account}', [AccountsController::class, 'show']);
         Route::post('/', [AccountsController::class, 'store']);
-        Route::put('/', [AccountsController::class, 'update']);
+        Route::put('/{account}', [AccountsController::class, 'update']);
         Route::delete('/', [AccountsController::class, 'destroy']);
     });
 
@@ -166,6 +164,7 @@ Route::prefix('banking')->group(function ()
  * * Double entry
  *  - Chart of accoutns
  *  - Journal Entry
+ *  
  */
 Route::prefix('double-entry')->group(function () 
 {
@@ -177,7 +176,7 @@ Route::prefix('double-entry')->group(function ()
         Route::get('/', [ChartOfAccountsController::class, 'index']);
         Route::get('/{chartOfAccount}', [ChartOfAccountsController::class, 'show']);
         Route::post('/', [ChartOfAccountsController::class, 'store']);
-        Route::put('/', [ChartOfAccountsController::class, 'update']);
+        Route::put('/{chartOfAccount}', [ChartOfAccountsController::class, 'update']);
         Route::delete('/', [ChartOfAccountsController::class, 'destroy']);
     });
 
@@ -244,9 +243,9 @@ Route::prefix('human-resources')->group(function ()
     Route::prefix('employees')->group(function () 
     {
         Route::get('/', [EmployeesController::class, 'index']);
-        Route::get('/{id}', [EmployeesController::class, 'show']);
+        Route::get('/{employee}', [EmployeesController::class, 'show']);
         Route::post('/', [EmployeesController::class, 'store']);
-        Route::put('/', [EmployeesController::class, 'update']);
+        Route::put('/{employee}', [EmployeesController::class, 'update']);
         Route::delete('/', [EmployeesController::class, 'destroy']);
     });
 

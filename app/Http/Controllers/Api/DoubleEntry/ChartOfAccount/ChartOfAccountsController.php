@@ -67,11 +67,12 @@ class ChartOfAccountsController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param ChartOfAccount $chartOfAccount
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, ChartOfAccount $chartOfAccount)
     {
-        $this->chartOfAccount->where('id', $request->id)->update($request->all());
+        $chartOfAccount->update($request->all());
 
         return $this->success(null, 'Chart of account updated successfully.');
     }

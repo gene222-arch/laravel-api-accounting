@@ -28,7 +28,10 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $result = $this->employee->getAllEmployees();
+        $result = $this->employee
+            ->with('salary')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -44,21 +47,10 @@ class EmployeesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->employee->createEmployee(
-            $request->firstName,
-            $request->lastName,
-            $request->email,
-            $request->birthDate,
-            $request->gender,
-            $request->phone,
-            $request->address,
-            $request->roleId,
-            $request->enabled,
-            $request->currencyId,
-            $request->amount,
-            $request->taxNumber,
-            $request->bankAccountNumber,
-            $request->hiredAt,
-            $request->createUser
+            $request->employee_details,
+            $request->role_id,
+            $request->salary_details,
+            $request->create_user,
         );
 
         return $result !== true 
@@ -69,43 +61,33 @@ class EmployeesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Employee $employee
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Employee $employee)
     {
-        $result = $this->employee->getEmployeeById($id);
+        $employee = $employee->with('salary')->first();
 
-        return !$result
+        return !$employee
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($employee);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Employee $employee
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Employee $employee)
     {
         $result = $this->employee->updateEmployee(
-            $request->id,
-            $request->firstName,
-            $request->lastName,
-            $request->email,
-            $request->birthDate,
-            $request->gender,
-            $request->phone,
-            $request->address,
-            $request->roleId,
-            $request->enabled,
-            $request->currencyId,
-            $request->amount,
-            $request->taxNumber,
-            $request->bankAccountNumber,
-            $request->hiredAt,
-            $request->updateUser
+            $employee,
+            $request->employee_details,
+            $request->role_id,
+            $request->salary_details,
+            $request->create_user,
         );
 
         return $result !== true 
@@ -121,7 +103,7 @@ class EmployeesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->employee->deleteEmployees($request->ids);
+        $this->employee->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Employee or employees deleted successfully.');
     }

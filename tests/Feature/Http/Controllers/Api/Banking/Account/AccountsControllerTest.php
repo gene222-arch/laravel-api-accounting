@@ -57,6 +57,8 @@ class AccountsControllerTest extends TestCase
     /** test */
     public function user_can_update_account()
     {
+        $id = 1; 
+
         $data = [
             'id' => 2,
             'currency_id' => 1,
@@ -68,7 +70,7 @@ class AccountsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/banking/accounts',
+            "/api/banking/accounts/${id}",
             $data,
             $this->apiHeader()
         );

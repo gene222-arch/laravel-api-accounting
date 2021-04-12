@@ -39,25 +39,23 @@ trait AccessRightServices
     /**
      * Update an existing access right
      *
-     * @param integer $id
+     * @param Role $role
      * @param string $role
      * @param array $permissions
      * @param bool $enabled
      * @return mixed
      */
-    public function updateAccessRight (int $id, string $role, array $permissions, bool $enabled): mixed
+    public function updateAccessRight (Role $role, string $role_name, array $permissions, bool $enabled): mixed
     {
         try {
-            DB::transaction(function () use ($id, $role, $permissions, $enabled) 
+            DB::transaction(function () use ($role, $role_name, $permissions, $enabled) 
             {
-                $findRole = Role::find($id);
-
-                $findRole->update([
-                    'name' => $role,
+                $role->update([
+                    'name' => $role_name,
                     'enabled' => $enabled
                 ]);
 
-                $findRole->syncPermissions($permissions);
+                $role->syncPermissions($permissions);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

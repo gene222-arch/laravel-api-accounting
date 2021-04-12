@@ -57,6 +57,8 @@ class AccessRightsControllerTest extends TestCase
     /** test */
     public function user_can_update_access_right()
     {
+        $id = 4;
+
         $data = [
             'id' => 4,
             'role' => 'Super Duper Manager',
@@ -68,7 +70,7 @@ class AccessRightsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/access-rights',
+            "/api/access-rights/${id}",
             $data,
             $this->apiHeader()
         );

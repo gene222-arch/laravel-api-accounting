@@ -75,13 +75,14 @@ class AccessRightsController extends Controller
      * Update the specified resource in storage.
      *
      * @param  UpdateRequest  $request
+     * @param Role $role
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Role $role)
     {
         $result = $this->updateAccessRight(
-            $request->id,
-            $request->role,
+            $role,
+            $request->role_name,
             $request->permissions,
             $request->enabled
         );
