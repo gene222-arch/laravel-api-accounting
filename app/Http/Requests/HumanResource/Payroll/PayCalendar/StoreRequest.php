@@ -16,7 +16,7 @@ class StoreRequest extends BaseRequest
         return [
             'name' => ['required', 'string', 'unique:pay_calendars,name'],
             'type' => ['required', 'string', 'in:Weekly,Bi-weekly,Semi-monthly,Monthly'],
-            'employeeIds.*' => ['required', 'integer', 'distinct', 'exists:employees,id']
+            'employee_ids.*' => ['required', 'integer', 'distinct', 'exists:employees,id']
         ];
     }
 }

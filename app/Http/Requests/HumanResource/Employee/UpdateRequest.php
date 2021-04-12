@@ -9,7 +9,6 @@ class UpdateRequest extends EmployeeBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
-     * Todo: create a rule for unique salary details
      *
      * @return array
      */

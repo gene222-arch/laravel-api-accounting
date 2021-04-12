@@ -40,8 +40,8 @@ class PayCalendarsControllerTest extends TestCase
     {
         $data = [
             'name' => 'February payroll',
-            'type' => 'Monthly',
-            'employeeIds' => [
+            'type' => 'Weekly',
+            'employee_ids' => [
                 1,
                 2
             ]
@@ -53,25 +53,25 @@ class PayCalendarsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_update_pay_calendar()
     {
+        $id = 1;
+
         $data = [
-            'id' => 2,
-            'name' => 'February payroll',
+            'id' => 1,
+            'name' => 'March payroll',
             'type' => 'Weekly',
-            'employeeIds' => [
+            'employee_ids' => [
                 1,
             ]
         ];
 
         $response = $this->put(
-            '/api/human-resources/payrolls/pay-calendars',
+            "/api/human-resources/payrolls/pay-calendars/${id}",
             $data,
             $this->apiHeader()
         );

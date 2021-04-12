@@ -257,9 +257,9 @@ Route::prefix('human-resources')->group(function ()
         Route::prefix('pay-calendars')->group(function () 
         {
             Route::get('/', [PayCalendarsController::class, 'index']);
-            Route::get('/{id}', [PayCalendarsController::class, 'show']);
+            Route::get('/{payCalendar}', [PayCalendarsController::class, 'show']);
             Route::post('/', [PayCalendarsController::class, 'store']);
-            Route::put('/', [PayCalendarsController::class, 'update']);
+            Route::put('/{payCalendar}', [PayCalendarsController::class, 'update']);
             Route::delete('/', [PayCalendarsController::class, 'destroy']);
         });
 
