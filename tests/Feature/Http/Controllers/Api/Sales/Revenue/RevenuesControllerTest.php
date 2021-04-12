@@ -37,16 +37,15 @@ class RevenuesControllerTest extends TestCase
     public function user_can_create_revenue()
     {
         $data = [
-            'number' => 'INV-1002',
             'date' => '2021-05-03',
             'amount' => 120.00,
             'recurring' => 'No',
 
-            'accountId' => 1,
-            'customerId' => 1,
-            'incomeCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'currencyId' => 1,
+            'account_id' => 1,
+            'customer_id' => 1,
+            'income_category_id' => 1,
+            'payment_method_id' => 1,
+            'currency_id' => 1,
         ];
 
         $response = $this->post(
@@ -61,23 +60,22 @@ class RevenuesControllerTest extends TestCase
     /** test */
     public function user_can_update_revenue()
     {
+        $id = 4;
+
         $data = [
-            'id' => 2,
-            'number' => 'INV-1002',
+            'id' => 4,
             'date' => '2021-05-03',
             'amount' => 140.00,
-            'description' => '',
             'recurring' => 'Daily',
-            'reference' => '',
-            'accountId' => 1,
-            'customerId' => 1,
-            'incomeCategoryId' => 1,
-            'paymentMethodId' => 1,
-            'currencyId' => 1,
+            'account_id' => 1,
+            'customer_id' => 1,
+            'income_category_id' => 1,
+            'payment_method_id' => 1,
+            'currency_id' => 1,
         ];
 
         $response = $this->put(
-            '/api/sales/revenues',
+            "/api/sales/revenues/${id}",
             $data,
             $this->apiHeader()
         );

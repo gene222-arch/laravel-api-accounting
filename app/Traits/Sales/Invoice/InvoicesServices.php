@@ -13,10 +13,11 @@ use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
 use Illuminate\Database\Eloquent\Collection;
 use App\Traits\Banking\Transaction\HasTransaction;
+use App\Traits\Sales\Revenue\RevenuesServices;
 
 trait InvoicesServices
 {    
-    use HasTransaction;
+    use HasTransaction, RevenuesServices;
     
     /**
      * Create a new record of invoice
@@ -186,7 +187,7 @@ trait InvoicesServices
                     ]);
 
                 /** Revenue */
-                $revenue = Revenue::create([
+                $this->createRevenue([
                     'number' => $invoice->invoice_number,
                     'account_id' => $account_id,
                     'customer_id' => $invoice->customer_id,
@@ -199,9 +200,7 @@ trait InvoicesServices
                     'recurring' => $invoice->recurring,
                     'reference' => $reference,
                     'file' => null
-                ]);
-
-                $revenue->invoices()->attach($invoice);
+                ], $invoice);
 
                 /** Transactions */
                 $this->createTransaction(
@@ -270,7 +269,7 @@ trait InvoicesServices
                     ]);
                 
                 /** Revenue */
-                $revenue = Revenue::create([
+                $this->createRevenue([
                     'number' => $invoice->invoice_number,
                     'account_id' => $account_id,
                     'customer_id' => $invoice->customer_id,
@@ -283,9 +282,7 @@ trait InvoicesServices
                     'recurring' => $invoice->recurring,
                     'reference' => $reference,
                     'file' => null
-                ]);
-
-                $revenue->invoices()->attach($invoice);
+                ], $invoice);
 
                 /** Transactions */
                 $this->createTransaction(

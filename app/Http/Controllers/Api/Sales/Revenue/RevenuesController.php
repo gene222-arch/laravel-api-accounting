@@ -7,7 +7,7 @@ use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sales\Revenue\StoreRequest;
 use App\Http\Requests\Sales\Revenue\DeleteRequest;
-use App\Http\Requests\Sales\Revenue\UpdateRequest;
+use App\Http\Requests\Sales\Revenue\UpdateStoreRequest;
 
 class RevenuesController extends Controller
 {
@@ -28,7 +28,15 @@ class RevenuesController extends Controller
      */
     public function index()
     {
-        $result = $this->revenue->getAllRevenues();
+        $result = $this->revenue->with([
+            'account',
+            'customer',
+            'incomeCategory',
+            'paymentMethod',
+            'invoices'
+        ])
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -38,25 +46,12 @@ class RevenuesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(UpdateStoreRequest $request)
     {
-        $result = $this->revenue->createRevenue(
-            $request->number,
-            $request->date,
-            $request->amount,
-            $request->description,
-            $request->recurring,
-            $request->reference,
-            $request->file,
-            $request->accountId,
-            $request->customerId,
-            $request->incomeCategoryId,
-            $request->paymentMethodId,
-            $request->currencyId
-        );
+        $result = $this->revenue->createRevenue($request->all());
 
         return $result !== true 
             ? $this->error($result, 500)
@@ -66,40 +61,37 @@ class RevenuesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Revenue $revenue
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Revenue $revenue)
     {
-        $result = $this->revenue->getRevenueById($id);
+        $revenue = $revenue->with([
+            'account',
+            'customer',
+            'incomeCategory',
+            'paymentMethod',
+            'invoices'
+        ])
+        ->first();
 
-        return !$result
+        return !$revenue
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($revenue);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param UpdateStoreRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateStoreRequest $request, Revenue $revenue)
     {
         $result = $this->revenue->updateRevenue(
-            $request->id,
-            $request->number,
-            $request->date,
-            $request->amount,
-            $request->description,
-            $request->recurring,
-            $request->reference,
-            $request->file,
-            $request->accountId,
-            $request->customerId,
-            $request->incomeCategoryId,
-            $request->paymentMethodId,
-            $request->currencyId
+            $revenue,
+            $request->all(),
         );
 
         return $result !== true 

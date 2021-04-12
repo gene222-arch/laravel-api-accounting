@@ -452,9 +452,9 @@ Route::prefix('sales')->group(function ()
     Route::prefix('revenues')->group(function () 
     {
         Route::get('/', [RevenuesController::class, 'index']);
-        Route::get('/{id}', [RevenuesController::class, 'show']);
+        Route::get('/{revenue}', [RevenuesController::class, 'show']);
         Route::post('/', [RevenuesController::class, 'store']);
-        Route::put('/', [RevenuesController::class, 'update']);
+        Route::put('/{revenue}', [RevenuesController::class, 'update']);
         Route::delete('/', [RevenuesController::class, 'destroy']);
     });
 });
