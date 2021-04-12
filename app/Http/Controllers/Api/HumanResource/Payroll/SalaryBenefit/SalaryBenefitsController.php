@@ -28,7 +28,12 @@ class SalaryBenefitsController extends Controller
      */
     public function index()
     {
-        $result = $this->salaryBenefit->getAllSalaryBenefits();
+        $result = $this->salaryBenefit
+            ->latest()
+            ->get([
+                'id', 
+                ...(new SalaryBenefit())->getFillable()
+            ]);;
 
         return !$result->count()
             ? $this->noContent()
@@ -43,11 +48,7 @@ class SalaryBenefitsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $salaryBenefit = $this->salaryBenefit->createSalaryBenefit(
-            $request->type,
-            $request->amount,
-            $request->enabled
-        );
+        $salaryBenefit = $this->salaryBenefit->create($request->all());
 
         return $this->success($salaryBenefit, 'Salary benefit created successfully.');
     }
@@ -55,32 +56,26 @@ class SalaryBenefitsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param SalaryBenefit $salaryBenefit
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(SalaryBenefit $salaryBenefit)
     {
-        $result = $this->salaryBenefit->getSalaryBenefitById($id);
-
-        return !$result
+        return !$salaryBenefit
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($salaryBenefit);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param SalaryBenefit $salaryBenefit
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, SalaryBenefit $salaryBenefit)
     {
-        $this->salaryBenefit->updateSalaryBenefit(
-            $request->id,
-            $request->type,
-            $request->amount,
-            $request->enabled
-        );
+        $salaryBenefit->update($request->except('id'));
 
         return $this->success(null, 'Salary benefit updated successfully.');
     }
@@ -93,7 +88,7 @@ class SalaryBenefitsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->salaryBenefit->deleteSalaryBenefits($request->ids);
+        $this->salaryBenefit->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Salary benefit or benefits deleted successfully.');
     }

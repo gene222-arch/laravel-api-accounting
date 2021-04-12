@@ -282,9 +282,9 @@ Route::prefix('human-resources')->group(function ()
         Route::prefix('salary-benefits')->group(function () 
         {
             Route::get('/', [SalaryBenefitsController::class, 'index']);
-            Route::get('/{id}', [SalaryBenefitsController::class, 'show']);
+            Route::get('/{salaryBenefit}', [SalaryBenefitsController::class, 'show']);
             Route::post('/', [SalaryBenefitsController::class, 'store']);
-            Route::put('/', [SalaryBenefitsController::class, 'update']);
+            Route::put('/{salaryBenefit}', [SalaryBenefitsController::class, 'update']);
             Route::delete('/', [SalaryBenefitsController::class, 'destroy']);
         });
 

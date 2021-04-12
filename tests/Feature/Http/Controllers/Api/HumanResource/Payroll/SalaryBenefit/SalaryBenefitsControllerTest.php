@@ -17,12 +17,10 @@ class SalaryBenefitsControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
-    /** @test */
+    /** test */
     public function user_can_view_salary_benefit()
     {
         $id = 1;
@@ -56,15 +54,17 @@ class SalaryBenefitsControllerTest extends TestCase
     /** test */
     public function user_can_update_salary_benefit()
     {
+        $id = 1;
+
         $data = [
-            'id' => 3,
-            'type' => 'Employee of the month',
+            'id' => 1,
+            'type' => 'Reward',
             'amount' => 2000.00,
             'enabled' => false
         ];
 
         $response = $this->put(
-            '/api/human-resources/payrolls/salary-benefits',
+            "/api/human-resources/payrolls/salary-benefits/${id}",
             $data,
             $this->apiHeader()
         );
