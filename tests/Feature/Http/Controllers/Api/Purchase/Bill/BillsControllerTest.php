@@ -23,14 +23,12 @@ class BillsControllerTest extends TestCase
     /** test */
     public function user_can_view_bill()
     {
-        $id = 1;
+        $id = 3;
 
         $response = $this->get(
             "/api/purchases/bills/${id}",
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
@@ -39,15 +37,15 @@ class BillsControllerTest extends TestCase
     public function user_can_create_bill()
     {
         $data = [
-            'vendorId' => 1,
-            'billNumber' => 'BILL-00002',
-            'orderNo' => 2,
+            'vendor_id' => 1,
+            'bill_number' => 'BILL-00004',
+            'order_no' => 4,
             'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
+            'due_date' => '2021-06-03',
             'recurring' => 'No',
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'discount_id' => null,
                     'item' => 'Guitar',
                     'price' => 5.00,
@@ -57,7 +55,7 @@ class BillsControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 20.00,
                 'sub_total' => 45.00,
@@ -75,16 +73,16 @@ class BillsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_mark_bill_as_paid()
     {
-        $id = 1;
+        $id = 7;
 
         $data = [
-            'accountId' => 1,
-            'currencyId' => 1,
-            'paymentMethodId' => 1,
-            'expenseCategoryId' => 1,
+            'account_id' => 1,
+            'currency_id' => 1,
+            'payment_method_id' => 1,
+            'expense_category_id' => 1,
             'amount' => 65.00,
         ];
 
@@ -94,6 +92,8 @@ class BillsControllerTest extends TestCase
             $this->apiHeader()
         ); 
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -121,18 +121,20 @@ class BillsControllerTest extends TestCase
     /** test */
     public function user_can_create_bill_payment()
     {
+        $id = 3;
+
         $data = [
-            'id' => 2,
-            'accountId' => 1,
-            'currencyId' => 1,
-            'paymentMethodId' => 1,
-            'expenseCategoryId' => 1,
+            'id' => 3,
+            'account_id' => 1,
+            'currency_id' => 1,
+            'payment_method_id' => 1,
+            'expense_category_id' => 1,
             'date' => '2021-05-06',
             'amount' => 20.00,
         ];
 
         $response = $this->post(
-            '/api/purchases/bills/payment',
+            "/api/purchases/bills/${id}/payment",
             $data,
             $this->apiHeader()
         ); 
@@ -143,17 +145,19 @@ class BillsControllerTest extends TestCase
     /** test */
     public function user_can_update_bill()
     {
+        $id = 3;
+
         $data = [
-            'id' => 1,
-            'vendorId' => 1,
-            'billNumber' => 'BILL-00001',
-            'orderNo' => 1,
+            'id' => 3,
+            'vendor_id' => 1,
+            'bill_number' => 'BILL-00003',
+            'order_no' => 1,
             'date' => '2021-05-03',
-            'dueDate' => '2021-06-03',
+            'due_date' => '2021-06-03',
             'recurring' => 'No',
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'discount_id' => null,
                     'item' => 'Guitar',
                     'price' => 5.00,
@@ -163,7 +167,7 @@ class BillsControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 20.00,
                 'sub_total' => 45.00,
@@ -173,11 +177,13 @@ class BillsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/purchases/bills',
+            "/api/purchases/bills/${id}",
             $data,
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -189,7 +195,7 @@ class BillsControllerTest extends TestCase
         $data = [];
 
         $response = $this->put(
-            "/api/purchases/bills/${id}",
+            "/api/purchases/bills/${id}/cancel-order",
             $data,
             $this->apiHeader()
         );

@@ -15,6 +15,33 @@ trait StocksServices
      * @param  array $items
      * @return void
      */
+    public function incomingStock (array $items): void
+    {
+        $data = [];
+
+        foreach ($items as $item) 
+        {
+            $data[] = [
+                'item_id' => $item['item_id'],
+                'incoming_stock' => $item['quantity']
+            ];
+        }
+
+        $uniqueKey = 'item_id';
+
+        $update = [
+            'incoming_stock' => DB::raw('incoming_stock + values(incoming_stock)'),
+        ];
+
+        Stock::upsert($data, $uniqueKey, $update);
+    }
+
+    /**
+     * Increases the stock in of an item from an existing record of stock
+     *
+     * @param  array $items
+     * @return void
+     */
     public function stockIn (array $items): void
     {
         $data = [];

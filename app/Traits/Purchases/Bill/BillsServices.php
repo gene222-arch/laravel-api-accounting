@@ -9,82 +9,42 @@ use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueBillNotification;
 use App\Models\Account;
 use App\Models\ExpenseCategory;
+use App\Models\Payment;
 use App\Traits\Banking\Transaction\HasTransaction;
-use App\Traits\Purchases\Payment\PaymentsServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
 {
-    use HasTransaction, PaymentsServices;
-    
-    /**
-     * Get latest records of Bills
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllBills (): Collection
-    {
-        return Bill::with('paymentDetail')
-            ->latest()
-            ->get();
-    }
-    
-    /**
-     * Get a record of bill via id
-     *
-     * @param  int $id
-     * @return Bill|null
-     */
-    public function getBillById (int $id): Bill|null
-    {
-        return Bill::find($id)
-            ->with([
-                'items' => fn($q) => $q->select('name'),
-                'paymentDetail'
-            ])
-            ->first();
-    }
-    
+    use HasTransaction;
 
     /**
      * Create a new record of bill
      *
-     * @param  integer $vendorId
-     * @param  string $billNumber
-     * @param  integer $orderNo
-     * @param  string $date
-     * @param  string $dueDate
-     * @param  string $recurring
+     * @param  array $bill_details
+     * @param  string $bill_number
      * @param  array $items
-     * @param  array $paymentDetail
+     * @param  array $payment_details
      * @return mixed
      */
-    public function createBill (int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetail): mixed
+    public function createBill (array $bill_details, string $bill_number, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($vendorId, $billNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetail)
+            DB::transaction(function () use ($bill_details, $bill_number, $items, $payment_details)
             {
-                $bill = Bill::create([
-                    'vendor_id' => $vendorId,
-                    'bill_number' => $billNumber,
-                    'order_no' => $orderNo,
-                    'date' => $date,
-                    'due_date' => $dueDate,
-                    'recurring' => $recurring
-                ]);
+                $bill = Bill::create($bill_details);
 
                 $bill->items()->attach($items);
 
-                $bill->paymentDetail()->create($paymentDetail);
+                $bill->paymentDetail()->create($payment_details);
 
-                (new Stock())->stockOut($items);
+                (new Stock())->incomingStock($items);
 
                 $bill
                     ->histories()
                     ->create([
                         'status' => 'Draft',
-                        'description' => "${billNumber} added!"
+                        'description' => "${bill_number} added!"
                     ]);
             });
         } catch (\Throwable $th) {
@@ -97,27 +57,25 @@ trait BillsServices
     /**
      * Mark a bill record as paid via id
      *
-     * @param  integer $id
-     * @param  integer $accountId
-     * @param  integer $currencyId
-     * @param  integer $paymentMethodId
-     * @param  integer $expenseCategoryId
+     * @param  Bill $bill
+     * @param  integer $account_id
+     * @param  integer $currency_id
+     * @param  integer $payment_method_id
+     * @param  integer $expense_category_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function markAsPaid (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, float $amount, ?string $description, ?string $reference): mixed
+    public function markAsPaid (Bill $bill, int $account_id, int $currency_id, int $payment_method_id, int $expense_category_id, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, $expenseCategoryId, 
+                $bill, $account_id, $currency_id, $payment_method_id, $expense_category_id, 
                 $amount, $description, $reference
             ) 
             {
-                $bill = Bill::find($id);
-
                 $bill->paymentDetail()
                     ->update([
                         'amount_due' => 0.00
@@ -132,42 +90,42 @@ trait BillsServices
                         'description' => "${amount} Payment!"
                     ]);
         
-
-                $this->createPayment(
-                    $bill->bill_number,
-                    $accountId,
-                    $bill->vendor_id,
-                    $expenseCategoryId,
-                    $paymentMethodId,
-                    $currencyId,
-                    Carbon::now(),
-                    $amount,
-                    $description,
-                    $bill->recurring,
-                    $reference,
-                    null
-                );
+                /** Purchases */
+                (new Payment())->create([
+                    'number' => $bill->bill_number,
+                    'account_id' => $account_id,
+                    'vendor_id' => $bill->vendor_id,
+                    'expense_category_id' => $expense_category_id,
+                    'payment_method_id' => $payment_method_id,
+                    'currency_id' => $currency_id,
+                    'date' => Carbon::now(),
+                    'amount' => $amount,
+                    'description' => $description,
+                    'recurring' => $bill->recurring,
+                    'reference' => $reference,
+                    'file' => null,
+                ]);
 
                 /** Transactions */
                 $this->createTransaction(
-                    get_class($bill),
-                    $id,
-                    $bill->bill_number,
-                    $accountId,
-                    null,
-                    $expenseCategoryId,
-                    'Cash',
-                    ExpenseCategory::find($expenseCategoryId)->name,
-                    'Expense',
-                    $amount,
-                    0.00,
-                    $amount,
-                    $description,
-                    Vendor::find($bill->vendor_id)->name
+                get_class($bill),
+                $bill->id,
+                $bill->bill_number,
+                $account_id,
+                null,
+                $expense_category_id,
+                $payment_method_id,
+                ExpenseCategory::find($expense_category_id)->name,
+                'Expense',
+                $amount,
+                $amount,
+                0.00,
+                $description,
+                Vendor::find($bill->vendor_id)->name
                 );
 
                 /** Account */
-                Account::where('id', $accountId)
+                Account::where('id', $account_id)
                     ->update([
                         'balance' => DB::raw("balance - ${amount}")
                     ]);
@@ -182,28 +140,24 @@ trait BillsServices
     /**
      * Create a new record of bill payment
      *
-     * @param  integer $id
-     * @param  integer $accountId
-     * @param  integer $currencyId
-     * @param  integer $paymentMethodId
-     * @param  integer $expenseCategoryId
+     * @param  Bill $bill
+     * @param  integer $account_id
+     * @param  integer $currency_id
+     * @param  integer $payment_method_id
+     * @param  integer $expense_category_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (int $id, int $accountId, int $currencyId, int $paymentMethodId, int $expenseCategoryId, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function payment (Bill $bill, int $account_id, int $currency_id, int $payment_method_id, int $expense_category_id, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $id, $accountId, $currencyId, $paymentMethodId, $expenseCategoryId, 
-
+                $bill, $account_id, $currency_id, $payment_method_id, $expense_category_id, 
                 $date, $amount, $description, $reference) 
             {
-                /** Bill */
-                $bill = Bill::find($id);
-
                 /** Bill payment detail */
                 $bill->paymentDetail()
                     ->update([
@@ -214,49 +168,48 @@ trait BillsServices
                 $status = $this->updateStatus($bill, $bill->paymentDetail->amount_due);    
 
                 /** Bill histories */
-                $bill
-                    ->histories()
+                $bill->histories()
                     ->create([
                         'status' => $status,
                         'description' => "${amount} Payment"
                     ]);
 
                 /** Purchases */
-                $this->createPayment(
-                    $bill->bill_number,
-                    $accountId,
-                    $bill->vendor_id,
-                    $expenseCategoryId,
-                    $paymentMethodId,
-                    $currencyId,
-                    $date,
-                    $amount,
-                    $description,
-                    $bill->recurring,
-                    $reference,
-                    null
-                );
-                
+                (new Payment())->create([
+                    'number' => $bill->bill_number,
+                    'account_id' => $account_id,
+                    'vendor_id' => $bill->vendor_id,
+                    'expense_category_id' => $expense_category_id,
+                    'payment_method_id' => $payment_method_id,
+                    'currency_id' => $currency_id,
+                    'date' => $date,
+                    'amount' => $amount,
+                    'description' => $description,
+                    'recurring' => $bill->recurring,
+                    'reference' => $reference,
+                    'file' => null,
+                ]);
+
                 /** Transactions */
                 $this->createTransaction(
                     get_class($bill),
-                    $id,
+                    $bill->id,
                     $bill->bill_number,
-                    $accountId,
+                    $account_id,
                     null,
-                    $expenseCategoryId,
-                    'Cash',
-                    ExpenseCategory::find($expenseCategoryId)->name,
+                    $expense_category_id,
+                    $payment_method_id,
+                    ExpenseCategory::find($expense_category_id)->name,
                     'Expense',
                     $amount,
-                    0.00,
                     $amount,
+                    0.00,
                     $description,
                     Vendor::find($bill->vendor_id)->name
                 );
 
                 /** Account */
-                Account::where('id', $accountId)
+                Account::where('id', $account_id)
                     ->update([
                         'balance' => DB::raw("balance - ${amount}")
                     ]);
@@ -271,36 +224,27 @@ trait BillsServices
     /**
      * Update an existing record of bill
      *
-     * @param  integer $id
+     * @param  Bill $bill
      * @param  integer $vendorId
-     * @param  string $billNumber
+     * @param  string $bill_number
      * @param  integer $orderNo
      * @param  string $date
      * @param  string $dueDate
      * @param  string $recurring
      * @param  array $items
-     * @param  array $paymentDetail
+     * @param  array $payment_details
      * @return mixed
      */
-    public function updateBill (int $id, int $vendorId, string $billNumber, int $orderNo, string $date, string $dueDate, string $recurring, array $items, array $paymentDetail): mixed
+    public function updateBill (Bill $bill, $bill_details, array $items, array $payment_details): mixed
     {
         try {
-            DB::transaction(function () use ($id, $vendorId, $billNumber, $orderNo, $date, $dueDate, $recurring, $items, $paymentDetail)
+            DB::transaction(function () use ($bill, $bill_details, $items, $payment_details)
             {
-                $bill = Bill::find($id);
-
-                $bill->update([
-                    'customer_id' => $vendorId,
-                    'bill_number' => $billNumber,
-                    'order_no' => $orderNo,
-                    'date' => $date,
-                    'due_date' => $dueDate,
-                    'recurring' => $recurring
-                ]);
+                $bill->update($bill_details);
 
                 $bill->items()->sync($items);
 
-                $bill->paymentDetail()->update($paymentDetail);
+                $bill->paymentDetail()->update($payment_details);
 
                 $bill
                     ->histories()
@@ -382,16 +326,5 @@ trait BillsServices
                 'status' => $status,
                 'description' => "Bill marked as cancelled!"
             ]);
-    }
-
-    /**
-     * Delete one or multiple records of Bills
-     *
-     * @param  array $ids
-     * @return boolean
-     */
-    public function deleteBills (array $ids): bool
-    {
-        return Bill::whereIn('id', $ids)->delete();
     }
 }

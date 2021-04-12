@@ -43,11 +43,11 @@ trait PaymentsServices
      * Create a new record of payment
      *
      * @param  string|null $number
-     * @param  integer $accountId
-     * @param  integer $vendorId
-     * @param  integer $expenseCategoryId
-     * @param  integer $paymentMethodId
-     * @param  integer $currencyId
+     * @param  integer $account_id
+     * @param  integer $vendor_id
+     * @param  integer $expense_category_id
+     * @param  integer $payment_method_id
+     * @param  integer $currency_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
@@ -56,15 +56,15 @@ trait PaymentsServices
      * @param  string|null $file
      * @return Payment
      */
-    public function createPayment (?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): Payment
+    public function createPayment (?string $number, int $account_id, int $vendor_id, int $expense_category_id, int $payment_method_id, int $currency_id, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): Payment
     {
         return Payment::create([
             'number' => $number,
-            'account_id' => $accountId,
-            'vendor_id' => $vendorId,
-            'expense_category_id' => $expenseCategoryId,
-            'payment_method_id' => $paymentMethodId,
-            'currency_id' => $currencyId,
+            'account_id' => $account_id,
+            'vendor_id' => $vendor_id,
+            'expense_category_id' => $expense_category_id,
+            'payment_method_id' => $payment_method_id,
+            'currency_id' => $currency_id,
             'date' => $date,
             'amount' => $amount,
             'description' => $description,
@@ -78,11 +78,11 @@ trait PaymentsServices
      * Update an existing record of payment
      *
      * @param  string|null $number
-     * @param  integer $accountId
-     * @param  integer $vendorId
-     * @param  integer $expenseCategoryId
-     * @param  integer $paymentMethodId
-     * @param  integer $currencyId
+     * @param  integer $account_id
+     * @param  integer $vendor_id
+     * @param  integer $expense_category_id
+     * @param  integer $payment_method_id
+     * @param  integer $currency_id
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
@@ -91,16 +91,16 @@ trait PaymentsServices
      * @param  string|null $file
      * @return bool
      */
-    public function updatePayment (int $id, ?string $number, int $accountId, int $vendorId, int $expenseCategoryId, int $paymentMethodId, int $currencyId, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): bool
+    public function updatePayment (int $id, ?string $number, int $account_id, int $vendor_id, int $expense_category_id, int $payment_method_id, int $currency_id, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): bool
     {
         return Payment::where('id', $id)
             ->update([
                 'number' => $number,
-                'account_id' => $accountId,
-                'vendor_id' => $vendorId,
-                'expense_category_id' => $expenseCategoryId,
-                'payment_method_id' => $paymentMethodId,
-                'currency_id' => $currencyId,
+                'account_id' => $account_id,
+                'vendor_id' => $vendor_id,
+                'expense_category_id' => $expense_category_id,
+                'payment_method_id' => $payment_method_id,
+                'currency_id' => $currency_id,
                 'date' => $date,
                 'amount' => $amount,
                 'description' => $description,

@@ -14,11 +14,10 @@ class MarkAsPaidRequest extends BaseRequest
     public function rules()
     {
         return [
-            'amount' => ['required', 'numeric', 'min:0'],
-            'accountId' => ['required', 'integer', 'exists:accounts,id'],
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
-            'paymentMethodId' => ['required', 'integer', 'exists:payment_methods,id'],
-            'expenseCategoryId' => ['required', 'integer', 'exists:expense_categories,id'],
+            'account_id' => ['required', 'integer', 'exists:accounts,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'payment_method_id' => ['required', 'integer', 'exists:payment_methods,id'],
+            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'reference' => ['nullable', 'string']
@@ -33,10 +32,10 @@ class MarkAsPaidRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'accountId' => 'account id',
-            'currencyId' => 'currency id',
-            'paymentMethodId' => 'payment method id',
-            'expenseCategoryId' => 'expense category id',
+            'account_id' => 'account id',
+            'currency_id' => 'currency id',
+            'payment_method_id' => 'payment method id',
+            'expense_category_id' => 'expense category id',
         ];
     }
 
@@ -48,10 +47,10 @@ class MarkAsPaidRequest extends BaseRequest
     public function messages()
     {
         return [
-            'accountId.exists' => 'The selected :attribute does not exist.',
-            'currencyId.exists' => 'The selected :attribute does not exist.',
-            'paymentMethodId.exists' => 'The selected :attribute does not exist.',
-            'expenseCategoryId.exists' => 'The selected :attribute does not exist.',
+            'account_id.exists' => 'The selected :attribute does not exist.',
+            'currency_id.exists' => 'The selected :attribute does not exist.',
+            'payment_method_id.exists' => 'The selected :attribute does not exist.',
+            'expense_category_id.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

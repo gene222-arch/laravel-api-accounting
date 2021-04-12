@@ -34,7 +34,10 @@ class BillsController extends Controller
      */
     public function index()
     {
-        $result = $this->bill->getAllBills();
+        $result = $this->bill
+            ->with('paymentDetail')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -66,18 +69,18 @@ class BillsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param integer $id
+     * @param Bill $bill
      * @param MarkAsPaidRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function markAsPaid(MarkAsPaidRequest $request ,$id)
+    public function markAsPaid(MarkAsPaidRequest $request, Bill $bill)
     {
         $result = $this->bill->markAsPaid(
-            $id, 
-            $request->accountId,
-            $request->currencyId,
-            $request->paymentMethodId,
-            $request->expenseCategoryId,
+            $bill, 
+            $request->account_id,
+            $request->currency_id,
+            $request->payment_method_id,
+            $request->expense_category_id,
             $request->amount,
             $request->description,
             $request->reference
@@ -85,7 +88,7 @@ class BillsController extends Controller
 
         return $result !== true
             ? $this->error($result, 500)
-            : $this->success(null, 'Bill paid successfully.');
+            : $this->success(null, 'Bill mark as paid successfully.');
     }
 
     /**
@@ -97,14 +100,10 @@ class BillsController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->bill->createBill(
-            $request->vendorId,
-            $request->billNumber,
-            $request->orderNo,
-            $request->date,
-            $request->dueDate,
-            $request->recurring,
+            $request->except('items', 'payment_details'),
+            $request->bill_number,
             $request->items,
-            $request->paymentDetail
+            $request->payment_details
         );
 
         return $result !== true 
@@ -115,32 +114,37 @@ class BillsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Bill $bill
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Bill $bill)
     {
-        $result = $this->bill->getBillById($id);
+        $bill = $bill->with([
+            'items' => fn($q) => $q->select('name'),
+            'paymentDetail'
+        ])
+            ->first();
 
-        return !$result
+        return !$bill
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($bill);
     }
 
    /**
      * Store a newly created resource in storage.
      *
      * @param PaymentRequest $request
+     * @param Bill $bill
      * @return \Illuminate\Http\JsonResponse
      */
-    public function payment(PaymentRequest $request)
+    public function payment(PaymentRequest $request, Bill $bill)
     {
         $result = $this->bill->payment(
-            $request->id,
-            $request->accountId,
-            $request->currencyId,
-            $request->paymentMethodId,
-            $request->expenseCategoryId,
+            $bill,
+            $request->account_id,
+            $request->currency_id,
+            $request->payment_method_id,
+            $request->expense_category_id,
             $request->date,
             $request->amount,
             $request->description,
@@ -152,25 +156,20 @@ class BillsController extends Controller
             : $this->success(null, 'Bill payment created successfully.');
     }
 
-
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Bill $bill
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Bill $bill)
     {
         $result = $this->bill->updateBill(
-            $request->id,
-            $request->vendorId,
-            $request->billNumber,
-            $request->orderNo,
-            $request->date,
-            $request->dueDate,
-            $request->recurring,
+            $bill,
+            $request->except('id', 'items', 'payment_details'),
             $request->items,
-            $request->paymentDetail
+            $request->payment_details
         );
 
         return $result !== true 
@@ -199,7 +198,7 @@ class BillsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->bill->deleteBills($request->ids);
+        $this->bill->whereIn('id', $request->ids)->delete();;
 
         return $this->success(null, 'Bill or bills deleted successfully.');
     }

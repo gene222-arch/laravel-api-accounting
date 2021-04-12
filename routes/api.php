@@ -358,13 +358,13 @@ Route::prefix('purchases')->group(function ()
     Route::prefix('bills')->group(function () 
     {
         Route::get('/', [BillsController::class, 'index']);
-        Route::get('/{id}', [BillsController::class, 'show']);
+        Route::get('/{bill}', [BillsController::class, 'show']);
         Route::post('/', [BillsController::class, 'store']);
         Route::post('/{bill}/vendors/{vendor}/mail', [BillsController::class, 'email']);
-        Route::post('/{id}/mark-as-paid', [BillsController::class, 'markAsPaid']);
-        Route::post('/payment', [BillsController::class, 'payment']);
-        Route::put('/', [BillsController::class, 'update']);
-        Route::put('/{bill}', [BillsController::class, 'cancel']);
+        Route::post('/{bill}/mark-as-paid', [BillsController::class, 'markAsPaid']);
+        Route::post('/{bill}/payment', [BillsController::class, 'payment']);
+        Route::put('/{bill}', [BillsController::class, 'update']);
+        Route::put('/{bill}/cancel-order', [BillsController::class, 'cancel']);
         Route::delete('/', [BillsController::class, 'destroy']);
     });
 

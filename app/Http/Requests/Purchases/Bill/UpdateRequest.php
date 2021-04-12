@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Purchases\Bill;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Purchases\Bill\BillBaseRequest;
 
-class UpdateRequest extends BaseRequest
+class UpdateRequest extends BillBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,18 +15,18 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:bills,id'],
-            'vendorId' => ['required', 'integer', 'exists:vendors,id'],
-            'billNumber' => ['required', 'string', 'unique:bills,bill_number,' . $this->id],
-            'orderNo' => ['required', 'integer', 'unique:bills,order_no,' . $this->id],
+            'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
+            'bill_number' => ['required', 'string', 'unique:bills,bill_number,' . $this->id],
+            'order_no' => ['required', 'integer', 'unique:bills,order_no,' . $this->id],
             'date' => ['required', 'string'],
-            'dueDate' => ['required', 'string'],
+            'due_date' => ['required', 'string'],
             'recurring' => ['required', 'string', 'in:No,Daily,Weekly,Monthly,Yearly'],
             'items.*' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
-            'paymentDetail.total_discounts' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total_taxes' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.sub_total' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total' => ['required', 'numeric', 'min:0'],
+            'payment_details.total_discounts' => ['required', 'numeric', 'min:0'],
+            'payment_details.total_taxes' => ['required', 'numeric', 'min:0'],
+            'payment_details.sub_total' => ['required', 'numeric', 'min:0'],
+            'payment_details.total' => ['required', 'numeric', 'min:0'],
         ];
     }
 
@@ -38,15 +38,15 @@ class UpdateRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'vendorId' => 'vendor id',
-            'billNumber' => 'bill number',
-            'orderNo' => 'order number',
-            'dueDate' => 'due date',
+            'vendor_id' => 'vendor id',
+            'bill_number' => 'bill number',
+            'order_no' => 'order number',
+            'due_date' => 'due date',
             'items.*.item_id' => 'item',
-            'paymentDetail.total_discounts' => 'discounts',
-            'paymentDetail.total_taxes' => 'taxes',
-            'paymentDetail.sub_total' => 'sub total',
-            'paymentDetail.total' => 'total',
+            'payment_details.total_discounts' => 'discounts',
+            'payment_details.total_taxes' => 'taxes',
+            'payment_details.sub_total' => 'sub total',
+            'payment_details.total' => 'total',
         ];
     }
 
@@ -58,7 +58,7 @@ class UpdateRequest extends BaseRequest
     public function messages()
     {
         return [
-            'vendorId.exists' => 'The selected :attribute does not exist.',
+            'vendor_id.exists' => 'The selected :attribute does not exist.',
             'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }
