@@ -7,7 +7,6 @@ use App\Models\Revenue;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use App\Traits\Sales\Customer\CustomersServices;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,9 +15,6 @@ class Customer extends Model
 {
     /** Libraries or Built-in */
     use HasFactory, Notifiable;
-
-    /** Custom */
-    use CustomersServices;
 
     protected $fillable = [
         'currency_id',

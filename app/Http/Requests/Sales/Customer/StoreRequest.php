@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Sales\Customer;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Sales\Customer\CustomerBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends CustomerBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,39 +14,15 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:customers,email'],
-            'taxNumber' => ['required', 'integer', 'unique:customers,tax_number'],
+            'tax_number' => ['required', 'integer', 'unique:customers,tax_number'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:customers,phone'],
             'website' => ['nullable', 'url', 'string'],
             'address' => ['required', 'string'],
             'reference' => ['nullable', 'string'],
             'enabled' => ['required', 'boolean']
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'currencyId' => 'currency id',
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'currencyId.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

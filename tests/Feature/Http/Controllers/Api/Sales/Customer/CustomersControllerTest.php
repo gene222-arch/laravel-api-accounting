@@ -37,10 +37,10 @@ class CustomersControllerTest extends TestCase
     public function user_can_create_customer()
     {
         $data = [
-            'currencyId' => 1,        
+            'currency_id' => 1,        
             'name' => 'Gene Phillip Artista',
             'email' => 'genephillip2222@gmail.com',
-            'taxNumber' => '12335',    
+            'tax_number' => '12335',    
             'phone' => '22222223222',
             'address' => 'Somewhere down there',
             'reference' => 'Nice store',
@@ -52,8 +52,6 @@ class CustomersControllerTest extends TestCase
             $data,
             $this->apiHeader()
         );
-        dd(json_decode($response->getContent()));
-        
 
         $this->assertResponse($response);
     }
@@ -61,12 +59,14 @@ class CustomersControllerTest extends TestCase
     /** test */
     public function user_can_update_customer()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
-            'currencyId' => 1,      
+            'currency_id' => 1,      
             'name' => 'Gene',
             'email' => 'gene@yahoo.com',
-            'taxNumber' => '1234',      
+            'tax_number' => '1234',      
             'phone' => '11111111111',
             'website' => '',
             'address' => 'Somewhere down there',
@@ -75,7 +75,7 @@ class CustomersControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/sales/customers',
+            "/api/sales/customers/${id}",
             $data,
             $this->apiHeader()
         );

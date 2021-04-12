@@ -409,9 +409,9 @@ Route::prefix('sales')->group(function ()
     Route::prefix('customers')->group(function () 
     {
         Route::get('/', [CustomersController::class, 'index']);
-        Route::get('/{id}', [CustomersController::class, 'show']);
+        Route::get('/{customer}', [CustomersController::class, 'show']);
         Route::post('/', [CustomersController::class, 'store']);
-        Route::put('/', [CustomersController::class, 'update']);
+        Route::put('/{customer}', [CustomersController::class, 'update']);
         Route::delete('/', [CustomersController::class, 'destroy']);
     });
 

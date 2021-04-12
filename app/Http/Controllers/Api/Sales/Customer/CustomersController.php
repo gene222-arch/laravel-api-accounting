@@ -28,7 +28,9 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $result = $this->customer->getAllCustomers();
+        $result = $this->customer
+            ->latest()
+            ->get(['id', ...(new Customer())->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,56 +45,34 @@ class CustomersController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->customer->createCustomer(
-            $request->currencyId, 
-            $request->name, 
-            $request->email, 
-            $request->taxNumber, 
-            $request->phone, 
-            $request->website, 
-            $request->address, 
-            $request->reference,
-            $request->enabled,
-        );
+        $customer = $this->customer->create($request->all());
 
-        return $this->success($model, 'Customer created successfully.');
+        return $this->success($customer, 'Customer created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Customer $customer)
     {
-        $result = $this->customer->getCustomerById($id);
-
-        return !$result
+        return !$customer
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($customer);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Customer $customer)
     {
-        $this->customer->updateCustomer(
-            $request->id,
-            $request->currencyId, 
-            $request->name, 
-            $request->email, 
-            $request->taxNumber, 
-            $request->phone, 
-            $request->website, 
-            $request->address, 
-            $request->reference,
-            $request->enabled,
-        );
+        $customer->update($request->except('id'));
 
         return $this->success(null, 'Customer updated successfully.');
     }
@@ -105,7 +85,7 @@ class CustomersController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {   
-        $this->customer->deleteCustomers($request->ids);
+        $this->customer->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Customer or customers deleted successfully.');
     }
