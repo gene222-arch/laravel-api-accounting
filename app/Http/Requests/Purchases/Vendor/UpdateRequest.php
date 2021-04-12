@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Purchases\Vendor;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Purchases\Vendor\VendorBaseRequest;
 
-class UpdateRequest extends BaseRequest
+class UpdateRequest extends VendorBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,42 +15,16 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:vendors,id'],
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:vendors,email,' . $this->id],
-            'taxNumber' => ['required', 'string', 'min:5', 'max:5', 'unique:vendors,tax_number,' . $this->id],
+            'tax_number' => ['required', 'string', 'min:5', 'max:5', 'unique:vendors,tax_number,' . $this->id],
             'address' => ['required', 'string'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:vendors,phone,' . $this->id],
             'website' => ['nullable', 'website'],
             'reference' => ['nullable', 'string'],
             'image' => ['nullable', 'string'],
             'enabled' => ['required', 'boolean'],
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'currencyId' => 'currency id',
-            'taxNumber' => 'tax number',
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'currencyId.exists' => 'The selected :attribute does not exist.',
-            'taxNumber.exists' => 'The selected :attribute does not exist.',
         ];
     }
 }

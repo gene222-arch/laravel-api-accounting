@@ -28,7 +28,9 @@ class VendorsController extends Controller
      */
     public function index()
     {
-        $result = $this->vendor->getAllVendors();
+        $result = $this->vendor
+            ->latest()
+            ->get(['id', ...$this->vendor->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,18 +45,7 @@ class VendorsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $vendor = $this->vendor->createVendor(
-            $request->currencyId,
-            $request->name,
-            $request->email,
-            $request->phone,
-            $request->taxNumber,
-            $request->website,
-            $request->address,
-            $request->reference,
-            $request->image,
-            $request->enabled
-        );
+        $vendor = $this->vendor->create($request->all());
 
         return $this->success($vendor, 'Vendor created successfully.');
     }
@@ -62,39 +53,26 @@ class VendorsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Vendor $vendor
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Vendor $vendor)
     {
-        $result = $this->vendor->getVendorById($id);
-
-        return !$result
+        return !$vendor
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($vendor);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Vendor $vendor
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Vendor $vendor)
     {
-        $this->vendor->updateVendor(
-            $request->id,
-            $request->currencyId,
-            $request->name,
-            $request->email,
-            $request->phone,
-            $request->taxNumber,
-            $request->website,
-            $request->address,
-            $request->reference,
-            $request->image,
-            $request->enabled
-        );
+        $vendor->update($request->except('id'));
 
         return $this->success(null, 'Vendor updated successfully.');
     }

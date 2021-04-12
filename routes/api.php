@@ -385,9 +385,9 @@ Route::prefix('purchases')->group(function ()
     Route::prefix('vendors')->group(function () 
     {
         Route::get('/', [VendorsController::class, 'index']);
-        Route::get('/{id}', [VendorsController::class, 'show']);
+        Route::get('/{vendor}', [VendorsController::class, 'show']);
         Route::post('/', [VendorsController::class, 'store']);
-        Route::put('/', [VendorsController::class, 'update']);
+        Route::put('/{vendor}', [VendorsController::class, 'update']);
         Route::delete('/', [VendorsController::class, 'destroy']);
     });
 

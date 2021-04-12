@@ -37,10 +37,10 @@ class VendorsControllerTest extends TestCase
     public function user_can_create_vendor()
     {
         $data = [
-            'currencyId' => 2,
+            'currency_id' => 2,
             'name' => 'Vendor 2',
             'email' => 'genephillip2@gmail.com',
-            'taxNumber' => '22222',
+            'tax_number' => '22222',
             'phone' => '22222222222',
             'address' => 'Somewhre',
             'enabled' => true,
@@ -58,19 +58,21 @@ class VendorsControllerTest extends TestCase
     /** test */
     public function user_can_update_vendor()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
-            'currencyId' => 2,
+            'currency_id' => 2,
             'name' => 'New Vendor 1',
             'email' => 'new@gmail.com',
-            'taxNumber' => '22223',
+            'tax_number' => '22223',
             'phone' => '111111111111',
             'address' => 'Somewhre',
             'enabled' => true,
         ];
 
         $response = $this->put(
-            '/api/purchases/vendors',
+            "/api/purchases/vendors/${id}",
             $data,
             $this->apiHeader()
         );
