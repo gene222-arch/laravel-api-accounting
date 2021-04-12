@@ -490,9 +490,9 @@ Route::prefix('settings')->group(function ()
       */
     Route::prefix('company')->group(function () 
     {
-        Route::get('/{id}', [CompaniesController::class, 'show']);
+        Route::get('/{company}', [CompaniesController::class, 'show']);
         Route::post('/', [CompaniesController::class, 'store']);
-        Route::put('/', [CompaniesController::class, 'update']);
+        Route::put('/{company}', [CompaniesController::class, 'update']);
     });
 
     /**

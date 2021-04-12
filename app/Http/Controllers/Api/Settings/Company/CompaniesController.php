@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api\Settings\Company;
 use App\Models\Company;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Settings\Company\StoreRequest;
-use App\Http\Requests\Settings\Company\UpdateRequest;
+use App\Http\Requests\Settings\Company\UpdateStoreRequest;
 
 class CompaniesController extends Controller
 {
@@ -20,23 +19,15 @@ class CompaniesController extends Controller
         $this->middleware(['auth:api', 'permission:Manage Company']);
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreRequest $request)
+    public function store(UpdateStoreRequest $request)
     {
-        $company = $this->company->createCompany(
-            $request->name,
-            $request->email,
-            $request->taxNumber,
-            $request->phone,
-            $request->address,
-            $request->logo
-        );
+        $company = $this->company->create($request->all());
 
         return $this->success($company, 'Company created successfully.');
     }
@@ -44,35 +35,25 @@ class CompaniesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Company $company
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Company $company)
     {
-        $result = $this->company->getCompanyById($id);
-
-        return !$result
+        return !$company
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($company);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateRequest $request
+     * @param UpdateStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateStoreRequest $request, Company $company)
     {
-        $this->company->updateCompany(
-            $request->id,
-            $request->name,
-            $request->email,
-            $request->taxNumber,
-            $request->phone,
-            $request->address,
-            $request->logo
-        );
+        $company->update($request->all());
 
         return $this->success(null, 'Company updated successfully.');
     }

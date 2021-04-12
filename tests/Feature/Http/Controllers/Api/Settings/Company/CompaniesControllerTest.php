@@ -19,8 +19,6 @@ class CompaniesControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-
         $this->assertResponse($response);
     }
 
@@ -28,10 +26,10 @@ class CompaniesControllerTest extends TestCase
     public function user_can_create_company()
     {
         $data = [
-            'name' => 'ABC',
-            'email' => 'test@company.com',
-            'taxNumber' => '111111111',
-            'phone' => '11111111111',
+            'name' => 'CCC',
+            'email' => 'CCC@company.com',
+            'tax_number' => '22222122222',
+            'phone' => '22222222122',
         ];
 
         $response = $this->post(
@@ -46,16 +44,18 @@ class CompaniesControllerTest extends TestCase
     /** test */
     public function user_can_update_company()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
             'name' => 'ABCDEFG',
             'email' => 'test@company.com',
-            'taxNumber' => '111111111',
+            'tax_number' => '111111111',
             'phone' => '11111111111',
         ];
 
         $response = $this->put(
-            '/api/settings/company',
+            "/api/settings/company/${id}",
             $data,
             $this->apiHeader()
         );
