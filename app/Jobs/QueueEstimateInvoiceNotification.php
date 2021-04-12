@@ -16,7 +16,7 @@ class QueueEstimateInvoiceNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public EstimateInvoice $estimateInvoice;
+    public EstimateInvoice $estimate_invoice;
     public Customer $customer;
     public ?string $subject;
     public ?string $greeting;
@@ -28,9 +28,9 @@ class QueueEstimateInvoiceNotification implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(EstimateInvoice $estimateInvoice, Customer $customer, ?string $subject = null, ?string $greeting = null, ?string $note = null, ?string $footer = null)
+    public function __construct(EstimateInvoice $estimate_invoice, Customer $customer, ?string $subject = null, ?string $greeting = null, ?string $note = null, ?string $footer = null)
     {
-        $this->estimateInvoice = $estimateInvoice;
+        $this->estimate_invoice = $estimate_invoice;
         $this->customer = $customer;
         $this->subject = $subject;
         $this->greeting = $greeting;
@@ -47,7 +47,7 @@ class QueueEstimateInvoiceNotification implements ShouldQueue
     {
         $this->customer->notify(
             new EstimateInvoiceNotification(
-                $this->estimateInvoice, 
+                $this->estimate_invoice, 
                 $this->subject, 
                 $this->greeting, 
                 $this->note, 

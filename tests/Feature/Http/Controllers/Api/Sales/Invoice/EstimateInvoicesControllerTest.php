@@ -23,7 +23,7 @@ class EstimateInvoicesControllerTest extends TestCase
     /** test */
     public function user_can_view_estimate_invoice()
     {
-        $id = 1;
+        $id = 2;
 
         $response = $this->get(
             "/api/sales/estimate-invoices/${id}",
@@ -37,16 +37,16 @@ class EstimateInvoicesControllerTest extends TestCase
     public function user_can_create_estimate_invoice()
     {
         $data = [
-            'customerId' => 1,
-            'currencyId' => 1,
-            'incomeCategoryId' => 1,
-            'estimateNumber' => 'EST-00002',
-            'estimatedAt' => '2021-05-03',
-            'expiredAt' => '2021-06-03',
-            'enableReminder' => false,
+            'customer_id' => 1,
+            'currency_id' => 1,
+            'income_category_id' => 1,
+            'estimate_number' => 'EST-00002',
+            'estimated_at' => '2021-05-03',
+            'expired_at' => '2021-06-03',
+            'enable_reminder' => false,
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'discount_id' => null,
                     'item' => 'Dawk',
                     'price' => 5.00,
@@ -56,7 +56,7 @@ class EstimateInvoicesControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 90.00,
@@ -73,10 +73,10 @@ class EstimateInvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_mail_customer()
     {
-        $estimateNumber = 3;
+        $estimate_number = 1;
         $customer = 1;
         $data = [
             'subject' => 'Your Estimate Invoice Receipt',
@@ -86,11 +86,13 @@ class EstimateInvoicesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            "/api/sales/estimate-invoices/${estimateNumber}/customers/${customer}/mail",
+            "/api/sales/estimate-invoices/${estimate_number}/customers/${customer}/mail",
             $data,
             $this->apiHeader()
         ); 
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -125,18 +127,20 @@ class EstimateInvoicesControllerTest extends TestCase
     /** test */
     public function user_can_update_estimate_invoice()
     {
+        $id = 2;
+
         $data = [
-            'id' => 1,
-            'customerId' => 1,
-            'currencyId' => 1,
-            'incomeCategoryId' => 1,
-            'estimateNumber' => 'EST-00004',
-            'estimatedAt' => '2021-05-03',
-            'expiredAt' => '2021-06-03',
-            'enableReminder' => true,
+            'id' => 2,
+            'customer_id' => 1,
+            'currency_id' => 1,
+            'income_category_id' => 1,
+            'estimate_number' => 'EST-00004',
+            'estimated_at' => '2021-05-03',
+            'expired_at' => '2021-06-03',
+            'enable_reminder' => true,
             'items' => [
                 [
-                    'item_id' => 1,
+                    'item_id' => 2,
                     'discount_id' => null,
                     'item' => 'Dawk',
                     'price' => 5.00,
@@ -146,7 +150,7 @@ class EstimateInvoicesControllerTest extends TestCase
                     'tax' => 0.00
                 ],
             ],
-            'paymentDetail' => [
+            'payment_details' => [
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 50.00,
@@ -156,7 +160,7 @@ class EstimateInvoicesControllerTest extends TestCase
 
 
         $response = $this->put(
-            '/api/sales/estimate-invoices',
+            "/api/sales/estimate-invoices/${id}",
             $data,
             $this->apiHeader()
         );

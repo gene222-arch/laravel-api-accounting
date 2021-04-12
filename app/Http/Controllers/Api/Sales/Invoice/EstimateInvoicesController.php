@@ -30,7 +30,10 @@ class EstimateInvoicesController extends Controller
      */
     public function index()
     {
-        $result = $this->estimateInvoice->getAllEstimateInvoices();
+        $result = $this->estimateInvoice
+            ->with('paymentDetail')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -45,10 +48,10 @@ class EstimateInvoicesController extends Controller
      * @param Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function mail(MailRequest $request, EstimateInvoice $estimateInvoice, Customer $customer)
+    public function mail(MailRequest $request, EstimateInvoice $estimate_invoice, Customer $customer)
     {
         $result = $this->estimateInvoice->mail(
-            $estimateInvoice,
+            $estimate_invoice,
             $customer,
             $request->subject,
             $request->greeting,
@@ -96,15 +99,10 @@ class EstimateInvoicesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->estimateInvoice->createEstimateInvoice(
-            $request->customerId,
-            $request->currencyId,
-            $request->incomeCategoryId,
-            $request->estimateNumber,
-            $request->estimatedAt,
-            $request->expiredAt,
-            $request->enableReminder,
+            $request->except('items', 'paymentDetail'),
+            $request->estimate_number,
             $request->items,
-            $request->paymentDetail
+            $request->payment_details
         );
 
         return $result !== true 
@@ -115,37 +113,37 @@ class EstimateInvoicesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param EstimateInvoice $estimateInvoice
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(EstimateInvoice $estimateInvoice)
     {
-        $result = $this->estimateInvoice->getEstimateInvoiceById($id);
+        $estimateInvoice = $estimateInvoice->with([
+                'items' => fn($q) => $q->select('name'),
+                'paymentDetail'
+            ])
+            ->first();
 
-        return !$result
+        return !$estimateInvoice
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($estimateInvoice);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param EstimateInvoice $estimateInvoice
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, EstimateInvoice $estimateInvoice)
     {
         $result = $this->estimateInvoice->updateEstimateInvoice(
-            $request->id,
-            $request->customerId,
-            $request->currencyId,
-            $request->incomeCategoryId,
-            $request->estimateNumber,
-            $request->estimatedAt,
-            $request->expiredAt,
-            $request->enableReminder,
+            $estimateInvoice,
+            $request->except('id', 'items', 'paymentDetail'),
+            $request->estimate_number,
             $request->items,
-            $request->paymentDetail
+            $request->payment_details
         );
 
         return $result !== true 
@@ -161,7 +159,7 @@ class EstimateInvoicesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->estimateInvoice->deleteEstimateInvoices($request->ids);
+        $this->estimateInvoice->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Estimate invoice or invoices deleted successfully.');
     }

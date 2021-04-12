@@ -421,12 +421,12 @@ Route::prefix('sales')->group(function ()
     Route::prefix('estimate-invoices')->group(function () 
     {
         Route::get('/', [EstimateInvoicesController::class, 'index']);
-        Route::get('/{id}', [EstimateInvoicesController::class, 'show']);
+        Route::get('/{estimateInvoice}', [EstimateInvoicesController::class, 'show']);
         Route::post('/', [EstimateInvoicesController::class, 'store']);
         Route::post('/{estimateInvoice}/customers/{customer}/mail', [EstimateInvoicesController::class, 'mail']);
         Route::put('/{estimateInvoice}/mark-as-approved', [EstimateInvoicesController::class, 'markAsApproved']);
         Route::put('/{estimateInvoice}/mark-as-refused', [EstimateInvoicesController::class, 'markAsRefused']);
-        Route::put('/', [EstimateInvoicesController::class, 'update']);
+        Route::put('/{estimateInvoice}', [EstimateInvoicesController::class, 'update']);
         Route::delete('/', [EstimateInvoicesController::class, 'destroy']);
     });
 

@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Sales\EstimateInvoice;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Sales\EstimateInvoice\EstimateInvoiceBaseRequest;
 
-class UpdateRequest extends BaseRequest
+class UpdateRequest extends EstimateInvoiceBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,54 +15,19 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:estimate_invoices,id'],
-            'customerId' => ['required', 'integer', 'exists:customers,id'],
-            'currencyId' => ['required', 'integer', 'exists:currencies,id'],
-            'incomeCategoryId' => ['required', 'integer', 'exists:income_categories,id'],
-            'estimateNumber' => ['required', 'string', 'unique:estimate_invoices,estimate_number'],
-            'estimatedAt' => ['required', 'date'],
-            'expiredAt' => ['required', 'date'],
-            'enableReminder' => ['required', 'boolean'],
+            'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'income_category_id' => ['required', 'integer', 'exists:income_categories,id'],
+            'estimate_number' => ['required', 'string', 'unique:estimate_invoices,estimate_number,' . $this->id],
+            'estimated_at' => ['required', 'date'],
+            'expired_at' => ['required', 'date'],
+            'enable_reminder' => ['required', 'boolean'],
             'items.*' => ['required', 'array', 'min:1'],
-            'paymentDetail.total_discounts' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total_taxes' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.sub_total' => ['required', 'numeric', 'min:0'],
-            'paymentDetail.total' => ['required', 'numeric', 'min:0']
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'customerId' => 'customer id',
-            'currencyId' => 'currency id',
-            'incomeCategoryId' => 'income category id',
-            'estimateInvoiceNumber' => 'estimate invoice number',
-            'estimatedAt' => 'estimated date',
-            'expiredAt' => 'expired date',
-            'paymentDetail.total_discounts' => 'discounts',
-            'paymentDetail.total_taxes' => 'taxes',
-            'paymentDetail.sub_total' => 'sub total',
-            'paymentDetail.total' => 'total',
-        ];
-    }
-
-     /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'customerId.exists' => 'The selected :attribute does not exist.',
-            'currencyId.exists' => 'The selected :attribute does not exist.',
-            'incomeCategoryId.exists' => 'The selected :attribute does not exist.',
-            'items.*.item_id.exists' => 'The selected :attribute does not exist.'
+            'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
+            'payment_details.total_discounts' => ['required', 'numeric', 'min:0'],
+            'payment_details.total_taxes' => ['required', 'numeric', 'min:0'],
+            'payment_details.sub_total' => ['required', 'numeric', 'min:0'],
+            'payment_details.total' => ['required', 'numeric', 'min:0']
         ];
     }
 }

@@ -16,6 +16,7 @@ class CreateEstimateInvoicesTable extends Migration
         Schema::create('estimate_invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id');
+            $table->foreignId('currency_id');
             $table->string('estimate_number');
             $table->timestamp('estimated_at')->default(now());
             $table->timestamp('expired_at')->default(now());
@@ -30,6 +31,11 @@ class CreateEstimateInvoicesTable extends Migration
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
+                ->cascadeOnDelete();
+
+            $table->foreign('currency_id')
+                ->references('id')
+                ->on('currencies')
                 ->cascadeOnDelete();
         });
 
