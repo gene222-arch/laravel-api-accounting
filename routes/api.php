@@ -525,9 +525,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('income-categories')->group(function () 
     {
         Route::get('/', [IncomeCategoriesController::class, 'index']);
-        Route::get('/{id}', [IncomeCategoriesController::class, 'show']);
+        Route::get('/{incomeCategory}', [IncomeCategoriesController::class, 'show']);
         Route::post('/', [IncomeCategoriesController::class, 'store']);
-        Route::put('/', [IncomeCategoriesController::class, 'update']);
+        Route::put('/{incomeCategory}', [IncomeCategoriesController::class, 'update']);
         Route::delete('/', [IncomeCategoriesController::class, 'destroy']);
     });
     

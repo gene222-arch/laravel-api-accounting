@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Settings\IncomeCategory;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\Settings\IncomeCategory\IncomeCategoryBaseRequest;
 
-class UpdateRequest extends BaseRequest
+class UpdateRequest extends IncomeCategoryBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -16,19 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:income_categories,id'],
             'name' => ['required', 'string', 'unique:income_categories,name,' . $this->id],
-            'hexCode' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code,' . $this->id]
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'hexCode' => 'hex code'
+            'hex_code' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code,' . $this->id]
         ];
     }
 }

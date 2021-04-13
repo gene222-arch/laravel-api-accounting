@@ -28,7 +28,9 @@ class IncomeCategoriesController extends Controller
      */
     public function index()
     {
-        $result = $this->incomeCategory->getAllIncomeCategories();
+        $result = $this->incomeCategory
+            ->latest()
+            ->get(['id', ...(new IncomeCategory())->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,10 +45,7 @@ class IncomeCategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $incomeCategory = $this->incomeCategory->createIncomeCategory(
-            $request->name,
-            $request->hexCode
-        );
+        $incomeCategory = $this->incomeCategory->create($request->all());
 
         return $this->success($incomeCategory, 'Income Category created successfully.');
     }
@@ -54,31 +53,26 @@ class IncomeCategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param IncomeCategory $incomeCategory
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(IncomeCategory $incomeCategory)
     {
-        $result = $this->incomeCategory->getIncomeCategoryById($id);
-
-        return !$result
+        return !$incomeCategory
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($incomeCategory);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param IncomeCategory $incomeCategory
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, IncomeCategory $incomeCategory)
     {
-        $this->incomeCategory->updateIncomeCategory(
-            $request->id,
-            $request->name,
-            $request->hexCode
-        );
+        $incomeCategory->update($request->except('id'));
 
         return $this->success(null, 'Income Category updated successfully.');
     }
@@ -91,7 +85,7 @@ class IncomeCategoriesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->incomeCategory->deleteIncomeCategories($request->ids);
+        $this->incomeCategory->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Income Category or categories deleted successfully.');
     }

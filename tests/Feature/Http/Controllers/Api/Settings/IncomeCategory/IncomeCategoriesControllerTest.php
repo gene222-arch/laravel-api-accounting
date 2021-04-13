@@ -37,8 +37,8 @@ class IncomeCategoriesControllerTest extends TestCase
     public function user_can_create_income_category()
     {
         $data = [
-            'name' => 'Deposit',
-            'hexCode' => '#000001'
+            'name' => 'New Deposit',
+            'hex_code' => '#000002'
         ];
 
         $response = $this->post(
@@ -53,20 +53,20 @@ class IncomeCategoriesControllerTest extends TestCase
     /** test */
     public function user_can_update_income_category()
     {
+        $id = 2;
+
         $data = [
             'id' => 2,
             'name' => 'Deposit',
-            'hexCode' => '#000002'
+            'hex_code' => '#000004'
         ];
 
         $response = $this->put(
-            '/api/settings/income-categories',
+            "/api/settings/income-categories/${id}",
             $data,
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
