@@ -28,7 +28,9 @@ class PaymentMethodsController extends Controller
      */
     public function index()
     {
-        $result = $this->paymentMethod->getAllPaymentMethods();
+        $result = $this->paymentMethod
+            ->latest()
+            ->get(['id', ...$this->paymentMethod->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,42 +45,34 @@ class PaymentMethodsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->paymentMethod->createPaymentMethod(
-            $request->name,
-            $request->enabled,
-        );
+        $paymentMethod = $this->paymentMethod->create($request->all());
 
-        return $this->success($model, 'Payment method created successfully.');
+        return $this->success($paymentMethod, 'Payment method created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param PaymentMethod $paymentMethod
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(PaymentMethod $paymentMethod)
     {
-        $result = $this->paymentMethod->getPaymentMethodById($id);
-
-        return !$result
+        return !$paymentMethod
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($paymentMethod);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param PaymentMethod $paymentMethod
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, PaymentMethod $paymentMethod)
     {
-        $this->paymentMethod->updatePaymentMethod(
-            $request->id,
-            $request->name,
-            $request->enabled,
-        );
+        $paymentMethod->update($request->except('id'));
 
         return $this->success(null, 'Payment method updated successfully.');
     }
@@ -91,7 +85,7 @@ class PaymentMethodsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->paymentMethod->deletePaymentMethods($request->ids);
+        $this->paymentMethod->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Payment method or methods deleted successfully.');
     }

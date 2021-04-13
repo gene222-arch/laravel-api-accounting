@@ -54,6 +54,8 @@ class PaymentMethodsControllerTest extends TestCase
     /** test */
     public function user_can_update_payment_method()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
             'name' => 'Cash',
@@ -61,7 +63,7 @@ class PaymentMethodsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/settings/payment-methods',
+            "/api/settings/payment-methods/${id}",
             $data,
             $this->apiHeader()
         );

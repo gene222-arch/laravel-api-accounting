@@ -549,9 +549,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('payment-methods')->group(function () 
     {
         Route::get('/', [PaymentMethodsController::class, 'index']);
-        Route::get('/{id}', [PaymentMethodsController::class, 'show']);
+        Route::get('/{paymentMethod}', [PaymentMethodsController::class, 'show']);
         Route::post('/', [PaymentMethodsController::class, 'store']);
-        Route::put('/', [PaymentMethodsController::class, 'update']);
+        Route::put('/{paymentMethod}', [PaymentMethodsController::class, 'update']);
         Route::delete('/', [PaymentMethodsController::class, 'destroy']);
     });
 
