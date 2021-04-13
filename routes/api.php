@@ -537,9 +537,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('expense-categories')->group(function () 
     {
         Route::get('/', [ExpenseCategoriesController::class, 'index']);
-        Route::get('/{id}', [ExpenseCategoriesController::class, 'show']);
+        Route::get('/{expenseCategory}', [ExpenseCategoriesController::class, 'show']);
         Route::post('/', [ExpenseCategoriesController::class, 'store']);
-        Route::put('/', [ExpenseCategoriesController::class, 'update']);
+        Route::put('/{expenseCategory}', [ExpenseCategoriesController::class, 'update']);
         Route::delete('/', [ExpenseCategoriesController::class, 'destroy']);
     });
 

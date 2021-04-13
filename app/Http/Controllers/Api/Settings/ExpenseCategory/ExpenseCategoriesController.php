@@ -28,7 +28,9 @@ class ExpenseCategoriesController extends Controller
      */
     public function index()
     {
-        $result = $this->expenseCategory->getAllExpenseCategories();
+        $result = $this->expenseCategory
+            ->latest()
+            ->get(['id', ...$this->expenseCategory->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,10 +45,7 @@ class ExpenseCategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $expenseCategory = $this->expenseCategory->createExpenseCategory(
-            $request->name,
-            $request->hexCode
-        );
+        $expenseCategory = $this->expenseCategory->create($request->all());
 
         return $this->success($expenseCategory, 'Expense category created successfully.');
     }
@@ -54,31 +53,26 @@ class ExpenseCategoriesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param ExpenseCategory $expenseCategory
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(ExpenseCategory $expenseCategory)
     {
-        $result = $this->expenseCategory->getExpenseCategoryById($id);
-
-        return !$result
+        return !$expenseCategory
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($expenseCategory);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param ExpenseCategory $expenseCategory
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, ExpenseCategory $expenseCategory)
     {
-        $this->expenseCategory->updateExpenseCategory(
-            $request->id,
-            $request->name,
-            $request->hexCode
-        );
+        $expenseCategory->update($request->except('id'));
 
         return $this->success(null, 'Expense category updated successfully.');
     }
@@ -91,7 +85,7 @@ class ExpenseCategoriesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->expenseCategory->deleteExpenseCategories($request->ids);
+        $this->expenseCategory->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Expense category or categories deleted successfully.');
     }

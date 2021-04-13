@@ -38,7 +38,7 @@ class ExpenseCategoriesControllerTest extends TestCase
     {
         $data = [
             'name' => 'Transfer',
-            'hexCode' => '#000000'
+            'hex_code' => '#000000'
         ];
 
         $response = $this->post(
@@ -53,14 +53,16 @@ class ExpenseCategoriesControllerTest extends TestCase
     /** test */
     public function user_can_update_expense_category()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
             'name' => 'Purchase',
-            'hexCode' => '#000001'
+            'hex_code' => '#000001'
         ];
 
         $response = $this->put(
-            '/api/settings/expense-categories',
+            "/api/settings/expense-categories/${id}",
             $data,
             $this->apiHeader()
         );
