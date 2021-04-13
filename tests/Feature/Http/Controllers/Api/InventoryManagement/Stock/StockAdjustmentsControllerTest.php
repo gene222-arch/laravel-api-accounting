@@ -9,15 +9,13 @@ use Tests\TestCase;
 class StockAdjustmentsControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_view_any_stock_adjustments()
     {
         $response = $this->get(
             '/api/inventory-management/stock-adjustments',
             $this->apiHeader()
         );
-
-        dd(json_decode($response->getContent()));
 
         $this->assertResponse($response);
     }
@@ -39,11 +37,11 @@ class StockAdjustmentsControllerTest extends TestCase
     public function user_can_create_stock_adjustment()
     {
         $data = [
-            'stockAdjustmentNumber' => 'SA-00005',
+            'stock_adjustment_number' => 'SA-00005',
             'reason' => 'Inventory count',
-            'adjustmentDetails' => [
+            'adjustment_details' => [
                 [
-                    'stock_id' => 1,
+                    'stock_id' => 2,
                     'item' => 'Gibson',
                     'book_quantity' => 5,
                     'quantity' => 10,
@@ -66,13 +64,15 @@ class StockAdjustmentsControllerTest extends TestCase
     /** test */
     public function user_can_update_stock_adjustment()
     {
+        $id = 3;
+
         $data = [
-            'id' => 5,
-            'stockAdjustmentNumber' => 'SA-00005',
+            'id' => 3,
+            'stock_adjustment_number' => 'SA-00003',
             'reason' => 'Received items',
-            'adjustmentDetails' => [
+            'adjustment_details' => [
                 [
-                    'stock_id' => 1,
+                    'stock_id' => 2,
                     'item' => 'Gibson',
                     'book_quantity' => 5,
                     'quantity' => 10,
@@ -84,7 +84,7 @@ class StockAdjustmentsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/inventory-management/stock-adjustments',
+            "/api/inventory-management/stock-adjustments/${id}",
             $data,
             $this->apiHeader()
         );

@@ -584,9 +584,9 @@ Route::prefix('inventory-management')->group(function ()
     Route::prefix('stock-adjustments')->group(function () 
     {
         Route::get('/', [StockAdjustmentsController::class, 'index']);
-        Route::get('/{id}', [StockAdjustmentsController::class, 'show']);
+        Route::get('/{stockAdjustment}', [StockAdjustmentsController::class, 'show']);
         Route::post('/', [StockAdjustmentsController::class, 'store']);
-        Route::put('/', [StockAdjustmentsController::class, 'update']);
+        Route::put('/{stockAdjustment}', [StockAdjustmentsController::class, 'update']);
         Route::delete('/', [StockAdjustmentsController::class, 'destroy']);
     });
 

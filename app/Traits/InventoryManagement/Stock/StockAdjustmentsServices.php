@@ -33,41 +33,23 @@ trait StockAdjustmentsServices
     }
     
     /**
-     * Get a record of stock adjustment via id
-     *
-     * @param  int $id
-     * @return StockAdjustment|null
-     */
-    public function getStockAdjustmentById (int $id): StockAdjustment|null
-    {
-        $stockAdjustment = StockAdjustment::find($id);
-
-        return !$stockAdjustment
-            ? null 
-            : $stockAdjustment->with('details')->first();
-    }
-    
-    /**
      * Create a new stock adjustment record
      *
-     * @param  string $stockAdjustmentNumber
+     * @param  array $stockAdjustmentDetails
      * @param  string $reason
-     * @param  array $adjustmentDetails
+     * @param  array $adjustment_details
      * @return mixed
      */
-    public function createStockAdjustment (string $stockAdjustmentNumber, string $reason, array $adjustmentDetails): mixed
+    public function createStockAdjustment (array $stockAdjustmentDetails, string $reason, array $adjustment_details): mixed
     {
         try {
-            DB::transaction(function () use ($stockAdjustmentNumber, $reason, $adjustmentDetails)
+            DB::transaction(function () use ($stockAdjustmentDetails, $reason, $adjustment_details)
             {
-                $stockAdjustment =  StockAdjustment::create([
-                    'stock_adjustment_number' => $stockAdjustmentNumber,
-                    'reason' => $reason
-                ]);
+                $stockAdjustment =  StockAdjustment::create($stockAdjustmentDetails);
 
-                $stockAdjustment->details()->attach($adjustmentDetails);
+                $stockAdjustment->details()->attach($adjustment_details);
 
-                $this->updateStocksBy($reason, $adjustmentDetails);
+                $this->updateStocksBy($reason, $adjustment_details);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -79,27 +61,22 @@ trait StockAdjustmentsServices
     /**
      * Update an existing record of stock adjustment
      *
-     * @param  integer $id
-     * @param  string $stockAdjustmentNumber
+     * @param  StockAdjustment $stockAdjustment
+     * @param  array $stockAdjustmentDetails
      * @param  string $reason
-     * @param  array $adjustmentDetails
+     * @param  array $adjustment_details
      * @return mixed
      */
-    public function updateStockAdjustment (int $id, string $stockAdjustmentNumber, string $reason, array $adjustmentDetails): mixed
+    public function updateStockAdjustment (StockAdjustment $stockAdjustment, array $stockAdjustmentDetails, string $reason, array $adjustment_details): mixed
     {
         try {
-            DB::transaction(function () use ($id, $stockAdjustmentNumber, $reason, $adjustmentDetails)
+            DB::transaction(function () use ($stockAdjustment, $stockAdjustmentDetails, $reason, $adjustment_details)
             {
-                $stockAdjustment = StockAdjustment::find($id);
+                $stockAdjustment->update($stockAdjustmentDetails);
 
-                $stockAdjustment->update([
-                    'stock_adjustment_number' => $stockAdjustmentNumber,
-                    'reason' => $reason
-                ]);
+                $stockAdjustment->details()->sync($adjustment_details);
 
-                $stockAdjustment->details()->sync($adjustmentDetails);
-
-                $this->updateStocksBy($reason, $adjustmentDetails);
+                $this->updateStocksBy($reason, $adjustment_details);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -182,16 +159,5 @@ trait StockAdjustmentsServices
         }
 
         Stock::upsert($data, $uniqueKey, $update);
-    }
-
-    /**
-     * Delete one or multiple records of StockAdjustments
-     *
-     * @param  array $ids
-     * @return boolean
-     */
-    public function deleteStockAdjustments (array $ids): bool
-    {
-        return StockAdjustment::whereIn('id', $ids)->delete();
     }
 }

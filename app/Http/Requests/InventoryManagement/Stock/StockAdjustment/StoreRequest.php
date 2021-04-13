@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests\InventoryManagement\Stock\StockAdjustment;
 
-use App\Http\Requests\BaseRequest;
 use App\Models\StockAdjustment;
+use App\Http\Requests\InventoryManagement\Stock\StockAdjustment\StockAdjustmentBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends StockAdjustmentBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -15,22 +15,10 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'stockAdjustmentNumber' => ['required', 'string', 'unique:stock_adjustments,stock_adjustment_number'],
+            'stock_adjustment_number' => ['required', 'string', 'unique:stock_adjustments,stock_adjustment_number'],
             'reason' => ['required', 'string', "in:" . implode(',', StockAdjustment::adjustmentReasons())],
-            'adjustmentDetails.*' => ['required', 'array', 'min:1']
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * return $array
-     */
-    public function attributes()
-    {
-        return [
-            'stockAdjustmentNumber' => 'stock adjustment number',
-            'adjustmentDetails' => 'adjustment details',
+            'adjustment_details.*' => ['required', 'array', 'min:1'],
+            'adjustment_details.*.stock_id' => ['required', 'integer', 'distinct', 'exists:stocks,id'],
         ];
     }
 

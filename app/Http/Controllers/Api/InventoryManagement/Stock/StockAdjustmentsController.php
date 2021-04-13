@@ -44,9 +44,9 @@ class StockAdjustmentsController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->stockAdjustment->createStockAdjustment(
-            $request->stockAdjustmentNumber,
+            $request->except('adjustment_details'),
             $request->reason,
-            $request->adjustmentDetails
+            $request->adjustment_details
         );
 
         return $result !== true
@@ -57,36 +57,37 @@ class StockAdjustmentsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param StockAdjustment $stockAdjustment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(StockAdjustment $stockAdjustment)
     {
-        $result = $this->stockAdjustment->getStockAdjustmentById($id);
+        $stockAdjustment = $stockAdjustment->with('details')->first();
 
-        return !$result
+        return !$stockAdjustment
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($stockAdjustment);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param StockAdjustment $stockAdjustment
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, StockAdjustment $stockAdjustment)
     {
         $result = $this->stockAdjustment->updateStockAdjustment(
-            $request->id,
-            $request->stockAdjustmentNumber,
+            $stockAdjustment,
+            $request->except('id', 'adjustment_details'),
             $request->reason,
-            $request->adjustmentDetails
+            $request->adjustment_details
         );
 
         return $result !== true
             ? $this->error($result, 500)
-            : $this->success(null, 'Stock adjustment created successfully.');
+            : $this->success(null, 'Stock adjustment update successfully.');
     }
 
     /**
@@ -97,6 +98,8 @@ class StockAdjustmentsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
+        $this->stockAdjustment->whereIn('id', $request->ids)->delete();
+
         return $this->success(null, 'Stock adjustment or adjustments deleted successfully.');
     }
 }
