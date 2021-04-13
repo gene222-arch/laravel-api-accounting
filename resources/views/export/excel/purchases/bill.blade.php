@@ -11,7 +11,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Invoice number</th>
+                <th>Bill number</th>
                 <th>Order number</th>
                 <th>Date</th>
                 <th>Due Date</th>
@@ -20,11 +20,11 @@
                 <th>Amount</th>
                 <th>Currency</th>
                 <th>Category</th>
-                <th>Customer</th>
-                <th>Customer email</th>
-                <th>Customer tax number</th>
-                <th>Customer phone</th>
-                <th>Customer address</th>
+                <th>Vendor</th>
+                <th>Vendor email</th>
+                <th>Vendor tax number</th>
+                <th>Vendor phone</th>
+                <th>Vendor address</th>
             </tr>
         </thead>
         <tbody>
@@ -40,10 +40,10 @@
                     <td align="right">{{ \number_format($bill->items->map->pivot->map->amount->sum(), 2) }}</td>
                     <td align="center">{{ $bill->currency->code }}</td>
                     <td align="center">{{ $bill->expenseCategory->name }}</td>
-                    <td align="center">{{ $bill->customer->name }}</td>
-                    <td align="center">{{ $bill->customer->tax_number }}</td>
-                    <td align="center">{{ $bill->customer->phone }}</td>
-                    <td align="center">{{ $bill->customer->address }}</td>
+                    <td align="center">{{ $bill->vendor->name }}</td>
+                    <td align="center">{{ $bill->vendor->tax_number }}</td>
+                    <td align="center">{{ $bill->vendor->phone }}</td>
+                    <td align="center">{{ $bill->vendor->address }}</td>
                 </tr>
             @endforeach
         </tbody>

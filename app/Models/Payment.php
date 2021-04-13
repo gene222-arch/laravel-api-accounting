@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Account;
 use App\Models\Currency;
-use App\Models\Customer;
+use App\Models\Vendor;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Purchases\Payment\PaymentsServices;
@@ -56,13 +56,13 @@ class Payment extends Model
     }
     
     /**
-     * Define an inverse one-to-many relationship with Customer
+     * Define an inverse one-to-many relationship with Vendor
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function customer(): BelongsTo
+    public function vendor(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Vendor::class);
     }
 
     /**

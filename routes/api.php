@@ -46,6 +46,15 @@ use App\Http\Controllers\Api\Exports\Purchases\VendorExportsController;
 use App\Http\Controllers\Api\Exports\Sales\CustomerExportsController;
 use App\Http\Controllers\Api\Exports\Sales\InvoiceExportsController;
 use App\Http\Controllers\Api\Exports\Sales\RevenueExportsController;
+use App\Http\Controllers\Api\ImportsControllers\Item\ImportItemsController;
+use App\Http\Controllers\Api\ImportsController\Banking\ImportBankAccountTransfersController;
+use App\Http\Controllers\Api\ImportsController\Banking\ImportTransactionsController;
+use App\Http\Controllers\Api\ImportsController\Purchases\ImportBillsController;
+use App\Http\Controllers\Api\ImportsController\Purchases\ImportPaymentsController;
+use App\Http\Controllers\Api\ImportsController\Purchases\ImportVendorsController;
+use App\Http\Controllers\Api\ImportsController\Sales\ImportCustomersController;
+use App\Http\Controllers\Api\ImportsController\Sales\ImportInvoicesController;
+use App\Http\Controllers\Api\ImportsController\Sales\ImportRevenuesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -224,6 +233,25 @@ Route::prefix('exports')->group(function ()
         Route::get('/transactions', [TransactionExportsController::class, 'csv']);
     });
 });
+
+
+
+/**
+ * * Imports
+ */
+Route::prefix('imports')->group(function () 
+{
+    Route::post('/bill', [ImportBillsController::class, 'import']);
+    Route::post('/bank-account-transfers', [ImportBankAccountTransfersController::class, 'import']);
+    Route::post('/customers', [ImportCustomersController::class, 'import']);
+    Route::post('/invoices', [ImportInvoicesController::class, 'import']);
+    Route::post('/items', [ImportItemsController::class, 'import']);
+    Route::post('/payments', [ImportPaymentsController::class, 'import']);
+    Route::post('/revenue', [ImportRevenuesController::class, 'import']);
+    Route::post('/transactions', [ImportTransactionsController::class, 'import']);
+    Route::post('/vendors', [ImportVendorsController::class, 'import']);
+});
+
 
 
 /**

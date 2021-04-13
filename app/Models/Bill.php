@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Currency;
-use App\Models\Customer;
+use App\Models\Vendor;
 use App\Models\ExpenseCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Purchases\Bill\BillsServices;
@@ -42,13 +42,13 @@ class Bill extends Model
     }
 
     /**
-     * Define a many-to-many relationship with Customer class
+     * Define a many-to-many relationship with Vendor class
      *
      * @return BelongsTo
      */
-    public function customer(): BelongsTo
+    public function vendor(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Vendor::class);
     }
 
     /**

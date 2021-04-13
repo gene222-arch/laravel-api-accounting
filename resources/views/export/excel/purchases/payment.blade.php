@@ -14,10 +14,10 @@
                 <th>Paid at</th>
                 <th>Amount</th>
                 <th>Currency</th>
-                <th>Account name</th>
+                <th>Account</th>
                 <th>Number</th>
-                <th>Customer</th>
-                <th>Customer email</th>
+                <th>Vendor</th>
+                <th>Vendor email</th>
                 <th>Category</th>
                 <th>Description</th>
                 <th>Payment method</th>
@@ -33,8 +33,8 @@
                     <td align="center">{{ $payment->currency->code }}</td>
                     <td align="center">{{ $payment->account->name }}</td>
                     <td align="center">{{ $payment->number }}</td>
-                    <td align="right">{{ $payment->customer->name }}</td>
-                    <td align="center">{{ $payment->customer->email }}</td>
+                    <td align="right">{{ $payment->vendor->name }}</td>
+                    <td align="center">{{ $payment->vendor->email }}</td>
                     <td align="center">{{ $payment->expenseCategory->name }}</td>
                     <td align="center">{{ $payment->description }}</td>
                     <td align="center">{{ $payment->paymentMethod->name }}</td>

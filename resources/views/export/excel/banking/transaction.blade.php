@@ -17,7 +17,7 @@
                 <th>Currency</th>
                 <th>Account</th>
                 <th>Number</th>
-                <th>Contact email</th>
+                <th>Contact</th>
                 <th>Category</th>
                 <th>Description</th>
                 <th>Payment method</th>

@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Imports\Items;
+namespace App\Imports\Sales;
 
 use App\Models\Item;
 use App\Models\Category;
+use App\Models\Currency;
+use App\Models\Customer;
+use App\Models\IncomeCategory;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\WithUpserts;
@@ -12,21 +15,20 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class ItemImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation, WithBatchInserts, WithChunkReading
+class InvoiceImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation, WithBatchInserts, WithChunkReading
 {
     use Importable;
 
     public function rules(): array
     {
         return [
-            '*.id' => ['required', 'integer', 'exists:items,id'],
-            '*.sku' => ['required', 'alpha_num', 'min:1', 'max:13', 'unique:items,sku'],
-            '*.barcode' => ['required', 'alpha_num', 'min:1', 'max:13', 'unique:items,barcode'],
-            '*.name' => ['required', 'string', 'unique:items,name'],
-            '*.category' => ['required', 'exists:categories,name'],
-            '*.sold_by' => ['required', 'in:each,weight'],
-            '*.price' => ['numeric', 'nullable'],
-            '*.cost' => ['required', 'numeric'],
+            'customer' => ['required', 'string', 'exists:customers,name'],
+            'invoice_number' => ['required', 'string', 'unique:invoices,invoice_number'],
+            'order_number' => ['required', 'integer', 'unique:invoices,order_no'],
+            'date' => ['required', 'date'],
+            'due_date' => ['required', 'date'],
+            'status' => ['required', 'string', 'in:Draft,Partially Paid,Paid'],
+            'category' => ['required', 'string', 'exists:income_categories,name']
         ];
     }
 
@@ -36,9 +38,9 @@ class ItemImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation
     public function customValidationAttributes()
     {
         return [
-            '*.id' => 'item',
-            '*.name' => 'item name',
-            '*.sold_by' => 'sold by',
+            'invoice_number' => 'invoice number',
+            'order_number' => 'order number',
+            'due_date' => 'due date'
         ];
     }
 
@@ -50,7 +52,6 @@ class ItemImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation
     public function customValidationMessages()
     {
         return [
-            '*.category.exists' => 'The :attribute does not exist.',
         ];
     }
     
@@ -62,8 +63,7 @@ class ItemImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation
     public function uniqueBy()
     {
         return [
-            'sku',
-            'barcode'
+            'invoice_number'
         ];
     }
     
@@ -96,14 +96,14 @@ class ItemImport implements ToModel, WithHeadingRow, WithUpserts, WithValidation
     {
         return new Item([
             'id' => $row['id'],
-            'sku' => $row['sku'],
-            'barcode' => $row['barcode'],
-            'name' => $row['name'],
-            'image' => 'http://127.0.0.1:8000/storage/images/Products/product_default_img_1614450024.svg',
-            'category' => Category::where('name', '=', $row['category'])->first()->id,
-            'sold_by' => $row['sold_by'],
-            'price' => $row['price'],
-            'cost' => $row['cost'],
+            'customer_id' => Customer::where('name', $row['customer'])->first()->id,
+            'currency_id' => Currency::where('code', $row['currency'])->first()->id,
+            'income_category_id' => IncomeCategory::where('name', $row['category'])->first()->id,
+            'invoice_number' => $row['invoice_number'],
+            'order_no' => $row['order_number'],
+            'date' => $row['date'],
+            'due_date' => $row['due_date'],
+            'status' => $row['status']
         ]);
     }
 }

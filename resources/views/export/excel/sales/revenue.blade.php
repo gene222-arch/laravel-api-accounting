@@ -14,7 +14,7 @@
                 <th>Paid at</th>
                 <th>Amount</th>
                 <th>Currency</th>
-                <th>Account name</th>
+                <th>Account</th>
                 <th>Number</th>
                 <th>Customer</th>
                 <th>Customer email</th>
