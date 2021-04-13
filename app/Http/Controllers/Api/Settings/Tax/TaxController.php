@@ -45,7 +45,7 @@ class TaxController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $tax = $this->tax->create($request->all());
+        $tax = $this->tax->create($request->validated());
 
         return $this->success($tax, 'Tax created successfully.');
     }

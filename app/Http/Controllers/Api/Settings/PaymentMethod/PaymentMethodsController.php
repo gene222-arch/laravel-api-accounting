@@ -45,7 +45,7 @@ class PaymentMethodsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $paymentMethod = $this->paymentMethod->create($request->all());
+        $paymentMethod = $this->paymentMethod->create($request->validated());
 
         return $this->success($paymentMethod, 'Payment method created successfully.');
     }

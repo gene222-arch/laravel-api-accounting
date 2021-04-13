@@ -48,7 +48,7 @@ class SalaryBenefitsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $salaryBenefit = $this->salaryBenefit->create($request->all());
+        $salaryBenefit = $this->salaryBenefit->create($request->validated());
 
         return $this->success($salaryBenefit, 'Salary benefit created successfully.');
     }

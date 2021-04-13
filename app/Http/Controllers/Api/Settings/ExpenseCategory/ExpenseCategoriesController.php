@@ -45,7 +45,7 @@ class ExpenseCategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $expenseCategory = $this->expenseCategory->create($request->all());
+        $expenseCategory = $this->expenseCategory->create($request->validated());
 
         return $this->success($expenseCategory, 'Expense category created successfully.');
     }

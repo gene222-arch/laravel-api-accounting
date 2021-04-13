@@ -45,7 +45,7 @@ class CurrenciesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $currency = $this->currency->create($request->all());
+        $currency = $this->currency->create($request->validated());
 
         return $this->success($currency, 'Currency created successfully.');
     }
@@ -72,7 +72,7 @@ class CurrenciesController extends Controller
      */
     public function update(UpdateRequest $request, Currency $currency)
     {
-        $currency->update($request->all());
+        $currency->update($request->except('id'));
 
         return $this->success(null, 'Currency updated successfully.');
     }

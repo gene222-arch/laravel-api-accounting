@@ -43,7 +43,7 @@ class BankAccountTransfersController extends Controller
     public function store(UpdateStoreRequest $request)
     {
         $result = $this->bankAccountTransfer->createBankAccountTransfer(
-            $request->all(),
+            $request->validated(),
             $request->from_account_id,
             $request->to_account_id,
             $request->amount
@@ -80,7 +80,7 @@ class BankAccountTransfersController extends Controller
     {
         $result = $this->bankAccountTransfer->updateBankAccountTransfer(
             $transfer,
-            $request->all(),
+            $request->validated(),
             $request->from_account_id,
             $request->to_account_id,
             $request->amount

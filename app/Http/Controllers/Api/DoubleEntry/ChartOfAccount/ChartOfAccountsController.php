@@ -45,7 +45,7 @@ class ChartOfAccountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $chartOfAccount = $this->chartOfAccount->create($request->all());
+        $chartOfAccount = $this->chartOfAccount->create($request->validated());
 
         return $this->success($chartOfAccount, 'Chart of account created successfully.');
     }
@@ -72,7 +72,7 @@ class ChartOfAccountsController extends Controller
      */
     public function update(UpdateRequest $request, ChartOfAccount $chartOfAccount)
     {
-        $chartOfAccount->update($request->all());
+        $chartOfAccount->update($request->except('id'));
 
         return $this->success(null, 'Chart of account updated successfully.');
     }

@@ -45,7 +45,7 @@ class DiscountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $model = $this->discount->create($request->all());
+        $model = $this->discount->create($request->validated());
 
         return $this->success($model, 'Discount created successfully.');
     }

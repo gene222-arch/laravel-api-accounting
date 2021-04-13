@@ -51,7 +51,7 @@ class RevenuesController extends Controller
      */
     public function store(UpdateStoreRequest $request)
     {
-        $result = $this->revenue->createRevenue($request->all());
+        $result = $this->revenue->createRevenue($request->validated());
 
         return $result !== true 
             ? $this->error($result, 500)
@@ -91,7 +91,7 @@ class RevenuesController extends Controller
     {
         $result = $this->revenue->updateRevenue(
             $revenue,
-            $request->all(),
+            $request->validated(),
         );
 
         return $result !== true 

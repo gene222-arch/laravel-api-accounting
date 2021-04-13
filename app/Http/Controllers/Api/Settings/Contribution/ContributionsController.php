@@ -45,7 +45,7 @@ class ContributionsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $contribution = $this->contribution->create($request->all());
+        $contribution = $this->contribution->create($request->validated());
 
         return $this->success($contribution, 'Contribution created successfully.');
     }
@@ -72,7 +72,7 @@ class ContributionsController extends Controller
      */
     public function update(UpdateRequest $request, Contribution $contribution)
     {
-        $contribution->update($request->all());
+        $contribution->update($request->except('id'));
 
         return $this->success(null, 'Contribution updated successfully.');
     }

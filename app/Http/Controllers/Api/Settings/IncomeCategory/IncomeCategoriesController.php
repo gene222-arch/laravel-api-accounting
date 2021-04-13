@@ -45,7 +45,7 @@ class IncomeCategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $incomeCategory = $this->incomeCategory->create($request->all());
+        $incomeCategory = $this->incomeCategory->create($request->validated());
 
         return $this->success($incomeCategory, 'Income Category created successfully.');
     }

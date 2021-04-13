@@ -45,7 +45,7 @@ class CustomersController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $customer = $this->customer->create($request->all());
+        $customer = $this->customer->create($request->validated());
 
         return $this->success($customer, 'Customer created successfully.');
     }

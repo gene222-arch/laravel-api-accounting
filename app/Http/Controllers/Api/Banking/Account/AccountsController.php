@@ -45,7 +45,7 @@ class AccountsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $account = $this->account->create($request->all());
+        $account = $this->account->create($request->validated());
 
         return $this->success($account, 'Account created successfully.');
     }

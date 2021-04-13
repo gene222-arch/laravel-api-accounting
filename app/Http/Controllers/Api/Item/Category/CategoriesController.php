@@ -47,7 +47,7 @@ class CategoriesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $category = $this->category->create($request->all());
+        $category = $this->category->create($request->validated());
 
         return $this->success($category,'Category created successfully.' );
     }

@@ -45,7 +45,7 @@ class VendorsController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $vendor = $this->vendor->create($request->all());
+        $vendor = $this->vendor->create($request->validated());
 
         return $this->success($vendor, 'Vendor created successfully.');
     }

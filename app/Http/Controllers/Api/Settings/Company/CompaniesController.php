@@ -27,7 +27,7 @@ class CompaniesController extends Controller
      */
     public function store(UpdateStoreRequest $request)
     {
-        $company = $this->company->create($request->all());
+        $company = $this->company->create($request->validated());
 
         return $this->success($company, 'Company created successfully.');
     }
@@ -53,7 +53,7 @@ class CompaniesController extends Controller
      */
     public function update(UpdateStoreRequest $request, Company $company)
     {
-        $company->update($request->all());
+        $company->update($request->except('id'));
 
         return $this->success(null, 'Company updated successfully.');
     }

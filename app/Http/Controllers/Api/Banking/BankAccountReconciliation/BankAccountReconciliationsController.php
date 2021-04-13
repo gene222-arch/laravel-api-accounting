@@ -48,7 +48,7 @@ class BankAccountReconciliationsController extends Controller
     public function store(UpdateStoreRequest $request, Account $account)
     {
         $result = $this->reconciliation->createBankAccountReconciliation(
-            $request->all(),
+            $request->validated(),
             $account,
             $request->closing_balance,
             $request->difference,
@@ -85,7 +85,7 @@ class BankAccountReconciliationsController extends Controller
     {
         $result = $this->reconciliation->updateBankAccountReconciliation(
             $reconciliation,
-            $request->all(),
+            $request->validated(),
             $account,
             $request->closing_balance,
             $request->difference,

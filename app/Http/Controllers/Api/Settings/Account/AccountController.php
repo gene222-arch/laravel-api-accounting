@@ -45,7 +45,7 @@ class AccountController extends Controller
      */
     public function update(UpdateRequest $request)
     {
-        Auth::user()->update($request->all());
+        Auth::user()->update($request->validated());
 
         return $this->success(null, 'Account updated successfully.');
     }
