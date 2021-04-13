@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\Settings\Tax\TaxesServices;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -11,10 +10,6 @@ class Tax extends Model
 {
     /** Libraries or Built-in */
     use HasFactory;
-
-    /** Custom */
-    use TaxesServices;
-
 
     protected $fillable = [
         'name',

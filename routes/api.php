@@ -561,9 +561,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('taxes')->group(function () 
     {
         Route::get('/', [TaxController::class, 'index']);
-        Route::get('/{id}', [TaxController::class, 'show']);
+        Route::get('/{tax}', [TaxController::class, 'show']);
         Route::post('/', [TaxController::class, 'store']);
-        Route::put('/', [TaxController::class, 'update']);
+        Route::put('/{tax}', [TaxController::class, 'update']);
         Route::delete('/', [TaxController::class, 'destroy']);
     });
 });

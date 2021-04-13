@@ -28,7 +28,9 @@ class TaxController extends Controller
      */
     public function index()
     {
-        $result = $this->tax->getAllTaxes();
+        $result = $this->tax
+            ->latest()
+            ->get(['id', ...$this->tax->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,12 +45,7 @@ class TaxController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $tax = $this->tax->createTax(
-            $request->name,
-            $request->rate,
-            $request->type,
-            $request->enabled
-        );
+        $tax = $this->tax->create($request->all());
 
         return $this->success($tax, 'Tax created successfully.');
     }
@@ -56,33 +53,26 @@ class TaxController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Tax $tax
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Tax $tax)
     {
-        $result = $this->tax->getTaxById($id);
-
-        return !$result
+        return !$tax
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($tax);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateRequest  $request
+     * @param UpdateRequest $request
+     * @param Tax $tax
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Tax $tax)
     {
-        $this->tax->updateTax(
-            $request->id,
-            $request->name,
-            $request->rate,
-            $request->type,
-            $request->enabled
-        );
+        $tax->update($request->except('id'));
 
         return $this->success(null, 'Tax updated successfully.');
     }
@@ -95,7 +85,7 @@ class TaxController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->tax->deleteTaxes($request->ids);
+        $this->tax->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Tax or taxes deleted successfully.');
     }

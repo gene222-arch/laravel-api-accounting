@@ -30,8 +30,6 @@ class TaxControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -50,15 +48,15 @@ class TaxControllerTest extends TestCase
             $data,
             $this->apiHeader()
         );
-           
-        dd(json_decode($response->getContent()));
-        
+
         $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_update_tax()
     {
+        $id = 12;
+
         $data = [
             'id' => 12,
             'name' => 'Sales Tax',
@@ -68,7 +66,7 @@ class TaxControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            "/api/settings/taxes",
+            "/api/settings/taxes/${id}",
             $data,
             $this->apiHeader()
         );
