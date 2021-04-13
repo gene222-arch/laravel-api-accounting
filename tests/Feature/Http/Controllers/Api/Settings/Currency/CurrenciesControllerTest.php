@@ -39,7 +39,7 @@ class CurrenciesControllerTest extends TestCase
     {
         $data = [
             'name' => 'Philippines Peso',
-            'code' => 'Php',
+            'code' => 'Pes',
             'enabled' => true
         ];
 
@@ -49,12 +49,16 @@ class CurrenciesControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
     /** test */
     public function user_can_update_currency()
     {
+        $id = 1;
+
         $data = [
             'id' => 1,
             'name' => 'US Dollar',
@@ -63,7 +67,7 @@ class CurrenciesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            '/api/settings/currencies',
+            "/api/settings/currencies/${id}",
             $data,
             $this->apiHeader()
         );

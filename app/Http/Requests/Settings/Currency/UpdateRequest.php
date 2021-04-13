@@ -16,7 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string', 'unique:currencies,name,' . $this->id],
-            'code' => ['required', 'string', 'unique:currencies,code,' . $this->id],
+            'code' => ['required', 'string', 'min:3', 'max:3', 'unique:currencies,code,' . $this->id],
             'enabled' => ['required', 'boolean']
         ];
     }

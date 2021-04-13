@@ -513,9 +513,9 @@ Route::prefix('settings')->group(function ()
     Route::prefix('currencies')->group(function () 
     {
         Route::get('/', [CurrenciesController::class, 'index']);
-        Route::get('/{id}', [CurrenciesController::class, 'show']);
+        Route::get('/{currency}', [CurrenciesController::class, 'show']);
         Route::post('/', [CurrenciesController::class, 'store']);
-        Route::put('/', [CurrenciesController::class, 'update']);
+        Route::put('/{currency}', [CurrenciesController::class, 'update']);
         Route::delete('/', [CurrenciesController::class, 'destroy']);
     });
 

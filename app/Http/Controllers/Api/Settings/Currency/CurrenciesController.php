@@ -28,7 +28,9 @@ class CurrenciesController extends Controller
      */
     public function index()
     {
-        $result = $this->currency->getAllCurrencies();
+        $result = $this->currency
+            ->latest()
+            ->get(['id', ...(new Currency())->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
@@ -43,11 +45,7 @@ class CurrenciesController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $currency = $this->currency->createCurrency(
-            $request->name,
-            $request->code,
-            $request->enabled,
-        );
+        $currency = $this->currency->create($request->all());
 
         return $this->success($currency, 'Currency created successfully.');
     }
@@ -55,32 +53,26 @@ class CurrenciesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param integer $id
+     * @param Currency $currency
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Currency $currency)
     {
-        $result = $this->currency->getCurrencyById($id);
-
-        return !$result
+        return !$currency
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($currency);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param UpdateRequest $request
+     * @param Currency $currency
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Currency $currency)
     {
-        $this->currency->updateCurrency(
-            $request->id,
-            $request->name,
-            $request->code,
-            $request->enabled,
-        );
+        $currency->update($request->all());
 
         return $this->success(null, 'Currency updated successfully.');
     }
@@ -93,7 +85,7 @@ class CurrenciesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {   
-        $this->currency->deleteCurrencies($request->ids);
+        $this->currency->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Currency or currencies deleted successfully.');
     }
