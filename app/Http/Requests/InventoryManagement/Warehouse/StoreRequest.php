@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\InventoryManagement\Warehouse;
 
-use App\Http\Requests\BaseRequest;
+use App\Http\Requests\InventoryManagement\Warehouse\WarehouseBaseRequest;
 
-class StoreRequest extends BaseRequest
+class StoreRequest extends WarehouseBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,9 +18,10 @@ class StoreRequest extends BaseRequest
             'email' => ['required', 'string', 'unique:warehouses,email'],
             'phone' => ['required', 'string', 'unique:warehouses,phone'],
             'address' => ['required', 'string'],
-            'defaultWarehouse' => ['required', 'boolean'],
+            'default_warehouse' => ['required', 'boolean'],
             'enabled' => ['required', 'boolean'],
-            'stocks.*' => ['required', 'array', 'min:1']
+            'stocks.*' => ['required', 'array', 'min:1'],
+            'stocks.*.stock_id' => ['required', 'integer', 'distinct', 'exists:stocks,id']
         ];
     }
 }

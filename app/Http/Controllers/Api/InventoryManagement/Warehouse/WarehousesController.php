@@ -28,7 +28,10 @@ class WarehousesController extends Controller
      */
     public function index()
     {
-        $result = $this->warehouse->getAllWarehouses();
+        $result = $this->warehouse
+            ->with('stocks.item')
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -44,12 +47,7 @@ class WarehousesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->warehouse->createWarehouse(
-            $request->name,
-            $request->email,
-            $request->phone,
-            $request->address,
-            $request->defaultWarehouse,
-            $request->enabled,
+            $request->except('stocks'),
             $request->stocks
         );
 
@@ -61,35 +59,30 @@ class WarehousesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Warehouse $warehouse
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Warehouse $warehouse)
     {
-        $result = $this->warehouse->getWarehouseById($id);
-
-        return !$result
+        $warehouse = $warehouse->with('stocks.item')->first();
+        
+        return !$warehouse
             ? $this->noContent()
-            : $this->success($result);
+            : $this->success($warehouse);
     }
-
 
     /**
      * Update the specified resource in storage.
      *
      * @param  UpdateRequest  $request
+     * @param Warehouse $warehouse
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request)
+    public function update(UpdateRequest $request, Warehouse $warehouse)
     {
         $result = $this->warehouse->updateWarehouse(
-            $request->id,
-            $request->name,
-            $request->email,
-            $request->phone,
-            $request->address,
-            $request->defaultWarehouse,
-            $request->enabled,
+            $warehouse,
+            $request->except('id', 'stocks'),
             $request->stocks
         );
 
@@ -106,7 +99,7 @@ class WarehousesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->warehouse->deleteWarehouses($request->ids);
+        $this->warehouse->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Warehouse or warehouses deleted successfully.');
     }

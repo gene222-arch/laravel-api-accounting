@@ -43,7 +43,7 @@ class WarehousesControllerTest extends TestCase
             'email' => 'warehouse2@mail.com',
             'phone'=> '22222222',
             'address' => 'Somewhre',
-            'defaultWarehouse' => false,
+            'default_warehouse' => false,
             'enabled' => false,
             'stocks' => [
                 [
@@ -70,7 +70,7 @@ class WarehousesControllerTest extends TestCase
             'email' => 'main@mail.com',
             'phone'=> '111111111',
             'address' => 'Somewhre',
-            'defaultWarehouse' => false,
+            'default_warehouse' => false,
             'enabled' => false,
             'stocks' => [
                 [

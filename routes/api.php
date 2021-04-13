@@ -596,9 +596,9 @@ Route::prefix('inventory-management')->group(function ()
     Route::prefix('warehouses')->group(function () 
     {
         Route::get('/', [WarehousesController::class, 'index']);
-        Route::get('/{id}', [WarehousesController::class, 'show']);
+        Route::get('/{warehouse}', [WarehousesController::class, 'show']);
         Route::post('/', [WarehousesController::class, 'store']);
-        Route::put('/', [WarehousesController::class, 'update']);
+        Route::put('/{warehouse}', [WarehousesController::class, 'update']);
         Route::delete('/', [WarehousesController::class, 'destroy']);
     });
 });

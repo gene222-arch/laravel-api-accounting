@@ -19,9 +19,10 @@ class UpdateRequest extends BaseRequest
             'email' => ['required', 'string', 'unique:warehouses,email,' . $this->id],
             'phone' => ['required', 'string', 'unique:warehouses,phone,' . $this->id],
             'address' => ['required', 'string'],
-            'defaultWarehouse' => ['required', 'boolean'],
+            'default_warehouse' => ['required', 'boolean'],
             'enabled' => ['required', 'boolean'],
-            'stocks.*' => ['required', 'array', 'min:1']
+            'stocks.*' => ['required', 'array', 'min:1'],
+            'stocks.*.stock_id' => ['required', 'integer', 'distinct', 'exists:stocks,id']
         ];
     }
 }
