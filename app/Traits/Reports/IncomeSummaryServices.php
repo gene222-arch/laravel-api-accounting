@@ -2,12 +2,14 @@
 
 namespace App\Traits\Reports;
 
+use App\Traits\Dashboard\Main\MainDashboardServices;
 use Illuminate\Support\Facades\DB;
 
 
 trait IncomeSummaryServices
 {    
-    
+    use MainDashboardServices;
+
     /**
      * Income summary
      *
@@ -20,7 +22,7 @@ trait IncomeSummaryServices
     {
         return [
             'incomeSummaryPerCategory' => $this->incomeSummaryPerCategory($dateFrom, $dateTo, $year),
-            'monthlyIncomeSummary' => $this->monthlyIncomeSummary($dateFrom, $dateTo, $year)
+            'monthlyIncomeSummary' => $this->monthlyIncome($dateFrom, $dateTo, $year)
         ];  
     }
 
@@ -70,46 +72,5 @@ trait IncomeSummaryServices
 
         return $data;
     }
-    
-    /**
-     * Get the list of monthly income
-     *
-     * @param  string $dateFrom
-     * @param  string $dateTo
-     * @param  integer $year
-     * @return array
-     */
-    public function monthlyIncomeSummary (string $dateFrom, string $dateTo, int $year = null): array 
-    {
-        setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(revenues.date) = :year' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
-
-        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
-
-        $query = DB::select(
-            "SELECT 
-                MONTH(revenues.date) - 1 as month,
-                IFNULL(SUM(revenues.amount), 0) as amount
-            FROM 
-                income_categories
-            INNER JOIN 
-                revenues
-            ON 
-                revenues.income_category_id = income_categories.id 
-            WHERE
-                $whereClause
-            GROUP BY 
-                MONTH(revenues.date)
-        ", $bindings);
-
-        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-        foreach ($query as $income) 
-        {
-            $data[$income->month] = $income->amount;
-        }
-
-        return $data;
-    }
 }
