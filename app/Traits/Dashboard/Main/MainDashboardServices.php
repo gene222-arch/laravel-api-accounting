@@ -18,7 +18,7 @@ trait MainDashboardServices
      * @param  integer|null $year
      * @return array
      */
-    public function dashboardData (string $dateFrom, string $dateTo, int $year = null): array 
+    public function dashboard (string $dateFrom, string $dateTo, int $year = null): array 
     {
         return [
             'generalAnalytics' => $this->generalAnalytics($dateFrom, $dateTo, $year),
@@ -161,7 +161,7 @@ trait MainDashboardServices
                 'upcomingInvoiceDateFrom' => $dateFrom,
                 'upcomingInvoiceDateTo' => $dateTo
             ];
-        $data = DB::select(
+        $query = DB::select(
             "SELECT 
             (
                 SELECT 
@@ -247,7 +247,7 @@ trait MainDashboardServices
             ) as upcoming
         ",$bindings);
 
-        return reset($data);
+        return reset($query);
     }
     
     /**
@@ -327,9 +327,9 @@ trait MainDashboardServices
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
-        $monthlyExpense = DB::select(
+        $query = DB::select(
             "SELECT 
-                MONTH(payments.date) as month,
+                MONTH(payments.date) - 1 as month,
                 IFNULL(SUM(payments.amount), 0) as expense 
             FROM 
                 payments
@@ -342,7 +342,7 @@ trait MainDashboardServices
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($monthlyExpense as $expense) 
+        foreach ($query as $expense) 
         {
             $data[$expense->month] = $expense->expense;
         }
@@ -363,9 +363,9 @@ trait MainDashboardServices
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
-        $monthlyIncome = DB::select(
+        $query = DB::select(
             "SELECT 
-                MONTH(revenues.date) as month,
+                MONTH(revenues.date) - 1 as month,
                 IFNULL(SUM(revenues.amount), 0) as income 
             FROM 
                 revenues
@@ -377,7 +377,7 @@ trait MainDashboardServices
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($monthlyIncome as $income) 
+        foreach ($query as $income) 
         {
             $data[$income->month] = $income->income;
         }
@@ -397,11 +397,13 @@ trait MainDashboardServices
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($monthlyIncome as $incomeKey => $incomeValue) 
+        foreach ($monthlyIncome as $month => $income) 
         {
-            foreach ($monthlyExpense as $expenseKey => $expenseValue) 
+            foreach ($monthlyExpense as $expenseMonth => $expense) 
             {
-                if ($incomeKey === $expenseKey)  $data[$incomeKey] = $incomeValue - $expenseValue;
+                if ($month === $expenseMonth) {
+                    $data[$month] = number_format($income - $expense, 2);
+                }
             }
         }
 

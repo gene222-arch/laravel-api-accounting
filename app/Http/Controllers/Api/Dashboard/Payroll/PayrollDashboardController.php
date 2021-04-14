@@ -1,25 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Api\Dashboard\Main;
+namespace App\Http\Controllers\Api\Dashboard\Payroll;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\Company;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Models\Company;
-use App\Traits\Dashboard\Main\MainDashboardServices;
-use Carbon\Carbon;
+use App\Traits\Dashboard\Payroll\PayrollDashboardServices;
 
-class MainDashboardController extends Controller
+class PayrollDashboardController extends Controller
 {
-    use ApiResponser, MainDashboardServices;
+    use ApiResponser, PayrollDashboardServices;
 
     public function __construct()
     {
-        $this->middleware(['auth:api', 'permission:View Main Dashboard']);
+        $this->middleware(['auth:api', 'permission:View Payroll Dashboard']);
     }
 
     /**
-     * Display a general list of main dashboard data.
+     * Handle the incoming request.
      *
      * @return \Illuminate\Http\JsonResponse
      */
