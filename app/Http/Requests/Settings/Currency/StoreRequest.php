@@ -16,6 +16,7 @@ class StoreRequest extends BaseRequest
         return [
             'name' => ['required', 'string', 'unique:currencies,name'],
             'code' => ['required', 'string', 'min:3', 'max:3', 'unique:currencies,code'],
+            'rate' => ['required', 'numeric', 'min:1'],
             'enabled' => ['required', 'boolean']
         ];
     }

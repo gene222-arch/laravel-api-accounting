@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsContr
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
+use App\Http\Controllers\Api\Dashboard\Main\MainDashboardController;
 use App\Http\Controllers\Api\Exports\Banking\BankAccountTransferExportsController;
 use App\Http\Controllers\Api\Exports\Banking\TransactionExportsController;
 use App\Http\Controllers\Api\Exports\Items\ItemExportsController;
@@ -164,6 +165,17 @@ Route::prefix('banking')->group(function ()
         Route::get('/{transaction}', [TransactionsController::class, 'show']);
         Route::get('/accounts/{id}', [TransactionsController::class, 'showByAccount']);
     });
+});
+
+
+
+/**
+ * * Dashboards
+ *  - Main
+ */
+Route::prefix('dashboards')->group(function () 
+{
+    Route::get('/main', [MainDashboardController::class, 'index']);
 });
 
 

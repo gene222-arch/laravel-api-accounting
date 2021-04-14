@@ -40,6 +40,7 @@ class CurrenciesControllerTest extends TestCase
         $data = [
             'name' => 'Philippines Peso',
             'code' => 'Pes',
+            'rate' => 1,
             'enabled' => true
         ];
 
@@ -63,6 +64,7 @@ class CurrenciesControllerTest extends TestCase
             'id' => 1,
             'name' => 'US Dollar',
             'code' => 'USD',
+            'rate' => 1,
             'enabled' => true
         ];
 
