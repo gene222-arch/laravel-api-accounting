@@ -315,36 +315,26 @@ trait MainDashboardServices
     }
     
     /**
-     * Get the list of monthly expense
+     * Sum of the monthly expenses
      *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
      * @return array
      */
     public function monthlyExpense (string $dateFrom, string $dateTo, int $year = null): array 
     {
-        setSqlModeEmpty();
-
-        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
-
-        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
-
-        $query = DB::select(
-            "SELECT 
-                MONTH(payments.date) - 1 as month,
-                IFNULL(SUM(payments.amount), 0) as expense 
-            FROM 
-                payments
-            WHERE
-                $whereClause
-            GROUP BY 
-                MONTH(payments.date)
-            ",
-            $bindings);
+        $monthlyPayment = $this->monthlyPayment($dateFrom, $dateTo, $year);
+        $monthlyPayroll = $this->monthlyPayroll($dateFrom, $dateTo, $year);
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($query as $expense) 
+        foreach ($monthlyPayment as $paymentMonth => $paymentAmount) 
         {
-            $data[$expense->month] = $expense->expense;
+            foreach ($monthlyPayroll as $payrollMonth => $payrollAmount) 
+            {
+                if ($paymentMonth === $payrollMonth) $data[$paymentMonth] = $paymentAmount + $payrollAmount;
+            }
         }
 
         return $data;
@@ -380,6 +370,87 @@ trait MainDashboardServices
         foreach ($query as $income) 
         {
             $data[$income->month] = $income->income;
+        }
+
+        return $data;
+    }
+    
+    /**
+     * Get the list of monthly expense
+     *
+     * @return array
+     */
+    public function monthlyPayment (string $dateFrom, string $dateTo, int $year = null): array 
+    {
+        setSqlModeEmpty();
+
+        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT 
+                MONTH(payments.date) - 1 as month,
+                IFNULL(SUM(payments.amount), 0) as expense 
+            FROM 
+                payments
+            WHERE
+                $whereClause
+            GROUP BY 
+                MONTH(payments.date)
+            ",
+            $bindings);
+
+        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($query as $expense) 
+        {
+            $data[$expense->month] = $expense->expense;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get the list of monthly payroll
+     *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
+     * @return array
+     */
+    public function monthlyPayroll (string $dateFrom, string $dateTo, int $year = null): array 
+    {
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(payrolls.payment_date) = :year' 
+            : 'AND payrolls.payment_date >= :dateFrom && payrolls.payment_date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT 
+                MONTH(payrolls.payment_date) - 1 as month,
+                IFNULL(SUM(employee_payroll.total_amount), 0) as amount 
+            FROM 
+                payrolls
+            INNER JOIN  
+                employee_payroll 
+            ON 
+                employee_payroll.payroll_id = payrolls.id
+            WHERE
+                payrolls.status = 'Approved'
+            $andWhereClause
+            GROUP BY 
+                MONTH(payrolls.payment_date)"
+            ,$bindings);
+
+        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($query as $expense) 
+        {
+            $data[$expense->month] = $expense->amount;
         }
 
         return $data;
