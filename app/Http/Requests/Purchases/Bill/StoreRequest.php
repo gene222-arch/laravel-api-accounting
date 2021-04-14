@@ -14,6 +14,8 @@ class StoreRequest extends BillBaseRequest
     public function rules()
     {
         return [
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
             'bill_number' => ['required', 'string', 'unique:bills,bill_number'],
             'order_no' => ['required', 'integer', 'unique:bills,order_no'],

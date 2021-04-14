@@ -15,6 +15,8 @@ class UpdateRequest extends BillBaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:bills,id'],
+            'currency_id' => ['required', 'integer', 'exists:currencies,id'],
+            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
             'bill_number' => ['required', 'string', 'unique:bills,bill_number,' . $this->id],
             'order_no' => ['required', 'integer', 'unique:bills,order_no,' . $this->id],
@@ -27,39 +29,6 @@ class UpdateRequest extends BillBaseRequest
             'payment_details.total_taxes' => ['required', 'numeric', 'min:0'],
             'payment_details.sub_total' => ['required', 'numeric', 'min:0'],
             'payment_details.total' => ['required', 'numeric', 'min:0'],
-        ];
-    }
-
-    /**
-     * Rename attributes
-     * 
-     * @return array
-     */
-    public function attributes()
-    {
-        return [
-            'vendor_id' => 'vendor id',
-            'bill_number' => 'bill number',
-            'order_no' => 'order number',
-            'due_date' => 'due date',
-            'items.*.item_id' => 'item',
-            'payment_details.total_discounts' => 'discounts',
-            'payment_details.total_taxes' => 'taxes',
-            'payment_details.sub_total' => 'sub total',
-            'payment_details.total' => 'total',
-        ];
-    }
-
-    /**
-     * Customize the error message
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'vendor_id.exists' => 'The selected :attribute does not exist.',
-            'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
     }
 }

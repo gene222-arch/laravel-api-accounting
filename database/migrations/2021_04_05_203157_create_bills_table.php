@@ -15,6 +15,8 @@ class CreateBillsTable extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('currency_id');
+            $table->foreignId('expense_category_id');
             $table->foreignId('vendor_id');
             $table->string('bill_number');
             $table->unsignedBigInteger('order_no');
@@ -24,7 +26,17 @@ class CreateBillsTable extends Migration
             $table->string('status')->default('Draft');
             $table->timestamps();
 
-            $table->foreign('vendor_id')
+            $table->foreign('currency_id')
+                ->references('id')
+                ->on('currencies')
+                ->cascadeOnDelete();
+
+            $table->foreign('expense_category_id')
+                ->references('id')
+                ->on('expense_categories')
+                ->cascadeOnDelete();
+            
+                $table->foreign('vendor_id')
                 ->references('id')
                 ->on('vendors')
                 ->cascadeOnDelete();

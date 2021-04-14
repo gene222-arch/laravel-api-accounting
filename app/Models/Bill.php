@@ -22,6 +22,8 @@ class Bill extends Model
     use BillsServices;
 
     protected $fillable = [
+        'currency_id',
+        'expense_category_id',
         'vendor_id',
         'bill_number',
         'order_no',

@@ -14,6 +14,8 @@ class BillBaseRequest extends BaseRequest
     public function attributes()
     {
         return [
+            'currency_id' => 'currency',
+            'expense_category_id' => 'expense category',
             'vendor_id' => 'vendor',
             'bill_number' => 'bill number',
             'order_no' => 'order number',
@@ -34,6 +36,8 @@ class BillBaseRequest extends BaseRequest
     public function messages()
     {
         return [
+            'currency_id.exists' => 'The selected :attribute does not exist.',
+            'expense_category_id.exists' => 'The selected :attribute does not exist.',
             'vendor_id.exists' => 'The selected :attribute does not exist.',
             'items.*.item_id.exists' => 'The selected :attribute does not exist.'
         ];
