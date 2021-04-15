@@ -35,25 +35,26 @@ trait IncomeSummaryServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(revenues.date) = :year' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(revenues.date) = :year' : 'AND revenues.date >= :dateFrom && revenues.date <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         $query = DB::select(
-            "SELECT 
-                MONTH(revenues.date) - 1 as month,
-                income_categories.name as category, 
-                IFNULL(SUM(revenues.amount), 0) as amount
+            "SELECT 	
+                MONTH(transactions.created_at) - 1 as month,
+                income_categories.name as category,
+                IFNULL(SUM(transactions.amount), 0) as amount 
             FROM 
-                income_categories
+                transactions
             INNER JOIN 
-                revenues
+                income_categories
             ON 
-                revenues.income_category_id = income_categories.id 
-            WHERE
-                $whereClause
+                income_categories.id = transactions.income_category_id
+            WHERE 
+                transactions.type = 'Income'
+            $andWhereClause
             GROUP BY 
-                MONTH(revenues.date), income_categories.id
+                MONTH(transactions.created_at), income_categories.id 
         ", $bindings);
 
         $data = [];

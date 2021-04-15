@@ -39,25 +39,26 @@ trait ExpenseSummaryServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         $query = DB::select(
-            "SELECT 
-                MONTH(payments.date) - 1 as month,
+            "SELECT 	
+                MONTH(transactions.created_at) - 1 as month,
                 expense_categories.name as category,
-                IFNULL(SUM(payments.amount), 0) as amount
+                IFNULL(SUM(transactions.amount), 0) as amount 
             FROM 
-                expense_categories
+                transactions
             LEFT JOIN 
-                payments
+                expense_categories
             ON 
-                payments.expense_category_id = expense_categories.id 
-            WHERE
-                $whereClause
+                expense_categories.id = transactions.expense_category_id
+            WHERE 
+                transactions.type = 'Expense'
+            $andWhereClause
             GROUP BY 
-                MONTH(payments.date), expense_categories.id  
+                MONTH(transactions.created_at)
         ",$bindings);
 
         $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

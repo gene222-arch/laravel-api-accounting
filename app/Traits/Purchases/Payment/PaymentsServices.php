@@ -25,12 +25,12 @@ trait PaymentsServices
      * @param  string $date
      * @param  float $amount
      * @param  string|null $description
-     * @param  string $recurring
+     * @param  string|null $recurring
      * @param  string|null $reference
      * @param  string|null $file
      * @return mixed
      */
-    public function createPayment (int $account_id, int $vendor_id, int $expense_category_id, int $payment_method_id, int $currency_id, string $date, float $amount, ?string $description, string $recurring, ?string $reference, ?string $file): mixed
+    public function createPayment (int $account_id, ?int $vendor_id, int $expense_category_id, int $payment_method_id, int $currency_id, string $date, float $amount, ?string $description = null, ?string $recurring = null, ?string $reference = null, ?string $file = null): mixed
     {
         try {
             DB::transaction(function () use ($account_id, $vendor_id, $expense_category_id, $payment_method_id, $currency_id, $date, $amount, $description, $recurring, $reference, $file)

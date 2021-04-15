@@ -9,14 +9,16 @@ use Tests\TestCase;
 class MainDashboardControllerTest extends TestCase
 {
 
-    /** test */
+    /** @test */
     public function user_can_view_main_dashboard()
     {
         $response = $this->get(
-            '/api/dashboards/main',
+            '/api/dashboards/main?year=2020',
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 

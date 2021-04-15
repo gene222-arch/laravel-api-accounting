@@ -6,13 +6,15 @@ use App\Models\Account;
 use App\Models\ExpenseCategory;
 use App\Models\Payroll;
 use App\Traits\Banking\Transaction\HasTransaction;
+use App\Traits\Purchases\Payment\PaymentsServices;
 use App\Traits\Purchases\Purchase\PurchasesServices;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
 trait PayrollsServices
 {
-    use HasTransaction;
+    use HasTransaction, PaymentsServices;
     
     /**
      * Approve a payroll draft
@@ -48,6 +50,7 @@ trait PayrollsServices
                     null,
                     null 
                 );
+
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

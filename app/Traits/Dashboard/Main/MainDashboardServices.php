@@ -123,14 +123,37 @@ trait MainDashboardServices
      */
     public function generalAnalytics (string $dateFrom, string $dateTo, int $year = null): mixed
     {
-        $revenueWhereClause = $year ? 'YEAR(revenues.date) = :revenueYear' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
-        $invoiceWhereClause = $year ? 'YEAR(invoices.date) = :invoiceYear' : 'invoices.date >= :invoiceDateFrom && invoices.date <= :invoiceDateTo';
-        $paymentWhereClause = $year ? 'YEAR(payments.date) = :paymentYear' : 'payments.date >= :paymentDateFrom && payments.date <= :paymentDateTo';
-        $billWhereClause = $year ? 'YEAR(bills.date) = :billYear' : 'bills.date >= :billDateFrom && bills.date <= :billDateTo';
-        $revenueProfitWhereClause = $year ? 'YEAR(revenues.date) = :revenueProfitYear' : 'revenues.date >= :profitRevenueDateFrom && revenues.date <= :profitRevenueDateTo';
-        $paymentProfitWhereClause = $year ? 'YEAR(payments.date) = :paymentProfityear' : 'payments.date >= :profitPaymentDateFrom && payments.date <= :profitPaymentDateTo';
-        $upcomingBillWhereClause = $year ? 'YEAR(bills.date) = :upcomingBillYear' : 'bills.date >= :upcomingBillDateFrom && bills.date <= :upcomingBillDateTo';
-        $upcomingInvoiceWhereClause = $year ? 'YEAR(invoices.date) = :upcomingInvoiceYear' : 'invoices.date >= :upcomingInvoiceDateFrom && invoices.date <= :upcomingInvoiceDateTo';
+        $andRevenueWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :revenueYear' 
+            : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
+
+        $invoiceWhereClause = $year 
+            ? 'YEAR(invoices.date) = :invoiceYear' 
+            : 'invoices.date >= :invoiceDateFrom && invoices.date <= :invoiceDateTo';
+        
+        $andPaymentWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :paymentYear' 
+            : 'AND transactions.created_at >= :paymentDateFrom && transactions.created_at <= :paymentDateTo';
+
+        $billWhereClause = $year 
+            ? 'YEAR(bills.date) = :billYear' 
+            : 'bills.date >= :billDateFrom && bills.date <= :billDateTo';
+
+        $revenueProfitWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :revenueProfitYear' 
+            : 'AND transactions.created_at >= :profitRevenueDateFrom && transactions.created_at <= :profitRevenueDateTo';
+
+        $paymentProfitWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :paymentProfityear' 
+            : 'AND transactions.created_at >= :profitPaymentDateFrom && transactions.created_at <= :profitPaymentDateTo';
+
+        $upcomingBillWhereClause = $year 
+            ? 'YEAR(bills.date) = :upcomingBillYear' 
+            : 'bills.date >= :upcomingBillDateFrom && bills.date <= :upcomingBillDateTo';
+
+        $upcomingInvoiceWhereClause = $year 
+            ? 'YEAR(invoices.date) = :upcomingInvoiceYear' 
+            : 'invoices.date >= :upcomingInvoiceDateFrom && invoices.date <= :upcomingInvoiceDateTo';
 
         $bindings = $year 
             ? [
@@ -165,11 +188,12 @@ trait MainDashboardServices
             "SELECT 
             (
                 SELECT 
-                    IFNULL(SUM(revenues.amount), 0) 
+                    SUM(transactions.amount)
                 FROM 
-                    revenues
-                WHERE
-                    $revenueWhereClause
+                    transactions
+                WHERE 
+                    transactions.`type` = 'Income'
+                $andRevenueWhereClause
             ) as income,
             (
                 SELECT	
@@ -184,12 +208,13 @@ trait MainDashboardServices
                     $invoiceWhereClause
             ) as receivables,
             (
-                SELECT
-                    IFNULL(SUM(payments.amount), 0)
+                SELECT 
+                    SUM(transactions.amount)
                 FROM 
-                    payments
-                WHERE
-                    $paymentWhereClause
+                    transactions
+                WHERE 
+                    transactions.`type` = 'Expense'
+                $andPaymentWhereClause
             ) as expense,
             (
                 SELECT	
@@ -206,19 +231,20 @@ trait MainDashboardServices
             (
                 (
                     SELECT 
-                        IFNULL(SUM(revenues.amount), 0) 
+                        SUM(transactions.amount)
                     FROM 
-                        revenues
-                    WHERE
-                        $revenueProfitWhereClause
-                    ) - (
-                
-                    SELECT
-                        IFNULL(SUM(payments.amount), 0)
+                        transactions
+                    WHERE 
+                        transactions.`type` = 'Income'
+                    $revenueProfitWhereClause
+                ) - (
+                    SELECT 
+                        SUM(transactions.amount)
                     FROM 
-                        payments
-                    WHERE
-                        $paymentProfitWhereClause
+                        transactions
+                    WHERE 
+                        transactions.`type` = 'Expense'
+                    $paymentProfitWhereClause
                 )
             ) as profit,
             (
@@ -259,27 +285,32 @@ trait MainDashboardServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(revenues.date) = :year' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         return DB::select(
-            "SELECT 
-                DATE_FORMAT(revenues.date, '%d %M %Y') paid_at,
-                income_categories.name as category,
-                revenues.amount
-            FROM 
-                revenues
-            INNER JOIN 
-                income_categories
-            ON 
-                income_categories.id = revenues.income_category_id
-            WHERE
-                $whereClause
-            ORDER BY 
-                revenues.created_at
-            DESC"
-        , $bindings);
+            "SELECT 	
+                    DATE_FORMAT(transactions.created_at, '%d %M %Y') as paid_at,
+                    income_categories.name as category,
+                    IFNULL(SUM(transactions.amount), 0) as amount 
+                FROM 
+                    transactions
+                INNER JOIN 
+                    income_categories
+                ON 
+                    income_categories.id = transactions.expense_category_id
+                WHERE 
+                    transactions.type = 'Income'
+                $andWhereClause
+                GROUP BY 
+                    transactions.id 
+                ORDER BY 
+                    transactions.created_at
+                DESC 
+                LIMIT 
+                    5
+            ",$bindings);
     }
     
     /**
@@ -291,31 +322,36 @@ trait MainDashboardServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         return DB::select(
-            "SELECT 
-                    DATE_FORMAT(payments.date, '%d %M %Y') as paid_at,
+            "SELECT 	
+                    DATE_FORMAT(transactions.created_at, '%d %M %Y') as paid_at,
                     expense_categories.name as category,
-                    payments.amount
+                    IFNULL(SUM(transactions.amount), 0) as amount 
                 FROM 
-                    payments
+                    transactions
                 INNER JOIN 
                     expense_categories
                 ON 
-                    expense_categories.id = payments.expense_category_id
-                WHERE
-                    $whereClause
+                    expense_categories.id = transactions.expense_category_id
+                WHERE 
+                    transactions.type = 'Expense'
+                $andWhereClause
+                GROUP BY 
+                    transactions.id 
                 ORDER BY 
-                    payments.created_at
-                DESC
+                    transactions.created_at
+                DESC 
+                LIMIT 
+                    5
             ",$bindings);
     }
     
     /**
-     * Sum of the monthly expenses
+     * Monthly expenses
      *
      * @param  string $dateFrom
      * @param  string $dateTo
@@ -324,17 +360,31 @@ trait MainDashboardServices
      */
     public function monthlyExpense (string $dateFrom, string $dateTo, int $year = null): array 
     {
-        $monthlyPayment = $this->monthlyPayment($dateFrom, $dateTo, $year);
-        $monthlyPayroll = $this->monthlyPayroll($dateFrom, $dateTo, $year);
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :year' 
+            : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT 	
+                MONTH(transactions.created_at) - 1 as month,
+                IFNULL(SUM(transactions.amount), 0) as amount 
+            FROM 
+                transactions
+            WHERE 
+                transactions.type = 'Expense'
+            $andWhereClause
+            GROUP BY 
+                MONTH(transactions.created_at)
+        ",$bindings);
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($monthlyPayment as $paymentMonth => $paymentAmount) 
-        {
-            foreach ($monthlyPayroll as $payrollMonth => $payrollAmount) 
-            {
-                if ($paymentMonth === $payrollMonth) $data[$paymentMonth] = $paymentAmount + $payrollAmount;
-            }
+        foreach ($query as $expense) {
+            $data[$expense->month] = $expense->amount;
         }
 
         return $data;
@@ -349,63 +399,30 @@ trait MainDashboardServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(revenues.date) = :year' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
+        $andWhereClause = $year 
+            ? 'AND YEAR(transactions.created_at) = :year' 
+            : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         $query = DB::select(
-            "SELECT 
-                MONTH(revenues.date) - 1 as month,
-                IFNULL(SUM(revenues.amount), 0) as income 
+        "SELECT 	
+                MONTH(transactions.created_at) - 1 as month,
+                IFNULL(SUM(transactions.amount), 0) as amount 
             FROM 
-                revenues
-            WHERE
-                $whereClause
+                transactions
+            WHERE 
+                transactions.type = 'Income'
+            $andWhereClause
             GROUP BY 
-                MONTH(revenues.date)"
-            ,$bindings);
+                MONTH(transactions.created_at)
+        ",$bindings);
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         foreach ($query as $income) 
         {
-            $data[$income->month] = $income->income;
-        }
-
-        return $data;
-    }
-    
-    /**
-     * Get the list of monthly expense
-     *
-     * @return array
-     */
-    public function monthlyPayment (string $dateFrom, string $dateTo, int $year = null): array 
-    {
-        setSqlModeEmpty();
-
-        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
-
-        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
-
-        $query = DB::select(
-            "SELECT 
-                MONTH(payments.date) - 1 as month,
-                IFNULL(SUM(payments.amount), 0) as expense 
-            FROM 
-                payments
-            WHERE
-                $whereClause
-            GROUP BY 
-                MONTH(payments.date)
-            ",
-            $bindings);
-
-        $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-        foreach ($query as $expense) 
-        {
-            $data[$expense->month] = $expense->expense;
+            $data[$income->month] = $income->amount;
         }
 
         return $data;
