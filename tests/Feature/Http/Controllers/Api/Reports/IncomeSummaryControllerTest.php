@@ -9,7 +9,7 @@ use Tests\TestCase;
 class IncomeSummaryControllerTest extends TestCase
 {
 
-    /** @test */
+    /** test */
     public function user_can_view_income_summary()
     {
         $response = $this->get(
@@ -17,8 +17,6 @@ class IncomeSummaryControllerTest extends TestCase
             $this->apiHeader()
         );
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
