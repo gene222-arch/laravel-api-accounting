@@ -59,6 +59,7 @@ use App\Http\Controllers\Api\ImportsController\Sales\ImportInvoicesController;
 use App\Http\Controllers\Api\ImportsController\Sales\ImportRevenuesController;
 use App\Http\Controllers\Api\Reports\ExpenseSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeSummaryController;
+use App\Http\Controllers\Api\Reports\IncomeVsExpenseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -446,6 +447,7 @@ Route::prefix('reports')->group(function ()
 {   
     Route::get('/expense-summary', ExpenseSummaryController::class);
     Route::get('/income-summary', IncomeSummaryController::class);
+    Route::get('/income-vs-expense', IncomeVsExpenseController::class);
 });
 
 
