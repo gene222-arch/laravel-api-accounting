@@ -35,7 +35,7 @@ trait IncomeSummaryServices
     {
         setSqlModeEmpty();
 
-        $andWhereClause = $year ? 'AND YEAR(revenues.date) = :year' : 'AND revenues.date >= :dateFrom && revenues.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
