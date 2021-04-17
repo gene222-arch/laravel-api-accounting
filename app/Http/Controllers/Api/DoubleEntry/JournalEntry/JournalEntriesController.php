@@ -47,7 +47,7 @@ class JournalEntriesController extends Controller
     {
         $result = $this->journalEntry->createJournalEntry(
             $request->except('items'),
-            $request->items
+            $request->details
         );
 
         return $result !== true 
@@ -82,7 +82,7 @@ class JournalEntriesController extends Controller
         $result = $this->journalEntry->updateJournalEntry(
             $journalEntry,
             $request->except('items'),
-            $request->items
+            $request->details
         );
 
         return $result !== true 

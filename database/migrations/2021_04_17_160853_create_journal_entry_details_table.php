@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJournalEntriesTable extends Migration
+class CreateJournalEntryDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,6 @@ class CreateJournalEntriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('journal_entries', function (Blueprint $table) {
-            $table->id();
-            $table->timestamp('date')->default(now());
-            $table->string('reference')->nullable();
-            $table->text('description')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('journal_entry_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('journal_entry_id');
@@ -31,7 +23,7 @@ class CreateJournalEntriesTable extends Migration
             $table->unique([
                 'journal_entry_id',
                 'chart_of_account_id'
-            ]); 
+            ], 'unique_journal_entry_chart_of_account'); 
 
             $table->foreign('journal_entry_id')
                 ->references('id')
@@ -53,6 +45,5 @@ class CreateJournalEntriesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('journal_entry_details');
-        Schema::dropIfExists('journal_entries');
     }
 }

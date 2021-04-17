@@ -17,9 +17,21 @@ class UpdateStoreRequest extends BaseRequest
             'date' => ['required', 'string'],
             'reference' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'items.*' => ['required', 'array', 'min:1'],
-            'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id']
+            'details.*' => ['required', 'array', 'min:1'],
+            'details.*.chart_of_account_id' => ['required', 'integer', 'exists:chart_of_accounts,id']
         ];
+    }
+    
+    /**
+     * Rename attributes
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'details.*.chart_of_account_id' => 'chart of account'
+        ];  
     }
 
     /**
@@ -30,7 +42,7 @@ class UpdateStoreRequest extends BaseRequest
     public function messages()
     {
         return [
-            'items.*.item_id.exists' => 'The selected item does not exists'
+            'details.*.chart_of_account_id' => 'The selected item does not exists'
         ];
     }
 }

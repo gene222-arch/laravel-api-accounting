@@ -39,9 +39,8 @@ class JournalEntriesControllerTest extends TestCase
         $data = [
             'date' => '2021-05-05',
             'description' => 'First journal entry',
-            'items' => [
+            'details' => [
                 [
-                    'item_id' => 1,
                     'chart_of_account_id' => 1,
                     'debit' => 10.00,
                     'credit' => 0.00
@@ -61,15 +60,24 @@ class JournalEntriesControllerTest extends TestCase
     /** test */
     public function user_can_update_journal_entry()
     {
-        $id = 3;
+        $id = 2;
 
         $data = [
             'date' => '2021-05-05',
-            'description' => 'Third journal entry',
-            'items' => [
+            'description' => 'First journal entry',
+            'details' => [
                 [
-                    'item_id' => 2,
-                    'chart_of_account_id' => 2,
+                    'chart_of_account_id' => 4,
+                    'debit' => 10.00,
+                    'credit' => 0.00
+                ],
+                [
+                    'chart_of_account_id' => 5,
+                    'debit' => 10.00,
+                    'credit' => 0.00
+                ],
+                [
+                    'chart_of_account_id' => 6,
                     'debit' => 10.00,
                     'credit' => 0.00
                 ]
