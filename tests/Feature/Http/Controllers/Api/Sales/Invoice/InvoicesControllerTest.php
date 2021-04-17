@@ -49,6 +49,7 @@ class InvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
+                    'tax_id' => null,
                     'item' => 'Dawk',
                     'price' => 5.00,
                     'quantity' => 1,
@@ -157,6 +158,7 @@ class InvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
+                    'tax_id' => null,
                     'item' => 'Item two',
                     'price' => 5.00,
                     'quantity' => 5,

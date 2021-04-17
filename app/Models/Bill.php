@@ -72,9 +72,8 @@ class Bill extends Model
     {
         return $this->belongsToMany(Item::class, 'bill_details')
             ->withPivot([
-                'bill_id',
-                'item_id',
                 'discount_id',
+                'tax_id',
                 'item',
                 'price',
                 'quantity',

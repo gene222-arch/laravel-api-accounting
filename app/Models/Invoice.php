@@ -73,8 +73,8 @@ class Invoice extends Model
     {
         return $this->belongsToMany(Item::class, 'invoice_details')
             ->withPivot([
-                'item_id',
                 'discount_id',
+                'tax_id',
                 'item',
                 'price',
                 'quantity',

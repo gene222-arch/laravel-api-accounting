@@ -25,6 +25,7 @@ class UpdateRequest extends InvoiceBaseRequest
             'recurring' => ['required', 'string', 'in:No,Daily,Weekly,Monthly,Yearly'],
             'items.*' => ['required', 'array', 'min:1'],
             'items.*.item_id' => ['required', 'integer', 'distinct', 'exists:items,id'],
+            'items.*.tax_id' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
             'payment_details.total_discounts' => ['required', 'numeric', 'min:0'],
             'payment_details.total_taxes' => ['required', 'numeric', 'min:0'],
             'payment_details.sub_total' => ['required', 'numeric', 'min:0'],

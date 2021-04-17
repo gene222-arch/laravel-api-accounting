@@ -49,6 +49,7 @@ class BillsControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
+                    'tax_id' => null,
                     'item' => 'Guitar',
                     'price' => 5.00,
                     'quantity' => 1,
@@ -159,6 +160,7 @@ class BillsControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
+                    'tax_id' => null,
                     'item' => 'Guitar',
                     'price' => 5.00,
                     'quantity' => 1,

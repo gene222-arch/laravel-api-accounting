@@ -47,6 +47,7 @@ class CreateInvoicesTable extends Migration
             $table->foreignId('invoice_id');
             $table->foreignId('item_id');
             $table->foreignId('discount_id')->nullable();
+            $table->foreignId('tax_id')->nullable();
             $table->string('item');
             $table->unsignedDecimal('price', 10, 2);
             $table->unsignedInteger('quantity');
@@ -73,6 +74,11 @@ class CreateInvoicesTable extends Migration
             $table->foreign('discount_id')
                 ->references('id')
                 ->on('discounts')
+                ->nullOnDelete();
+
+            $table->foreign('tax_id')
+                ->references('id')
+                ->on('taxes')
                 ->nullOnDelete();
         });
 
