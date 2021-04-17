@@ -41,8 +41,9 @@ class CreateItemsTable extends Migration
 
         Schema::create('item_tax', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->nullable();
-            $table->foreignId('tax_id')->nullable();
+            $table->foreignId('item_id');
+            $table->foreignId('tax_id');
+            $table->unsignedDecimal('amount')->default(0);
             $table->timestamps();
 
             $table->unique([
@@ -53,13 +54,12 @@ class CreateItemsTable extends Migration
             $table->foreign('item_id')
                 ->references('id')
                 ->on('items')
-                ->nullOnDelete();
+                ->cascadeOnDelete();
 
-                
             $table->foreign('tax_id')
                 ->references('id')
                 ->on('taxes')
-                ->nullOnDelete();
+                ->cascadeOnDelete();
         });
     }
 
