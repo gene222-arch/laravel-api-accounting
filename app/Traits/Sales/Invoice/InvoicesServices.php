@@ -43,6 +43,7 @@ trait InvoicesServices
                 $this->createManyTaxSummary(
                     get_class($invoice),
                     $invoice->id,
+                    'Sales',
                     $items
                 );
 
@@ -84,6 +85,7 @@ trait InvoicesServices
                 $this->updateManyTaxSummary(
                     get_class($invoice),
                     $invoice->id,
+                    'Sales',
                     $items
                 );
 

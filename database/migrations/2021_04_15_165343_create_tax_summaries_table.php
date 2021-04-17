@@ -17,6 +17,7 @@ class CreateTaxSummariesTable extends Migration
             $table->id();
             $table->string('model_type');
             $table->foreignId('model_id');
+            $table->string('type');
             $table->foreignId('tax_id');
             $table->unsignedDecimal('amount', 10, 2)->default(0);
 

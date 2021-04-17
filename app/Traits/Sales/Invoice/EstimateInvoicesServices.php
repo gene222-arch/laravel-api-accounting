@@ -36,6 +36,7 @@ trait EstimateInvoicesServices
                 $this->createManyTaxSummary(
                     get_class($estimateInvoice),
                     $estimateInvoice->id,
+                    'Sales',
                     $items
                 );
 
@@ -169,6 +170,7 @@ trait EstimateInvoicesServices
                 $this->updateManyTaxSummary(
                     get_class($estimateInvoice),
                     $estimateInvoice->id,
+                    'Sales',
                     $items
                 );
 

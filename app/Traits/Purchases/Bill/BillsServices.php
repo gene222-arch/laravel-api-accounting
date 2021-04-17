@@ -44,6 +44,7 @@ trait BillsServices
                 $this->createManyTaxSummary(
                     get_class($bill),
                     $bill->id,
+                    'Purchase',
                     $items
                 );
 
@@ -256,6 +257,7 @@ trait BillsServices
                 $this->updateManyTaxSummary(
                     get_class($bill),
                     $bill->id,
+                    'Purchase',
                     $items
                 );
 
