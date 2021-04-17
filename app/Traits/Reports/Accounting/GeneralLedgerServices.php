@@ -32,7 +32,7 @@ trait GeneralLedgerServices
 
         $query = DB::select(
             "SELECT 	
-                REPLACE(LOWER(CONCAT(chart_of_accounts.name, ' ', chart_of_accounts.type)), ' ', '_') as name,
+                REPLACE(LOWER(CONCAT(chart_of_accounts.name, ' ', chart_of_account_types.name)), ' ', '_') as name,
                 DATE_FORMAT(journal_entries.date, '%d %M %Y') as date,
                 journal_entries.description as description,
                 journal_entry_details.debit as debit,
@@ -47,6 +47,10 @@ trait GeneralLedgerServices
                 chart_of_accounts 
             ON 
                 chart_of_accounts.id = journal_entry_details.chart_of_account_id 
+            INNER JOIN  
+                chart_of_account_types
+            ON 
+                chart_of_account_types.id = chart_of_accounts.id
             WHERE 
                 $whereClause
             $andClause

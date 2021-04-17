@@ -39,7 +39,7 @@ class ChartOfAccountsControllerTest extends TestCase
         $data = [
             'name' => 'Accounts Payable',
             'code' => '0003',
-            'type' => 'Current Payable',
+            'chart_of_account_type_id' => 1,
             'enabled' => true
         ];
 
@@ -61,7 +61,7 @@ class ChartOfAccountsControllerTest extends TestCase
             'id' => 2,
             'name' => 'Accounts Payable',
             'code' => '0001',
-            'type' => 'Current Payable',
+            'chart_of_account_type_id' => 2,
             'enabled' => true
         ];
 
