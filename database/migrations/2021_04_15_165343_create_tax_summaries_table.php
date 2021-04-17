@@ -20,6 +20,7 @@ class CreateTaxSummariesTable extends Migration
             $table->string('type');
             $table->foreignId('tax_id');
             $table->unsignedDecimal('amount', 10, 2)->default(0);
+            $table->timestamps();
 
             $table->foreign('tax_id')
                 ->references('id')

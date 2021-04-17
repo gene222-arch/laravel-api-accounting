@@ -26,8 +26,6 @@ class ExpenseSummaryController extends Controller
      */
     public function __invoke(Request $request)
     {   
-        setSqlModeEmpty();
-
         $dateFrom = request()->get('dateFrom', Company::first()->created_at);
         $dateTo = request()->get('dateTo', Carbon::now());
         $year = request()->get('year', date('Y'));

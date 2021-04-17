@@ -26,8 +26,6 @@ class ProfitAndLossController extends Controller
      */
     public function __invoke()
     {   
-        setSqlModeEmpty();
-
         $dateFrom = request()->get('dateFrom', Company::first()->created_at);
         $dateTo = request()->get('dateTo', Carbon::now());
         $year = request()->get('year', date('Y'));

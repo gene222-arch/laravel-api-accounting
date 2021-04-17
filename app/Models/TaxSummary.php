@@ -17,8 +17,6 @@ class TaxSummary extends Model
         'tax_id',
         'amount'
     ];
-
-    public $timestamps = false;
         
     /**
      * Define an inverse one-to-one or many relationship with Tax class

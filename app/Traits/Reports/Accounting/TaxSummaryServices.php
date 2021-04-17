@@ -7,6 +7,62 @@ use Illuminate\Support\Facades\DB;
 
 trait TaxSummaryServices
 {
+    
+    /**
+     * Get the list of tax summary per tax category
+     *
+     * @return array
+     */
+    public function taxSummary (string $dateFrom, string $dateTo, int $year = null): array
+    {
+        setSqlModeEmpty();
+
+        $whereClause = $year 
+            ? 'YEAR(tax_summaries.created_at) = :year' 
+            : 'tax_summaries.created_at >= :dateFrom && tax_summaries.created_at <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT 	
+                taxes.name as name,
+                tax_summaries.type as type,
+                MONTH(tax_summaries.created_at) - 1 as month,
+                SUM(tax_summaries.amount) as amount 
+            FROM 
+                tax_summaries
+            INNER JOIN	
+                taxes
+            ON 
+                taxes.id = tax_summaries.tax_id
+            WHERE 
+                $whereClause
+            GROUP BY 
+                MONTH(tax_summaries.created_at), tax_summaries.tax_id
+            ORDER BY 
+	            tax_summaries.type 
+        ", $bindings);
+        
+        $data = [];
+        $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+        foreach ($query as $taxSummary) 
+        {
+            if(!isset($data[$taxSummary->name][$taxSummary->type])) {
+                $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            }
+
+            $months = [
+                ...$months,
+                $taxSummary->month => $taxSummary->amount
+            ];
+
+            $data[$taxSummary->name][$taxSummary->type] = $months;
+        }
+
+        return $data;
+    }
+
         
     /**
      * createTaxSummary
@@ -49,7 +105,8 @@ trait TaxSummaryServices
                     'model_id' => $model_id,
                     'type' => $type,
                     'tax_id' => $taxSummary['tax_id'],
-                    'amount' => $taxSummary['tax']
+                    'amount' => $taxSummary['tax'],
+                    'created_at' => now()
                 ];
             }
         }, $taxSummaryDetails);
