@@ -15,9 +15,9 @@ class CreateChartOfAccountsTable extends Migration
     {
         Schema::create('chart_of_accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('chart_of_account_type_id');
             $table->string('name');
             $table->string('code');
-            $table->string('type');
             $table->text('description')->nullable();
             $table->boolean('enabled')->default(false);
             $table->timestamps();
@@ -26,6 +26,11 @@ class CreateChartOfAccountsTable extends Migration
                 'name',
                 'code'
             ]);
+
+            $table->foreign('chart_of_account_type_id')
+                ->references('id')
+                ->on('chart_of_account_types')
+                ->cascadeOnDelete();
         });
     }
 
