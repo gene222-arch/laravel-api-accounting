@@ -39,6 +39,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsC
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
 use App\Http\Controllers\Api\Dashboard\Main\MainDashboardController;
 use App\Http\Controllers\Api\Dashboard\Payroll\PayrollDashboardController;
+use App\Http\Controllers\Api\DoubleEntry\ChartOfAccount\ChartOfAccountTypesController;
 use App\Http\Controllers\Api\Exports\Banking\BankAccountTransferExportsController;
 use App\Http\Controllers\Api\Exports\Banking\TransactionExportsController;
 use App\Http\Controllers\Api\Exports\Items\ItemExportsController;
@@ -207,6 +208,18 @@ Route::prefix('double-entry')->group(function ()
         Route::put('/{chartOfAccount}', [ChartOfAccountsController::class, 'update']);
         Route::delete('/', [ChartOfAccountsController::class, 'destroy']);
     });
+
+    /**
+      * Chart of types
+      */
+      Route::prefix('chart-of-account-types')->group(function () 
+      {
+          Route::get('/', [ChartOfAccountTypesController::class, 'index']);
+          Route::get('/{accountType}', [ChartOfAccountTypesController::class, 'show']);
+          Route::post('/', [ChartOfAccountTypesController::class, 'store']);
+          Route::put('/{accountType}', [ChartOfAccountTypesController::class, 'update']);
+          Route::delete('/', [ChartOfAccountTypesController::class, 'destroy']);
+      });
 
     /**
       * Journal Entries
