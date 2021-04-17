@@ -27,8 +27,17 @@ class JournalEntriesController extends Controller
      */
     public function index()
     {
+        setSqlModeEmpty();
+
         $result = $this->journalEntry
-            ->with('items')
+            ->selectRaw('
+                DATE_FORMAT(journal_entries.date, "%d %M %Y") as date,
+                SUM(journal_entry_details.debit) + SUM(journal_entry_details.credit) as amount,
+                journal_entries.description,
+                journal_entries.reference
+            ')
+            ->join('journal_entry_details', 'journal_entry_details.journal_entry_id', '=', 'journal_entries.id')
+            ->groupBy('journal_entries.id')
             ->latest()
             ->get();
 
@@ -46,7 +55,7 @@ class JournalEntriesController extends Controller
     public function store(UpdateStoreRequest $request)
     {
         $result = $this->journalEntry->createJournalEntry(
-            $request->except('items'),
+            $request->except('details'),
             $request->details
         );
 
@@ -63,7 +72,7 @@ class JournalEntriesController extends Controller
      */
     public function show(JournalEntry $journalEntry)
     {
-        $journalEntry = $journalEntry->with('items')->first();
+        $journalEntry = $journalEntry->with('details')->first();
 
         return !$journalEntry
             ? $this->noContent()
@@ -81,7 +90,7 @@ class JournalEntriesController extends Controller
     {
         $result = $this->journalEntry->updateJournalEntry(
             $journalEntry,
-            $request->except('items'),
+            $request->except('details'),
             $request->details
         );
 

@@ -37,6 +37,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsContr
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
+use App\Http\Controllers\Api\Dashboard\DoubleEntry\DoubleEntryDashboardController;
 use App\Http\Controllers\Api\Dashboard\Main\MainDashboardController;
 use App\Http\Controllers\Api\Dashboard\Payroll\PayrollDashboardController;
 use App\Http\Controllers\Api\DoubleEntry\ChartOfAccount\ChartOfAccountTypesController;
@@ -185,6 +186,8 @@ Route::prefix('banking')->group(function ()
  */
 Route::prefix('dashboards')->group(function () 
 {
+    Route::get('/double-entry', DoubleEntryDashboardController::class);
+    
     Route::get('/main', MainDashboardController::class);
     Route::get('/payroll', PayrollDashboardController::class);
 });
