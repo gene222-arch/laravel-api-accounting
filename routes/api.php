@@ -62,6 +62,7 @@ use App\Http\Controllers\Api\Reports\Accounting\BalanceSheetController;
 use App\Http\Controllers\Api\Reports\Accounting\GeneralLedgerController;
 use App\Http\Controllers\Api\Reports\Accounting\ProfitAndLossController;
 use App\Http\Controllers\Api\Reports\Accounting\TaxSummaryController;
+use App\Http\Controllers\Api\Reports\Accounting\TrialBalanceController;
 use App\Http\Controllers\Api\Reports\ExpenseSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeVsExpenseController;
@@ -478,6 +479,7 @@ Route::prefix('reports')->group(function ()
         Route::get('/general-ledger', GeneralLedgerController::class);
         Route::get('/profit-and-loss', ProfitAndLossController::class);
         Route::get('/tax-summary', TaxSummaryController::class);
+        Route::get('/trial-balance', TrialBalanceController::class);
         
     });
 });
