@@ -57,6 +57,7 @@ use App\Http\Controllers\Api\ImportsController\Purchases\ImportVendorsController
 use App\Http\Controllers\Api\ImportsController\Sales\ImportCustomersController;
 use App\Http\Controllers\Api\ImportsController\Sales\ImportInvoicesController;
 use App\Http\Controllers\Api\ImportsController\Sales\ImportRevenuesController;
+use App\Http\Controllers\Api\Reports\Accounting\GeneralLedgerController;
 use App\Http\Controllers\Api\Reports\Accounting\ProfitAndLossController;
 use App\Http\Controllers\Api\Reports\Accounting\TaxSummaryController;
 use App\Http\Controllers\Api\Reports\ExpenseSummaryController;
@@ -459,6 +460,7 @@ Route::prefix('reports')->group(function ()
      */
     Route::prefix('accounting')->group(function () 
     {
+        Route::get('/general-ledger', GeneralLedgerController::class);
         Route::get('/profit-and-loss', ProfitAndLossController::class);
         Route::get('/tax-summary', TaxSummaryController::class);
         

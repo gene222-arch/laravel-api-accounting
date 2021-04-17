@@ -25,8 +25,8 @@ trait TaxSummaryServices
 
         $query = DB::select(
             "SELECT 	
-                taxes.name as name,
-                tax_summaries.type as type,
+                REPLACE(LOWER(taxes.name), ' ', '_') as name,
+                LOWER( tax_summaries.type) as type,
                 MONTH(tax_summaries.created_at) - 1 as month,
                 SUM(tax_summaries.amount) as amount 
             FROM 
@@ -40,7 +40,7 @@ trait TaxSummaryServices
             GROUP BY 
                 MONTH(tax_summaries.created_at), tax_summaries.tax_id
             ORDER BY 
-	            tax_summaries.type 
+                tax_summaries.type 
         ", $bindings);
         
         $data = [];
