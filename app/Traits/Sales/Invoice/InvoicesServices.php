@@ -6,18 +6,17 @@ use Carbon\Carbon;
 use App\Models\Stock;
 use App\Models\Account;
 use App\Models\Invoice;
-use App\Models\Revenue;
 use App\Models\Customer;
 use App\Models\IncomeCategory;
 use Illuminate\Support\Facades\DB;
 use App\Jobs\QueueInvoiceNotification;
-use Illuminate\Database\Eloquent\Collection;
 use App\Traits\Banking\Transaction\HasTransaction;
+use App\Traits\Reports\Accounting\TaxSummaryServices;
 use App\Traits\Sales\Revenue\RevenuesServices;
 
 trait InvoicesServices
 {    
-    use HasTransaction, RevenuesServices;
+    use HasTransaction, RevenuesServices, TaxSummaryServices;
     
     /**
      * Create a new record of invoice
@@ -40,6 +39,12 @@ trait InvoicesServices
                 $invoice->paymentDetail()->create($payment_details);
 
                 (new Stock())->stockOut($items);
+
+                $this->createManyTaxSummary(
+                    get_class($invoice),
+                    $invoice->id,
+                    $items
+                );
 
                 $invoice
                     ->histories()
@@ -75,6 +80,12 @@ trait InvoicesServices
                 $invoice->items()->sync($items);
 
                 $invoice->paymentDetail()->update($payment_details);
+
+                $this->updateManyTaxSummary(
+                    get_class($invoice),
+                    $invoice->id,
+                    $items
+                );
 
                 $invoice
                     ->histories()
@@ -319,18 +330,56 @@ trait InvoicesServices
      * Update an invoice status as cancelled
      *
      * @param  Invoice $invoice
-     * @return void
+     * @return mixed
      */
-    public function cancelInvoice (Invoice $invoice): void
+    public function cancelInvoice (Invoice $invoice): mixed
     {
-        $status = $this->updateStatus($invoice, 0, 'Cancelled');
+        try {
+            DB::transaction(function () use ($invoice)
+            {
+                $status = $this->updateStatus($invoice, 0, 'Cancelled');
 
-        $invoice
-            ->histories()
-            ->create([
-                'status' => $status,
-                'description' => 'Invoice marked as cancelled!'
-            ]);
+                $this->deleteManyTaxSummaries(
+                    get_class($invoice),
+                    $invoice->id
+                );
+
+                $invoice
+                    ->histories()
+                    ->create([
+                        'status' => $status,
+                        'description' => 'Invoice marked as cancelled!'
+                    ]);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
     }
-
+    
+    /**
+     * Delete one or multiple records of invoices
+     *
+     * @param  array $ids
+     * @return mixed
+     */
+    public function deleteManyInvoices (array $ids): mixed
+    {
+        try {
+            DB::transaction(function () use ($ids)
+            {
+                Invoice::whereIn('id', $ids)->delete();
+                
+                $this->deleteManyTaxSummaries(
+                    'App\Models\Invoice',
+                    $ids
+                );
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
+    }
 }

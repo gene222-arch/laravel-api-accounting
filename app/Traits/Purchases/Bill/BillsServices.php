@@ -11,12 +11,13 @@ use App\Models\Account;
 use App\Models\ExpenseCategory;
 use App\Models\Payment;
 use App\Traits\Banking\Transaction\HasTransaction;
+use App\Traits\Reports\Accounting\TaxSummaryServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 
 trait BillsServices
 {
-    use HasTransaction;
+    use HasTransaction, TaxSummaryServices;
 
     /**
      * Create a new record of bill
@@ -39,6 +40,12 @@ trait BillsServices
                 $bill->paymentDetail()->create($payment_details);
 
                 (new Stock())->incomingStock($items);
+
+                $this->createManyTaxSummary(
+                    get_class($bill),
+                    $bill->id,
+                    $items
+                );
 
                 $bill
                     ->histories()
@@ -246,6 +253,12 @@ trait BillsServices
 
                 $bill->paymentDetail()->update($payment_details);
 
+                $this->updateManyTaxSummary(
+                    get_class($bill),
+                    $bill->id,
+                    $items
+                );
+
                 $bill
                     ->histories()
                     ->create([
@@ -314,17 +327,56 @@ trait BillsServices
      * Update a bill status as cancelled
      *
      * @param  Bill $bill
-     * @return void
+     * @return mixed
      */
-    public function cancelBill (Bill $bill): void
+    public function cancelBill (Bill $bill): mixed
     {
-        $status = $this->updateStatus($bill, 0, 'Cancelled');
+        try {
+            DB::transaction(function () use ($bill)
+            {
+                $status = $this->updateStatus($bill, 0, 'Cancelled');
 
-        $bill
-            ->histories()
-            ->create([
-                'status' => $status,
-                'description' => "Bill marked as cancelled!"
-            ]);
+                $this->deleteManyTaxSummaries(
+                    get_class($bill),
+                    $bill->id
+                );
+
+                $bill
+                    ->histories()
+                    ->create([
+                        'status' => $status,
+                        'description' => "Bill marked as cancelled!"
+                    ]);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
+    }
+
+    /**
+     * Delete one or multiple records of bills
+     *
+     * @param  array $ids
+     * @return mixed
+     */
+    public function deleteManyBills(array $ids): mixed
+    {
+        try {
+            DB::transaction(function () use ($ids)
+            {
+                Bill::whereIn('id', $ids)->delete();
+                
+                $this->deleteManyTaxSummaries(
+                    'App\Models\Bill',
+                    $ids
+                );
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
     }
 }

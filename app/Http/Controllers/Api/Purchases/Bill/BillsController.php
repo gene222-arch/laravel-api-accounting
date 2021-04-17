@@ -198,7 +198,9 @@ class BillsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->bill->whereIn('id', $request->ids)->delete();;
+        $this->bill->deleteManyBills(
+            $request->ids
+        );
 
         return $this->success(null, 'Bill or bills deleted successfully.');
     }

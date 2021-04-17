@@ -5,11 +5,13 @@ namespace App\Traits\Sales\Invoice;
 use App\Jobs\QueueEstimateInvoiceNotification;
 use App\Models\Customer;
 use App\Models\EstimateInvoice;
+use App\Traits\Reports\Accounting\TaxSummaryServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
 
 trait EstimateInvoicesServices
 {
+    use TaxSummaryServices;
 
     /**
      * Create a new record of estimated invoice
@@ -30,6 +32,12 @@ trait EstimateInvoicesServices
                 $estimateInvoice->items()->attach($items);
 
                 $estimateInvoice->paymentDetail()->create($payment_details);
+
+                $this->createManyTaxSummary(
+                    get_class($estimateInvoice),
+                    $estimateInvoice->id,
+                    $items
+                );
 
                 $estimateInvoice->histories()->create([
                     'description' => "${estimate_number} added!"
@@ -158,6 +166,12 @@ trait EstimateInvoicesServices
 
                 $estimateInvoice->paymentDetail()->update($payment_details);
 
+                $this->updateManyTaxSummary(
+                    get_class($estimateInvoice),
+                    $estimateInvoice->id,
+                    $items
+                );
+
                 $estimateInvoice->histories()->create([
                     'status' => DB::raw('status'),
                     'description' => "${estimate_number} updated!"
@@ -170,4 +184,29 @@ trait EstimateInvoicesServices
         return true;
     }
 
+    
+    /**
+     * Delete one or multiple records of estimate invoices
+     *
+     * @param  array $ids
+     * @return mixed
+     */
+    public function deleteManyEstimateInvoices (array $ids): mixed 
+    {
+        try {
+            DB::transaction(function () use ($ids)
+            {
+                EstimateInvoice::whereIn('id', $ids)->delete();
+                
+                $this->deleteManyTaxSummaries(
+                    'App\Models\EstimateInvoice',
+                    $ids
+                );
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
+    }
 }

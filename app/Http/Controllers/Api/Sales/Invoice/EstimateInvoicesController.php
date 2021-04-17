@@ -159,7 +159,9 @@ class EstimateInvoicesController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->estimateInvoice->whereIn('id', $request->ids)->delete();
+        $this->estimateInvoice->deleteManyEstimateInvoices(
+            $request->ids
+        );
 
         return $this->success(null, 'Estimate invoice or invoices deleted successfully.');
     }

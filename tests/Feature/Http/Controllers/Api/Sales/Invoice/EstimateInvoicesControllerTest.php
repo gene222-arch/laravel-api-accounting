@@ -40,7 +40,7 @@ class EstimateInvoicesControllerTest extends TestCase
             'customer_id' => 1,
             'currency_id' => 1,
             'income_category_id' => 1,
-            'estimate_number' => 'EST-00002',
+            'estimate_number' => 'EST-00001',
             'estimated_at' => '2021-05-03',
             'expired_at' => '2021-06-03',
             'enable_reminder' => false,
@@ -48,7 +48,7 @@ class EstimateInvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
-                    'tax_id',
+                    'tax_id' => 1,
                     'item' => 'Dawk',
                     'price' => 5.00,
                     'quantity' => 1,
@@ -71,6 +71,8 @@ class EstimateInvoicesControllerTest extends TestCase
             $this->apiHeader()
         );
 
+        dd(json_decode($response->getContent()));
+        
         $this->assertResponse($response);
     }
 
@@ -92,8 +94,6 @@ class EstimateInvoicesControllerTest extends TestCase
             $this->apiHeader()
         ); 
 
-        dd(json_decode($response->getContent()));
-        
         $this->assertResponse($response);
     }
 
@@ -128,14 +128,14 @@ class EstimateInvoicesControllerTest extends TestCase
     /** test */
     public function user_can_update_estimate_invoice()
     {
-        $id = 2;
+        $id = 5;
 
         $data = [
-            'id' => 2,
+            'id' => 5,
             'customer_id' => 1,
             'currency_id' => 1,
             'income_category_id' => 1,
-            'estimate_number' => 'EST-00004',
+            'estimate_number' => 'EST-00005',
             'estimated_at' => '2021-05-03',
             'expired_at' => '2021-06-03',
             'enable_reminder' => true,
@@ -143,13 +143,13 @@ class EstimateInvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
-                    'tax_id',
+                    'tax_id' => 2,
                     'item' => 'Dawk',
                     'price' => 5.00,
                     'quantity' => 1,
                     'amount' => 255.00,
                     'discount' => 0.00,
-                    'tax' => 0.00
+                    'tax' => 10.00
                 ],
             ],
             'payment_details' => [
@@ -175,7 +175,7 @@ class EstimateInvoicesControllerTest extends TestCase
     {
         $data = [
             'ids' => [
-                1
+                5
             ]
         ];
 

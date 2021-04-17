@@ -49,7 +49,7 @@ class InvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
-                    'tax_id' => null,
+                    'tax_id' => 1,
                     'item' => 'Dawk',
                     'price' => 5.00,
                     'quantity' => 1,
@@ -142,15 +142,15 @@ class InvoicesControllerTest extends TestCase
     /** test */
     public function user_can_update_invoice()
     {
-        $id = 3;
+        $id = 6;
 
         $data = [
-            'id' => 3,
+            'id' => 6,
             'customer_id' => 1,
             'currency_id' => 1,
             'income_category_id' => 2,
-            'invoice_number' => 'INV-00003',
-            'order_no' => 3,
+            'invoice_number' => 'INV-00006',
+            'order_no' => 6,
             'date' => '2021-05-03',
             'due_date' => '2021-06-03',
             'recurring' => 'No',
@@ -158,11 +158,11 @@ class InvoicesControllerTest extends TestCase
                 [
                     'item_id' => 2,
                     'discount_id' => null,
-                    'tax_id' => null,
+                    'tax_id' => 2,
                     'item' => 'Item two',
                     'price' => 5.00,
                     'quantity' => 5,
-                    'amount' => 25.00,
+                    'amount' => 40.00,
                     'discount' => 0.00,
                     'tax' => 0.00
                 ],
@@ -185,19 +185,19 @@ class InvoicesControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_cancel_an_invoice()
     {
-        $id = 2;
+        $id = 7;
 
         $data = [];
 
         $response = $this->put(
-            "/api/sales/invoices/${id}",
+            "/api/sales/invoices/${id}/cancel-order",
             $data,
             $this->apiHeader()
         );
-
+        
         $this->assertResponse($response);
     }
 
@@ -206,7 +206,7 @@ class InvoicesControllerTest extends TestCase
     {
         $data = [
             'ids' => [
-                5
+                8
             ]
         ];
 
