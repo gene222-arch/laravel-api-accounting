@@ -59,7 +59,8 @@ class RegisterController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-        ]);
+        ])
+        ->sendEmailVerificationNotification();
 
         if (!Auth::attempt($request->only('email', 'password')))
         {
@@ -68,11 +69,7 @@ class RegisterController extends Controller
 
         return $this->token(
             $this->getPersonalAccessToken($request),
-            'Successful Registration',
-            [
-                'user' => Auth::user(),
-                'permissions' => $this->authPermissionViaRoles()
-            ]
+            'Registration is successful, an email verification is sent through your email.',
         );
     }
 }

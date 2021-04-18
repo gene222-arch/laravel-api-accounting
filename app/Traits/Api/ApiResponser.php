@@ -38,7 +38,7 @@ trait ApiResponser
     public function success($data = null, $message = null, $code = 200)
 	{
 		return response()->json([
-			'status' => 'Success',
+			'status' => 'success',
 			'message' => $message,
 			'data' => $data
 		], $code);
@@ -55,7 +55,7 @@ trait ApiResponser
 	public function error($message = null, $code = 422)
 	{
 		return response()->json([
-			'status'=> 'Error',
+			'status'=> 'error',
 			'message' => $message
         ], $code);
     }

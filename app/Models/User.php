@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Jobs\QueuePasswordResetNotification;
+use App\Notifications\EmailVerificationNotification;
 use App\Traits\Auth\User\UsersServices;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,14 +13,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** Libraries or Built-in */
     use HasFactory, Notifiable, SoftDeletes, HasApiTokens, HasRoles;
 
     /** Custom */
     use UsersServices;
-
 
     protected $guard_name = 'api';
 
@@ -59,9 +60,19 @@ class User extends Authenticatable
      * 
      * @return void
      */
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void 
     {
         dispatch(new QueuePasswordResetNotification($this, $token))
             ->delay(now()->addSeconds(10));
+    }
+    
+    /**
+     * Send an email notification verification
+     *
+     * @return void
+     */
+    public function sendEmailVerificationNotification(): void 
+    {
+        $this->notify(new EmailVerificationNotification());
     }
 }
