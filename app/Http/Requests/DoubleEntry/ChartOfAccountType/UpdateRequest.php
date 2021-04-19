@@ -15,7 +15,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:chart_of_account_types,id'],
-            'category' => ['required', 'string', 'in:Asset,Liability,Equity'],
+            'category' => ['required', 'string', 'in:Assets,Expenses,Liabilities,Incomes,Equity'],
             'name' => ['required', 'string', 'unique:chart_of_account_types,name,' . $this->id],
             'description' => ['nullable', 'string']
         ];

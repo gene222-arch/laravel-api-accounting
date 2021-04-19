@@ -21,6 +21,7 @@ use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\SalaryBenefitSeeder;
 use Database\Seeders\IncomeCategorySeeder;
 use Database\Seeders\ExpenseCategorySeeder;
+use Database\Seeders\ChartOfAccountTypeSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -48,7 +49,8 @@ class DatabaseSeeder extends Seeder
             StockSeeder::class,
             EmployeeSeeder::class,
             SalaryBenefitSeeder::class,
-            // UserSeeder::class
+            UserSeeder::class,
+            ChartOfAccountTypeSeeder::class,
         ]);
     }
 }

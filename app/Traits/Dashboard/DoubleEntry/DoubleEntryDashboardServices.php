@@ -76,7 +76,7 @@ trait DoubleEntryDashboardServices
             ON 
                 chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
             WHERE 
-                chart_of_account_types.category = 'Expense'
+                chart_of_account_types.category = 'Expenses'
             $andWhereClause
             GROUP BY 
                 journal_entries.id 
@@ -135,7 +135,7 @@ trait DoubleEntryDashboardServices
             ON 
                 chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
             WHERE 
-                chart_of_account_types.category = 'Income'
+                chart_of_account_types.category = 'Incomes'
             $andWhereClause
             GROUP BY 
                 journal_entries.id 
@@ -194,7 +194,7 @@ trait DoubleEntryDashboardServices
             ON 
                 chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
             WHERE 
-                chart_of_account_types.category = 'Expense'
+                chart_of_account_types.category = 'Expenses'
             $andWhereClause
             GROUP BY 
                 MONTH(journal_entries.date)         
@@ -250,7 +250,7 @@ trait DoubleEntryDashboardServices
             ON 
                 chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
             WHERE 
-                chart_of_account_types.category = 'Income'
+                chart_of_account_types.category = 'Incomes'
             $andWhereClause
             GROUP BY 
                 MONTH(journal_entries.date)         

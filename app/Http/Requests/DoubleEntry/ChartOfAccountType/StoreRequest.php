@@ -14,7 +14,7 @@ class StoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'category' => ['required', 'string', 'in:Asset,Liability,Equity'],
+            'category' => ['required', 'string', 'in:Assets,Expenses,Liabilities,Incomes,Equity'],
             'name' => ['required', 'string', 'unique:chart_of_account_types,name'],
             'description' => ['nullable', 'string']
         ];
