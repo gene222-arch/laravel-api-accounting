@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DoubleEntry\ChartOfAccountType\StoreRequest;
 use App\Http\Requests\DoubleEntry\ChartOfAccountType\DeleteRequest;
 use App\Http\Requests\DoubleEntry\ChartOfAccountType\UpdateRequest;
+use Illuminate\Support\Facades\Cache;
 
 class ChartOfAccountTypesController extends Controller
 {
@@ -28,9 +29,20 @@ class ChartOfAccountTypesController extends Controller
      */
     public function index()
     {
-        $result = $this->accountType->latest()->get(['id', ...$this->accountType->getFillable()]);
+        $result = Cache::remember('chart_of_account_types', 1, function () 
+        {
+            $accountTypes = $this->accountType->latest()->get(['id', ...$this->accountType->getFillable()]);
 
-        return !$result->count()
+            $data = [];
+
+            foreach ($accountTypes as $accountType) {
+                $data[$accountType->category][] = $accountType->name;
+            }
+
+            return $data;
+        });
+
+        return !count($result)
             ? $this->noContent()
             : $this->success($result);
     }

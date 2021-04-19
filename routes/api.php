@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Sales\Invoice\InvoicesController;
 use App\Http\Controllers\Api\Sales\Revenue\RevenuesController;
 use App\Http\Controllers\Api\Item\Discount\DiscountsController;
 use App\Http\Controllers\Api\AccessRight\AccessRightsController;
+use App\Http\Controllers\Api\AccessRight\PermissionController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\Banking\Account\AccountsController;
 use App\Http\Controllers\Api\Item\Category\CategoriesController;
@@ -127,6 +128,8 @@ Route::middleware(['api'])->group(function ()
             Route::post('/', [AccessRightsController::class, 'store']);
             Route::put('/{role}', [AccessRightsController::class, 'update']);
             Route::delete('/', [AccessRightsController::class, 'destroy']);
+
+            Route::get('/permissions', PermissionController::class);
         });
 
 
