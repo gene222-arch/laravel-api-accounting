@@ -29,20 +29,9 @@ class ChartOfAccountTypesController extends Controller
      */
     public function index()
     {
-        $result = Cache::remember('chart_of_account_types', 1, function () 
-        {
-            $accountTypes = $this->accountType->latest()->get(['id', ...$this->accountType->getFillable()]);
-
-            $data = [];
-
-            foreach ($accountTypes as $accountType) {
-                $data[$accountType->category][] = $accountType->name;
-            }
-
-            return $data;
-        });
-
-        return !count($result)
+        $result = $this->accountType->latest()->get(['id', ...$this->accountType->getFillable()]);
+        
+        return !$result->count()
             ? $this->noContent()
             : $this->success($result);
     }

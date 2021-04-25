@@ -200,7 +200,6 @@ Route::middleware(['api'])->group(function ()
         Route::prefix('dashboards')->group(function () 
         {
             Route::get('/double-entry', DoubleEntryDashboardController::class);
-            
             Route::get('/main', MainDashboardController::class);
             Route::get('/payroll', PayrollDashboardController::class);
         });

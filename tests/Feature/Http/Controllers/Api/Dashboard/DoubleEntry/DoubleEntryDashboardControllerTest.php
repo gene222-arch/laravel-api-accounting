@@ -13,7 +13,7 @@ class DoubleEntryDashboardControllerTest extends TestCase
     public function user_can_view_double_entry_dashboard()
     {
         $response = $this->get(
-            '/api/dashboards/double-entry',
+            '/api/dashboards/double-entry?dateFrom=2021-04-25&dateTo=2021-04-25',
             $this->apiHeader()
         );
 

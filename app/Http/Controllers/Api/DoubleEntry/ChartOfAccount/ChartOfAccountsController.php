@@ -29,6 +29,10 @@ class ChartOfAccountsController extends Controller
     public function index()
     {
         $result = $this->chartOfAccount
+            ->when(request()->get('enabled'), function ($q) {
+                return $q->where('enabled', true);
+            })
+            ->with('type')
             ->latest()
             ->get(['id', ...$this->chartOfAccount->getFillable()]);
 

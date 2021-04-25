@@ -31,6 +31,7 @@ class JournalEntriesController extends Controller
 
         $result = $this->journalEntry
             ->selectRaw('
+                journal_entries.id,
                 DATE_FORMAT(journal_entries.date, "%d %M %Y") as date,
                 SUM(journal_entry_details.debit) + SUM(journal_entry_details.credit) as amount,
                 journal_entries.description,
@@ -65,14 +66,14 @@ class JournalEntriesController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified resource
      *
      * @param JournalEntry $journalEntry
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(JournalEntry $journalEntry)
     {
-        $journalEntry = $journalEntry->with('details')->first();
+        $journalEntry = $journalEntry->load('details');
 
         return !$journalEntry
             ? $this->noContent()

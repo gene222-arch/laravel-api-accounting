@@ -27,6 +27,6 @@ class ChartOfAccount extends Model
      */
     public function type(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccountType::class);
+        return $this->belongsTo(ChartOfAccountType::class, 'chart_of_account_type_id');
     }
 }

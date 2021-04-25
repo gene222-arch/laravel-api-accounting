@@ -14,10 +14,10 @@ class UpdateStoreRequest extends BaseRequest
     public function rules()
     {
         return [
-            'date' => ['required', 'string'],
+            'date' => ['required', 'date'],
             'reference' => ['nullable', 'string'],
             'description' => ['nullable', 'string'],
-            'details.*' => ['required', 'array', 'min:1'],
+            'details' => ['required', 'array'],
             'details.*.chart_of_account_id' => ['required', 'integer', 'exists:chart_of_accounts,id']
         ];
     }

@@ -28,7 +28,7 @@ class JournalEntry extends Model
      */
     public function details(): BelongsToMany
     {
-        return $this->belongsToMany(ChartOfAccount::class, 'journal_entry_details')
+        return $this->belongsToMany(ChartOfAccount::class, 'journal_entry_details', )
             ->withPivot([
                 'debit',
                 'credit'

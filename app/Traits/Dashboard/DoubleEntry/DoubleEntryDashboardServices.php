@@ -23,11 +23,22 @@ trait DoubleEntryDashboardServices
         $income = $this->latestIncomeByChartOfAccounts($dateFrom, $dateTo, $year);
         $expense = $this->latestExpenseByChartOfAccounts($dateFrom, $dateTo, $year);
 
+        $payables = $this->payables($dateFrom, $dateTo, $year);
+        $receivables = $this->receivables($dateFrom, $dateTo, $year);
+        $upcoming = [
+            'amount' => \number_format($receivables->amount - $payables->amount, 2)
+        ];
+
         return [    
             'totalIncome' => $income['totalIncome'],
+            'receivables' => $receivables,
             'totalExpense' => $expense['totalExpense'],
+            'payables' => $payables,
             'totalProfit' => $income['totalIncome'] - $expense['totalExpense'],
-            'accountBalance' => Account::all(['id', 'name', 'balance']),
+            'upcoming' => $upcoming,
+            'accountBalances' => Account::all(['id', 'name', 'balance']),
+            'incomeByChartOfAccounts' => $this->incomeByChartOfAccounts($dateFrom, $dateTo, $year),
+            'expenseByChartOfAccounts' => $this->expenseByChartOfAccounts($dateFrom, $dateTo, $year),
             'latestIncomeByChartOfAccounts' => $income['latestIncomes'],
             'latestExpenseByChartOfAccounts' => $expense['latestExpenses'],
             'cashFlow' => [
@@ -36,6 +47,94 @@ trait DoubleEntryDashboardServices
                 'monthlyProfitByChartOfAccounts' => $this->monthlyProfitByChartOfAccounts($dateFrom, $dateTo, $year),
             ]
         ];
+    }
+
+    /**
+     * Get the list of expense by chart of accounts
+     *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
+     * @return array
+     */
+    public function expenseByChartOfAccounts (string $dateFrom, string $dateTo, int $year = null): array
+    {
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(journal_entries.date) = :year' 
+            : 'AND journal_entries.date >= :dateFrom && journal_entries.date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        return DB::select(
+            "SELECT 
+                chart_of_accounts.name,
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
+            FROM 
+                journal_entries
+            INNER JOIN 
+                journal_entry_details
+            ON 
+                journal_entry_details.journal_entry_id = journal_entries.id 
+            INNER JOIN 
+                chart_of_accounts
+            ON 
+                chart_of_accounts.id = journal_entry_details.chart_of_account_id
+            INNER JOIN 
+                chart_of_account_types 
+            ON 
+                chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
+            WHERE
+                chart_of_account_types.category = 'Expenses'
+            $andWhereClause
+            GROUP BY 
+                chart_of_accounts.id
+        ", $bindings);
+    }
+
+    /**
+     * Get the list of income by chart of accounts
+     *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
+     * @return array
+     */
+    public function incomeByChartOfAccounts (string $dateFrom, string $dateTo, int $year = null): array
+    {
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(journal_entries.date) = :year' 
+            : 'AND journal_entries.date >= :dateFrom && journal_entries.date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        return DB::select(
+            "SELECT 
+                chart_of_accounts.name,
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
+            FROM 
+                journal_entries
+            INNER JOIN 
+                journal_entry_details
+            ON 
+                journal_entry_details.journal_entry_id = journal_entries.id 
+            INNER JOIN 
+                chart_of_accounts
+            ON 
+                chart_of_accounts.id = journal_entry_details.chart_of_account_id
+            INNER JOIN 
+                chart_of_account_types 
+            ON 
+                chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
+            WHERE
+                chart_of_account_types.category = 'Incomes'
+            $andWhereClause
+            GROUP BY 
+                chart_of_accounts.id
+        ", $bindings);
     }
 
     /**
@@ -60,7 +159,7 @@ trait DoubleEntryDashboardServices
             "SELECT 
                 DATE_FORMAT(journal_entries.date, '%d %M %Y') as date,
                 chart_of_accounts.name as name,
-                SUM(journal_entry_details.debit) as amount
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
             FROM 
                 journal_entries
             INNER JOIN 
@@ -119,7 +218,7 @@ trait DoubleEntryDashboardServices
             "SELECT 
                 DATE_FORMAT(journal_entries.date, '%d %M %Y') as date,
                 chart_of_accounts.name as name,
-                SUM(journal_entry_details.debit) as amount
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
             FROM 
                 journal_entries
             INNER JOIN 
@@ -178,7 +277,7 @@ trait DoubleEntryDashboardServices
             "SELECT 
                 MONTH(journal_entries.date) - 1 as month,
                 chart_of_accounts.name as name,
-                SUM(journal_entry_details.debit) as amount
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
             FROM 
                 journal_entries
             INNER JOIN 
@@ -205,7 +304,7 @@ trait DoubleEntryDashboardServices
         foreach ($query as $monthlyExpense) {
             $data = [
                 ...$data,
-                $monthlyExpense->month => $monthlyExpense->amount 
+                $monthlyExpense->month => floatval($monthlyExpense->amount)
             ];
         }
 
@@ -234,7 +333,7 @@ trait DoubleEntryDashboardServices
             "SELECT 
                 MONTH(journal_entries.date) - 1 as month,
                 chart_of_accounts.name as name,
-                SUM(journal_entry_details.debit) as amount
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
             FROM 
                 journal_entries
             INNER JOIN 
@@ -261,7 +360,7 @@ trait DoubleEntryDashboardServices
         foreach ($query as $monthlyIncome) {
             $data = [
                 ...$data,
-                $monthlyIncome->month => $monthlyIncome->amount 
+                $monthlyIncome->month => floatval($monthlyIncome->amount) 
             ];
         }
 
@@ -285,11 +384,89 @@ trait DoubleEntryDashboardServices
             foreach ($monthlyExpense as $expenseMonth => $expense) 
             {
                 if ($month === $expenseMonth) {
-                    $data[$month] = number_format($income - $expense, 2);
+                    $data[$month] = (float) $income - (float) $expense;
                 }
             }
         }
 
         return $data;
+    }
+    
+    /**
+     * Payables
+     *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
+     * @return mixed
+     */
+    public function payables (string $dateFrom, string $dateTo, int $year = null): mixed
+    {
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(journal_entries.date) = :year' 
+            : 'AND journal_entries.date >= :dateFrom && journal_entries.date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT 
+                IFNULL(SUM(journal_entry_details.credit), 0) as amount
+            FROM 
+                journal_entries
+            INNER JOIN 
+                journal_entry_details
+            ON 
+                journal_entry_details.journal_entry_id = journal_entries.id 
+            INNER JOIN 
+                chart_of_accounts
+            ON 
+                chart_of_accounts.id = journal_entry_details.chart_of_account_id
+            WHERE
+                chart_of_accounts.name = 'Accounts Payable'
+            $andWhereClause
+        ", $bindings);
+
+        return reset($query);
+    }
+
+    /**
+     * Receivables
+     *
+     * @param  string $dateFrom
+     * @param  string $dateTo
+     * @param  integer $year
+     * @return mixed
+     */
+    public function receivables (string $dateFrom, string $dateTo, int $year = null): mixed
+    {
+        setSqlModeEmpty();
+
+        $andWhereClause = $year 
+            ? 'AND YEAR(journal_entries.date) = :year' 
+            : 'AND journal_entries.date >= :dateFrom && journal_entries.date <= :dateTo';
+
+        $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
+
+        $query = DB::select(
+            "SELECT
+                IFNULL(SUM(journal_entry_details.debit), 0) as amount
+            FROM 
+                journal_entries
+            INNER JOIN 
+                journal_entry_details
+            ON 
+                journal_entry_details.journal_entry_id = journal_entries.id 
+            INNER JOIN 
+                chart_of_accounts
+            ON 
+                chart_of_accounts.id = journal_entry_details.chart_of_account_id
+            WHERE
+                chart_of_accounts.name = 'Accounts Receivable'
+            $andWhereClause
+        ", $bindings);
+
+        return reset($query);
     }
 }
