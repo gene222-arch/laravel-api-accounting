@@ -16,7 +16,7 @@ class UpdateRequest extends IncomeCategoryBaseRequest
         return [
             'id' => ['required', 'integer', 'exists:income_categories,id'],
             'name' => ['required', 'string', 'unique:income_categories,name,' . $this->id],
-            'hex_code' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code,' . $this->id]
+            'hex_code' => ['required', 'string', 'min:4', 'max:7', 'unique:income_categories,hex_code,' . $this->id]
         ];
     }
 }

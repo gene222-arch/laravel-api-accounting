@@ -34,9 +34,7 @@ class CategoriesController extends Controller
 
         return !$result->count()
             ? $this->noContent()
-            : $this->success([
-                'data' => $result
-            ]);
+            : $this->success($result);
     }
 
     /**
@@ -73,7 +71,7 @@ class CategoriesController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateRequest $request, Category $category)
-    {
+    {   
         $category->update($request->except('id'));
 
         return $this->success(null, 'Category updated successfully.');

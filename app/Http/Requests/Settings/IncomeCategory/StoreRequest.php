@@ -15,7 +15,7 @@ class StoreRequest extends IncomeCategoryBaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:income_categories,name'],
-            'hex_code' => ['required', 'string', 'min:7', 'max:7', 'unique:income_categories,hex_code']
+            'hex_code' => ['required', 'string', 'min:4', 'max:7', 'unique:income_categories,hex_code']
         ];
     }
 }

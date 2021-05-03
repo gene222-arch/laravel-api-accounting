@@ -12,7 +12,8 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'hex_code'
+        'hex_code',
+        'enabled'
     ];  
 
 }
