@@ -13,7 +13,7 @@ class CategoriesControllerTest extends TestCase
     public function user_can_view_any_categories()
     {
         $response = $this->get(
-            '/api/item/categories',
+            '/api/items/categories',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class CategoriesControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/item/categories/${id}",
+            "/api/items/categories/${id}",
             $this->apiHeader()
         );
 
@@ -43,7 +43,7 @@ class CategoriesControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/item/categories',
+            '/api/items/categories',
             $data,
             $this->apiHeader()
         );
@@ -64,7 +64,7 @@ class CategoriesControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            "/api/item/categories/${id}",
+            "/api/items/categories/${id}",
             $data,
             $this->apiHeader()
         );
@@ -83,7 +83,7 @@ class CategoriesControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/item/categories',
+            '/api/items/categories',
             $data,
             $this->apiHeader()
         );

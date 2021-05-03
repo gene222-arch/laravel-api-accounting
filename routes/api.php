@@ -377,7 +377,7 @@ Route::middleware(['api'])->group(function ()
          *  - Categories
          *  - Discounts
          */
-        Route::prefix('item')->group(function () 
+        Route::prefix('items')->group(function () 
         {
             /**
              * Categories
@@ -596,7 +596,7 @@ Route::middleware(['api'])->group(function ()
             /**
              * Company
             */
-            Route::prefix('company')->group(function () 
+            Route::prefix('companies')->group(function () 
             {
                 Route::get('/{company}', [CompaniesController::class, 'show']);
                 Route::post('/', [CompaniesController::class, 'store']);

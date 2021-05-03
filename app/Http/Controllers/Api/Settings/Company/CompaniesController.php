@@ -16,8 +16,9 @@ class CompaniesController extends Controller
     public function __construct(Company $company)
     {
         $this->company = $company;
-        $this->middleware(['auth:api', 'permission:Manage Company']);
+        $this->middleware(['auth:api', 'permission:Manage Companies']);
     }
+
 
     /**
      * Store a newly created resource in storage.

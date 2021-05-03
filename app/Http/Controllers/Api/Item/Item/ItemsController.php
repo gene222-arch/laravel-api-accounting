@@ -30,14 +30,14 @@ class ItemsController extends Controller
     public function index()
     {
         $result = $this->item
+            ->when(request()->get('enabled'), fn ($q) => $q->where('enabled', true))
+            ->with('category')
             ->latest()
             ->get(['id', ...$this->item->getFillable()]);
 
         return !$result->count()
             ? $this->noContent()
-            : $this->success([
-                'data' => $result
-            ]);
+            : $this->success($result);
     }
 
     /**

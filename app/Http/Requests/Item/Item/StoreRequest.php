@@ -28,7 +28,7 @@ class StoreRequest extends ItemBaseRequest
             'stock.in_stock' => ['nullable', 'integer', 'min:0'],
             'stock.minimum_stock' => ['nullable', 'integer', 'min:0'],
             'track_stock' => ['required', 'boolean'],
-            'taxes.*' => ['required', 'array', 'min:1'],
+            'taxes' => ['required', 'array', 'min:1'],
             'taxes.*.tax_id' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
         ];
     }

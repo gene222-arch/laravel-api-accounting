@@ -15,7 +15,7 @@ class CompaniesControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/settings/company/${id}",
+            "/api/settings/companies/${id}",
             $this->apiHeader()
         );
 
@@ -27,13 +27,13 @@ class CompaniesControllerTest extends TestCase
     {
         $data = [
             'name' => 'CCC',
-            'email' => 'CCC@company.com',
+            'email' => 'CCC@companies.com',
             'tax_number' => '22222122222',
             'phone' => '22222222122',
         ];
 
         $response = $this->post(
-            '/api/settings/company',
+            '/api/settings/companies',
             $data,
             $this->apiHeader()
         );
@@ -49,13 +49,13 @@ class CompaniesControllerTest extends TestCase
         $data = [
             'id' => 1,
             'name' => 'ABCDEFG',
-            'email' => 'test@company.com',
+            'email' => 'test@companies.com',
             'tax_number' => '111111111',
             'phone' => '11111111111',
         ];
 
         $response = $this->put(
-            "/api/settings/company/${id}",
+            "/api/settings/companies/${id}",
             $data,
             $this->apiHeader()
         );

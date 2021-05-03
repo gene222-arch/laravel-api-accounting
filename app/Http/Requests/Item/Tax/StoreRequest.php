@@ -15,7 +15,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:taxes,name'],
-            'rate' => ['required', 'numeric', 'min:0', 'max:100'],
+            'rate' => ['required', 'numeric', 'min:1', 'max:100'],
             'type' => ['required', 'string', 'in:Normal,Compound,Fixed,Inclusive,Withholding'],
             'enabled' => ['required', 'boolean']
         ];
