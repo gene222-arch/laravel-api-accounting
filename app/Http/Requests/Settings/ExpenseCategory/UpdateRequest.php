@@ -16,7 +16,7 @@ class UpdateRequest extends ExpenseCategoryBaseRequest
         return [
             'id' => ['required', 'integer', 'exists:expense_categories,id'],
             'name' => ['required', 'string', 'unique:expense_categories,name,' . $this->id],
-            'hex_code' => ['required', 'string', 'min:7', 'max:7', 'unique:expense_categories,hex_code,' . $this->id]
+            'hex_code' => ['required', 'string', 'min:4', 'max:7', 'unique:expense_categories,hex_code,' . $this->id]
         ];
     }
 

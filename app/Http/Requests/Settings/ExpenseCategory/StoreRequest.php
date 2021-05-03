@@ -15,7 +15,7 @@ class StoreRequest extends ExpenseCategoryBaseRequest
     {
         return [
             'name' => ['required', 'string', 'unique:expense_categories,name'],
-            'hex_code' => ['required', 'string', 'min:7', 'max:7', 'unique:expense_categories,hex_code']
+            'hex_code' => ['required', 'string', 'min:4', 'max:7', 'unique:expense_categories,hex_code']
         ];
     }
 }
