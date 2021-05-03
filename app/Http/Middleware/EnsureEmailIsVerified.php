@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Middleware\EnsureEmailIsVerified as MiddlewareEnsureEmailIsVerified;
+use Illuminate\Support\Facades\Auth;
 
 class EnsureEmailIsVerified extends MiddlewareEnsureEmailIsVerified
 {
@@ -22,7 +23,7 @@ class EnsureEmailIsVerified extends MiddlewareEnsureEmailIsVerified
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {   
-        $user = User::where('email', $request->email)->first() ?? auth()->user();
+        $user = User::where('email', Auth()->user()->email)->first() ?? auth()->user();
 
         if (!$user || !($user instanceof MustVerifyEmail && $user->hasVerifiedEmail())) {
             return abort(403, 'Your email address is not verified.');

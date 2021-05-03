@@ -17,7 +17,7 @@ class StoreRequest extends VendorBaseRequest
             'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:vendors,email'],
-            'tax_number' => ['required', 'string', 'min:5', 'max:5', 'unique:vendors,tax_number'],
+            'tax_number' => ['required', 'string', 'min:5', 'max:7', 'unique:vendors,tax_number'],
             'address' => ['required', 'string'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:vendors,phone'],
             'website' => ['nullable', 'website'],

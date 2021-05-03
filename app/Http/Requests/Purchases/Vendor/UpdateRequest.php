@@ -18,7 +18,7 @@ class UpdateRequest extends VendorBaseRequest
             'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'name' => ['required', 'string'],
             'email' => ['required', 'email', 'unique:vendors,email,' . $this->id],
-            'tax_number' => ['required', 'string', 'min:5', 'max:5', 'unique:vendors,tax_number,' . $this->id],
+            'tax_number' => ['required', 'string', 'min:5', 'max:7', 'unique:vendors,tax_number,' . $this->id],
             'address' => ['required', 'string'],
             'phone' => ['required', 'string', 'min:11', 'max:15', 'unique:vendors,phone,' . $this->id],
             'website' => ['nullable', 'website'],
