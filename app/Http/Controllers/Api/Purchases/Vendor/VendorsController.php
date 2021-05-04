@@ -85,7 +85,7 @@ class VendorsController extends Controller
      */
     public function destroy(DeleteRequest $request)
     {
-        $this->vendor->deleteVendors($request->ids);
+        $this->vendor->whereIn('id', $request->ids)->delete();
 
         return $this->success(null, 'Vendor or vendors deleted successfully.');
     }
