@@ -24,7 +24,7 @@ class InvoicesController extends Controller
         $this->invoice = $invoice;
         $this->middleware(['auth:api', 'permission:Manage Invoices']);
     }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +33,10 @@ class InvoicesController extends Controller
     public function index()
     {
         $result = $this->invoice
-            ->with('paymentDetail')
+            ->with([
+                'paymentDetail',
+                'customer'
+            ])
             ->latest()
             ->get();
 
@@ -71,8 +74,13 @@ class InvoicesController extends Controller
     public function show(Invoice $invoice)
     {
         $invoice = $invoice->with([
-            'items' => fn($q) => $q->select('name'),
-            'paymentDetail'
+            'incomeCategory',
+            'customer',
+            'currency',
+            'items',
+            'paymentDetail',
+            'histories',
+            'transactions'
         ])
         ->first();
 

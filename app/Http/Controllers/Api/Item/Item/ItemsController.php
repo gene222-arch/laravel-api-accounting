@@ -30,7 +30,9 @@ class ItemsController extends Controller
     public function index()
     {
         $result = $this->item
-            ->when(request()->get('enabled'), fn ($q) => $q->where('enabled', true))
+            ->when(request()->get('isForSale'), fn ($q) => $q->where('is_for_sale', true))
+            ->whereHas('stock', fn ($q) => request()->get('hasStocks', false) ? $q->where('in_stock', '>', 0) : $q )
+            ->with('stock')
             ->with('category')
             ->latest()
             ->get(['id', ...$this->item->getFillable()]);

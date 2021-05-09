@@ -34,9 +34,9 @@ class PaymentRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'accountId' => 'account id',
-            'paymentMethodId' => 'payment method id',
-            'incomeCategoryId' => 'income category id',
+            'accountId' => 'account',
+            'paymentMethodId' => 'payment method',
+            'incomeCategoryId' => 'income category',
         ];
     }
 

@@ -20,5 +20,4 @@ class InvoiceDetail extends Model
         'discount',
         'tax'
     ];
-
 }

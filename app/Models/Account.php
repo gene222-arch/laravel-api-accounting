@@ -17,6 +17,9 @@ class Account extends Model
         'number',
         'opening_balance',
         'balance',
+        'bank_name',
+        'bank_phone',
+        'bank_address',
         'enabled'
     ];
     

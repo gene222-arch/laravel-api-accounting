@@ -42,6 +42,9 @@ class AccountsControllerTest extends TestCase
             'number' => 12345,
             'opening_balance' => 1000000.00,
             'balance' => 1000000.00,
+            'bank_name' => 'Some',
+            'bank_phone' => 'Some',
+            'bank_address' => 'Some',
             'enabled' => true,
         ];
 
@@ -66,6 +69,9 @@ class AccountsControllerTest extends TestCase
             'number' => 2222,
             'opening_balance' => 1000000.00,
             'balance' => 1000000.00,
+            'bank_name' => 'Some',
+            'bank_phone' => 'Some',
+            'bank_address' => 'Some',
             'enabled' => true,
         ];
 

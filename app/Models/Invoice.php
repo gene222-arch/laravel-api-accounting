@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sales\Invoice\InvoicesServices;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,33 @@ class Invoice extends Model
         'status',
         'recurring'
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
+
+    protected $timeFormat = 'Y-m-d';
+    
+    
+    /**
+     * getDueDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDueDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format($this->timeFormat);
+    }
+
+    /**
+     * getDueDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format($this->timeFormat);
+    }
     
     /**
      * Define a many-to-many relationship with Currency class
@@ -45,13 +73,13 @@ class Invoice extends Model
     }
 
     /**
-     * Define a many-to-many relationship with Customer class
+     * Define a one-to-many relationship with Customer class
      *
      * @return BelongsTo
      */
     public function customer(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     /**
@@ -81,8 +109,7 @@ class Invoice extends Model
                 'amount',
                 'discount',
                 'tax'
-            ])
-            ->withTimestamps();
+            ]);
     }
 
     /**
@@ -104,4 +131,15 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceHistory::class);
     }
+    
+    /**
+     * transactions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'model_id')->where('model_type', get_class($this));
+    }
+
 }

@@ -80,7 +80,10 @@ trait InvoicesServices
 
                 $invoice->items()->sync($items);
 
-                $invoice->paymentDetail()->update($payment_details);
+                $invoice->paymentDetail()->update(array_merge(
+                    $payment_details,
+                    ['amount_due' => DB::raw($payment_details['amount_due'] . ' - recent_payment')])
+                );
 
                 $this->updateManyTaxSummary(
                     get_class($invoice),

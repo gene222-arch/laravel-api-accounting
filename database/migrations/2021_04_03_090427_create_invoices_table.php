@@ -54,7 +54,6 @@ class CreateInvoicesTable extends Migration
             $table->unsignedDecimal('amount', 10, 2);
             $table->unsignedDecimal('discount', 10, 2)->default(0.00);
             $table->unsignedDecimal('tax', 10, 2)->default(0.00);
-            $table->timestamps();
 
             $table->unique([
                 'invoice_id',

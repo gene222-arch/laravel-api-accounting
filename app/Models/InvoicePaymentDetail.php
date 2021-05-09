@@ -11,6 +11,8 @@ class InvoicePaymentDetail extends Model
 
     protected $fillable = [
         'invoice_id',
+        'tax_id',
+        'discount_id',
         'total_discounts',
         'total_taxes',
         'sub_total',

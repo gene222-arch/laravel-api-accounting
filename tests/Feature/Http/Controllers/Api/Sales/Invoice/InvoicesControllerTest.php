@@ -168,6 +168,8 @@ class InvoicesControllerTest extends TestCase
                 ],
             ],
             'payment_details' => [
+                'discount_id' => 1,
+                'tax_id' => 1,
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 50.00,
