@@ -28,9 +28,7 @@ class UpdateRequest extends BaseRequest
             'stock.vendor_id' => ['nullable', 'integer', 'exists:vendors,id'],
             'stock.in_stock' => ['nullable', 'integer', 'min:0'],
             'stock.minimum_stock' => ['nullable', 'integer', 'min:0'],
-            'track_stock' => ['required', 'boolean'],
-            'taxes.*' => ['required', 'array', 'min:1'],
-            'taxes.*.tax_id' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
+            'track_stock' => ['required', 'boolean']
         ];
     }
 }

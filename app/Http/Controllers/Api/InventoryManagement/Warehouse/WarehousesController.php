@@ -64,7 +64,7 @@ class WarehousesController extends Controller
      */
     public function show(Warehouse $warehouse)
     {
-        $warehouse = $warehouse->with('stocks.item')->first();
+        $warehouse = $warehouse->with('stocks.item.category')->first();
         
         return !$warehouse
             ? $this->noContent()

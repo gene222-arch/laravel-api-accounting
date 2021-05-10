@@ -20,7 +20,7 @@ class StoreRequest extends WarehouseBaseRequest
             'address' => ['required', 'string'],
             'default_warehouse' => ['required', 'boolean'],
             'enabled' => ['required', 'boolean'],
-            'stocks.*' => ['required', 'array', 'min:1'],
+            'stocks' => ['required', 'array', 'min:1'],
             'stocks.*.stock_id' => ['required', 'integer', 'distinct', 'exists:stocks,id']
         ];
     }

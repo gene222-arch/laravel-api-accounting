@@ -38,28 +38,6 @@ class CreateItemsTable extends Migration
                 ->on('categories')
                 ->nullOnDelete();
         });
-
-        Schema::create('item_tax', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('item_id');
-            $table->foreignId('tax_id');
-            $table->timestamps();
-
-            $table->unique([
-                'item_id',
-                'tax_id',
-            ]);
-
-            $table->foreign('item_id')
-                ->references('id')
-                ->on('items')
-                ->cascadeOnDelete();
-
-            $table->foreign('tax_id')
-                ->references('id')
-                ->on('taxes')
-                ->cascadeOnDelete();
-        });
     }
 
     /**
@@ -69,7 +47,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_tax');
         Schema::dropIfExists('items');
     }
 }

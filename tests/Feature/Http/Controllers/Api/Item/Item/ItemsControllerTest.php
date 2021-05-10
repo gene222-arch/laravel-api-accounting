@@ -56,7 +56,6 @@ class ItemsControllerTest extends TestCase
                 'in_stock' => 1,
                 'minimum_stock' => 10,
             ],
-            'taxes' => [],
             'track_stock' => true,
         ];
 
@@ -92,9 +91,6 @@ class ItemsControllerTest extends TestCase
                 'vendor_id' => 1,
                 'in_stock' => 1,
                 'minimum_stock' => 10,
-            ],
-            'taxes' => [
-                1
             ],
             'track_stock' => true,
         ];

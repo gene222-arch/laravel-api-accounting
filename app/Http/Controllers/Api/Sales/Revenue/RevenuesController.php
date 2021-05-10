@@ -32,8 +32,6 @@ class RevenuesController extends Controller
             'account',
             'customer',
             'incomeCategory',
-            'paymentMethod',
-            'invoices'
         ])
             ->latest()
             ->get();
@@ -66,15 +64,6 @@ class RevenuesController extends Controller
      */
     public function show(Revenue $revenue)
     {
-        $revenue = $revenue->with([
-            'account',
-            'customer',
-            'incomeCategory',
-            'paymentMethod',
-            'invoices'
-        ])
-        ->first();
-
         return !$revenue
             ? $this->noContent()
             : $this->success($revenue);

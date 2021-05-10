@@ -22,7 +22,8 @@ class Stock extends Model
         'incoming_stock',
         'stock_in',
         'stock_out',
-        'bad_stock'
+        'bad_stock',
+        'minimum_stock'
     ];
 
     /**

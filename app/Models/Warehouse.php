@@ -23,6 +23,11 @@ class Warehouse extends Model
         'default_warehouse',
         'enabled'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
     
     /**
      * Define a many-to-many relationship with Stock class

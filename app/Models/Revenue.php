@@ -6,6 +6,7 @@ use App\Models\Invoice;
 use App\Models\Currency;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Sales\Revenue\RevenuesServices;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -32,6 +33,22 @@ class Revenue extends Model
         'reference',
         'file'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+    
+    /**
+     * getDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
 
     /**
      * Define an inverse one-to-many relationship with Account

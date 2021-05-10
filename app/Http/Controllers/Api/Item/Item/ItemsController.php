@@ -30,9 +30,15 @@ class ItemsController extends Controller
     public function index()
     {
         $result = $this->item
-            ->when(request()->get('isForSale'), fn ($q) => $q->where('is_for_sale', true))
-            ->whereHas('stock', fn ($q) => request()->get('hasStocks', false) ? $q->where('in_stock', '>', 0) : $q )
-            ->with('stock')
+            ->when(request()->get('isForSale'), fn ($q) => $q->where('is_for_sale', true));
+
+        if (request()->get('includeStockTable')) {
+            $result = $result
+                ->whereHas('stock', fn ($q) => request()->get('hasStocks', false) ? $q->where('in_stock', '>', 0) : $q )
+                ->with('stock');
+        }
+
+        $result = $result
             ->with('category')
             ->latest()
             ->get(['id', ...$this->item->getFillable()]);
@@ -53,7 +59,6 @@ class ItemsController extends Controller
         $result = $this->item->createItem(
             $request->item,
             $request->stock,
-            $request->taxes,
             $request->track_stock,
         );
 
@@ -72,7 +77,7 @@ class ItemsController extends Controller
     {
         return !$item
             ? $this->noContent()
-            : $this->success($item);
+            : $this->success($item->with('stock')->first());
     }
 
     /**
@@ -88,7 +93,6 @@ class ItemsController extends Controller
             $item,
             $request->item,
             $request->stock,
-            $request->taxes,
             $request->track_stock,
         );
 

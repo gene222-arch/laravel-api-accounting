@@ -13,23 +13,23 @@ class StoreRequest extends ItemBaseRequest
      */
     public function rules()
     {
+        $doTrackStock = !$this->track_stock ? 'nullable' : 'required';
+
         return [
             'item.category_id' => ['required', 'integer', 'exists:categories,id'],
             'item.sku' => ['required', 'string', 'min:8', 'max:12', 'unique:items,sku'],
             'item.barcode' => ['required', 'string', 'min:3', 'max:12', 'unique:items,barcode'],
             'item.name' => ['required', 'string', 'unique:items,name'],
             'item.description' => ['nullable', 'string'],
-            'item.price' => ['nullable', 'numeric', 'min:0'],
-            'item.cost' => ['required', 'numeric', 'min:0'],
+            'item.price' => ['required', 'numeric', 'min:1'],
+            'item.cost' => ['required', 'numeric', 'min:1'],
             'item.sold_by' => ['required', 'string', 'in:each,weight'],
             'item.is_for_sale' => ['required', 'boolean'],
             'item.image' => ['nullable', 'string'],
-            'stock.vendor_id' => ['nullable', 'integer', 'exists:vendors,id'],
-            'stock.in_stock' => ['nullable', 'integer', 'min:0'],
-            'stock.minimum_stock' => ['nullable', 'integer', 'min:0'],
-            'track_stock' => ['required', 'boolean'],
-            'taxes' => ['required', 'array', 'min:1'],
-            'taxes.*.tax_id' => ['nullable', 'integer', 'distinct', 'exists:taxes,id'],
+            'stock.vendor_id' => [$doTrackStock, 'integer', 'exists:vendors,id'],
+            'stock.in_stock' => [$doTrackStock, 'integer', 'min:0'],
+            'stock.minimum_stock' => [$doTrackStock, 'integer', 'min:1'],
+            'track_stock' => ['required', 'boolean']
         ];
     }
 }
