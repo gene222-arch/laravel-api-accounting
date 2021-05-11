@@ -27,7 +27,14 @@ class BankAccountTransfersController extends Controller
      */
     public function index()
     {
-        $result = $this->bankAccountTransfer->getAllBankAccountTransfers();
+        $result = $this->bankAccountTransfer
+            ->with([
+                'from:id,name',
+                'to:id,name',
+                'paymentMethod:id,name'
+            ])
+            ->latest()
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -62,8 +69,6 @@ class BankAccountTransfersController extends Controller
      */
     public function show(BankAccountTransfer $transfer)
     {
-        $transfer = $transfer->with(['from', 'to', 'paymentMethod'])->firstOrFail();
-
         return !$transfer
             ? $this->noContent()
             : $this->success($transfer);
@@ -78,17 +83,24 @@ class BankAccountTransfersController extends Controller
      */
     public function update(UpdateStoreRequest $request, BankAccountTransfer $transfer)
     {
-        $result = $this->bankAccountTransfer->updateBankAccountTransfer(
-            $transfer,
-            $request->validated(),
-            $request->from_account_id,
-            $request->to_account_id,
-            $request->amount
-        );
+        $transfer->update($request->validated());
 
-        return $result !== true
-            ? $this->error($result, 500)
-            : $this->success(null, 'Bank account transfer updated successfully.');
+        return $this->success(null, 'Bank account transfer updated successfully.');
+    }
+
+    /**
+     * Update the accounts table and delete the specified resource.
+     *
+     * @param BankAccountTransfer $transfer
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reversalOfTransaction(BankAccountTransfer $transfer)
+    {
+        $result = $this->bankAccountTransfer->reverseTransaction($transfer);
+
+        return $result !== true 
+            ? $this->error(null, 500)
+            : $this->success(null, 'Transaction reversed successfully.');
     }
 
     /**

@@ -166,6 +166,7 @@ Route::middleware(['api'])->group(function ()
                 Route::get('/{transfer}', [BankAccountTransfersController::class, 'show']);
                 Route::post('/', [BankAccountTransfersController::class, 'store']);
                 Route::put('/{transfer}', [BankAccountTransfersController::class, 'update']);
+                Route::delete('/{transfer}/reverse', [BankAccountTransfersController::class, 'reversalOfTransaction']);
                 Route::delete('/', [BankAccountTransfersController::class, 'destroy']);
             });
 

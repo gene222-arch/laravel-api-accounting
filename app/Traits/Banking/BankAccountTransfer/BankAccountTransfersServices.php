@@ -9,22 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 trait BankAccountTransfersServices
 {
-    
-    /**
-     * Get latest records of bank account transfers
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getAllBankAccountTransfers (): Collection
-    {
-        return BankAccountTransfer::with([
-            'sender',
-            'receiver',
-            'paymentMethod'
-        ])
-            ->latest()
-            ->get();
-    }
       
     /**
      * Create a new record of bank account transfer
@@ -56,27 +40,23 @@ trait BankAccountTransfersServices
     }
     
     /**
-     * Update an existing record of bank account transfer
+     * Reverse previous transaction
      *
      * @param  BankAccountTransfer $transfer
-     * @param  array $transfer
-     * @param  integer $from_account_id
-     * @param  integer $to_account_id
-     * @param  float $amount
      * @return mixed
      */
-    public function updateBankAccountTransfer (BankAccountTransfer $transfer, array $transfer_details, int $from_account_id, int $to_account_id, float $amount): mixed
+    public function reverseTransaction (BankAccountTransfer $transfer): mixed
     {
         try {
-            DB::transaction(function () use ($transfer, $transfer_details, $from_account_id, $to_account_id, $amount)
-            {
-                $transfer->update($transfer_details);
+            DB::transaction(function () use ($transfer)
+            {   
+                Account::where('id', $transfer->from_account_id)
+                    ->update(['balance' => DB::raw("balance + {$transfer->amount}")]);
 
-                Account::where('id', $from_account_id)
-                    ->update(['balance' => DB::raw("balance - ${amount}")]);
+                Account::where('id', $transfer->to_account_id)
+                    ->update(['balance' => DB::raw("balance - {$transfer->amount}")]);
 
-                Account::where('id', $to_account_id)
-                ->update(['balance' => DB::raw("balance + ${amount}")]);
+                $transfer->delete();
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

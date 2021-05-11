@@ -18,7 +18,7 @@ class UpdateStoreRequest extends BaseRequest
             'from_account_id' => ['required', 'integer', 'exists:accounts,id'],
             'to_account_id' => ['required', 'integer', 'exists:accounts,id'],
             'payment_method_id' => ['required', 'integer', 'exists:payment_methods,id'],
-            'amount' => ['required', 'numeric', 'min:0', new AccountBalanceExceed($this->from_account_id)],
+            'amount' => ['required', 'numeric'],
             'transferred_at' => ['required', 'string'],
             'description' => ['nullable', 'string'],
             'reference' => ['nullable', 'string']

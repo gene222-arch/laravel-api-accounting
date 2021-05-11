@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Banking\BankAccountTransfer\BankAccountTransfersServices;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -24,7 +25,23 @@ class BankAccountTransfer extends Model
         'description',
         'reference'
     ];
-    
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+        
+    /**
+     * getTransferredAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getTransferredAtAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
     /**
      * Define a one-to-many relationship with Account class
      *
