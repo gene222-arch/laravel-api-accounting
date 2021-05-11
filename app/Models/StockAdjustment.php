@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\InventoryManagement\Stock\StockAdjustmentsServices;
+use Carbon\Carbon;
 
 class StockAdjustment extends Model
 {
@@ -17,6 +18,7 @@ class StockAdjustment extends Model
     use StockAdjustmentsServices;
 
     protected $fillable = [
+        'adjusted_by',
         'stock_adjustment_number',
         'reason'
     ];
@@ -40,7 +42,18 @@ class StockAdjustment extends Model
             self::INVENTORY_COUNT
         ];
     }
-    
+        
+    /**
+     * getCreatedAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('M d, Y');
+    }
+
     /**
      * Define a many-to-many relationship with Stock class
      *

@@ -6,6 +6,7 @@ use App\Models\Stock;
 use App\Models\StockAdjustment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 
 trait StockAdjustmentsServices
 {
@@ -23,7 +24,7 @@ trait StockAdjustmentsServices
             stock_adjustments.id,
             stock_adjustments.stock_adjustment_number,
             stock_adjustments.reason,
-            stock_adjustments.created_at,
+            DATE_FORMAT(stock_adjustments.created_at, "%M %d, %Y") as created_at,
             SUM(stock_adjustment_details.quantity) as quantity
         ')
             ->join('stock_adjustment_details', 'stock_adjustment_details.stock_adjustment_id', '=', 'stock_adjustments.id')
@@ -45,7 +46,9 @@ trait StockAdjustmentsServices
         try {
             DB::transaction(function () use ($stockAdjustmentDetails, $reason, $adjustment_details)
             {
-                $stockAdjustment =  StockAdjustment::create($stockAdjustmentDetails);
+                $stockAdjustment =  StockAdjustment::create(array_merge($stockAdjustmentDetails, [
+                    'adjusted_by' => Auth::user()->getFullName()
+                ]));
 
                 $stockAdjustment->details()->attach($adjustment_details);
 
@@ -72,7 +75,9 @@ trait StockAdjustmentsServices
         try {
             DB::transaction(function () use ($stockAdjustment, $stockAdjustmentDetails, $reason, $adjustment_details)
             {
-                $stockAdjustment->update($stockAdjustmentDetails);
+                $stockAdjustment->update(array_merge($stockAdjustmentDetails, [
+                    'adjusted_by' => Auth::user()->getFullName()
+                ]));
 
                 $stockAdjustment->details()->sync($adjustment_details);
 
