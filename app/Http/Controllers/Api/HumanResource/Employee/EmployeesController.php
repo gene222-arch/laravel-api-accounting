@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\HumanResource\Employee;
 use App\Models\Employee;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Upload\UploadImageRequest;
 use App\Http\Requests\HumanResource\Employee\StoreRequest;
 use App\Http\Requests\HumanResource\Employee\DeleteRequest;
 use App\Http\Requests\HumanResource\Employee\UpdateRequest;
+use App\Traits\Upload\UploadServices;
 
 class EmployeesController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser, UploadServices;
 
     private Employee $employee;
     
@@ -47,9 +49,8 @@ class EmployeesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->employee->createEmployee(
-            $request->employee_details,
-            $request->role_id,
-            $request->salary_details,
+            $request->employee,
+            $request->salary,
             $request->create_user,
         );
 
@@ -84,15 +85,30 @@ class EmployeesController extends Controller
     {
         $result = $this->employee->updateEmployee(
             $employee,
-            $request->employee_details,
-            $request->role_id,
-            $request->salary_details,
+            $request->employee,
+            $request->salary,
             $request->create_user,
         );
 
         return $result !== true 
             ? $this->error($result, 500)
             : $this->success(null, 'Employee updated successfully.');
+    }
+
+    /**
+     * Upload the specified resource.
+     *
+     * @param UploadImageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */   
+    public function upload(UploadImageRequest $request)
+    {
+        $data = $this->uploadImage(
+            $request,
+            'employees'
+        );
+
+        return $this->success($data, 'Image uploaded successfully.');
     }
 
     /**

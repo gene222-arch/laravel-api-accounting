@@ -37,7 +37,7 @@ class EmployeesControllerTest extends TestCase
     public function user_can_create_employee()
     {
         $data = [
-            'employee_details' => [
+            'employee' => [
                 'first_name' => 'John Phillip',
                 'last_name' => 'Artista',
                 'email' => 'john@gmail.com',
@@ -48,7 +48,7 @@ class EmployeesControllerTest extends TestCase
                 'enabled' => true,
             ],
             'role_id' => 2,
-            'salary_details' => [
+            'salary' => [
                 'currency_id' => 1,
                 'amount' => 10000,
                 'tax_number' => '111111121',
@@ -74,7 +74,7 @@ class EmployeesControllerTest extends TestCase
 
         $data = [
             'id' => $id,
-            'employee_details' => [
+            'employee' => [
                 'first_name' => 'John Phillip',
                 'last_name' => 'Artista',
                 'email' => 'johngggg@gmail.com',
@@ -85,7 +85,7 @@ class EmployeesControllerTest extends TestCase
                 'enabled' => true,
             ],
             'role_id' => 2,
-            'salary_details' => [
+            'salary' => [
                 'currency_id' => 1,
                 'amount' => 10000,
                 'tax_number' => '1111111211',

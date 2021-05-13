@@ -4,7 +4,7 @@ namespace App\Http\Requests\Item\Item;
 
 use App\Http\Requests\BaseRequest;
 
-class UpdateRequest extends BaseRequest
+class UpdateRequest extends ItemBaseRequest
 {
     /**
      * Get the validation rules that apply to the request.

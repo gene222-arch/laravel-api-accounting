@@ -9,10 +9,11 @@ use App\Http\Requests\Item\Item\UpdateRequest;
 use App\Http\Requests\Upload\UploadImageRequest;
 use App\Models\Item;
 use App\Traits\Api\ApiResponser;
+use App\Traits\Upload\UploadServices;
 
 class ItemsController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser, UploadServices;
 
     private Item $item;
     
@@ -109,7 +110,7 @@ class ItemsController extends Controller
      */   
     public function upload(UploadImageRequest $request)
     {
-        $data = $this->item->uploadImage(
+        $data = $this->uploadImage(
             $request,
             'items/images'
         );

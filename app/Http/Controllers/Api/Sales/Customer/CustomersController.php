@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\Sales\Customer;
 use App\Models\Customer;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Sales\Customer\DeleteRequest;
+use App\Http\Requests\Upload\UploadImageRequest;
 use App\Http\Requests\Sales\Customer\StoreRequest;
+use App\Http\Requests\Sales\Customer\DeleteRequest;
 use App\Http\Requests\Sales\Customer\UpdateRequest;
+use App\Traits\Upload\UploadServices;
 
 class CustomersController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser, UploadServices;
 
     private Customer $customer;
     
@@ -75,6 +77,22 @@ class CustomersController extends Controller
         $customer->update($request->except('id'));
 
         return $this->success(null, 'Customer updated successfully.');
+    }
+
+    /**
+     * Upload the specified resource.
+     *
+     * @param UploadImageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */   
+    public function upload(UploadImageRequest $request)
+    {
+        $data = $this->uploadImage(
+            $request,
+            'employees'
+        );
+
+        return $this->success($data, 'Image uploaded successfully.');
     }
 
     /**

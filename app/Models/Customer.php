@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Invoice;
 use App\Models\Revenue;
 use App\Models\Currency;
+use App\Traits\Upload\UploadServices;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;

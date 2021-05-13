@@ -31,9 +31,7 @@ class AccessRightsController extends Controller
 
         return !$roles->count()
             ? $this->noContent()
-            : $this->success([
-                'roles' => $roles
-            ]);
+            : $this->success($roles);
     }
 
     /**

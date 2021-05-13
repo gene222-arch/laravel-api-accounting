@@ -17,7 +17,7 @@ class Item extends Model
     use HasFactory;
 
     /** Custom */
-    use ItemsServices, UploadServices;
+    use ItemsServices;
 
     protected $fillable = [
         'category_id',

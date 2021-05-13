@@ -29,16 +29,9 @@ class PayCalendarsController extends Controller
     public function index()
     {
         $result = $this->payCalendar
-            ->with([
-                'employees' => fn($q) => $q->selectRaw('
-                    employees.id,
-                    employees.first_name,
-                    employees.last_name,
-                    employees.email
-                ')
-            ])
+            ->with('employees:id,first_name,last_name,email')
             ->latest()
-            ->get([ 'id', ...$this->payCalendar->getFillable() ]);
+            ->get();
 
         return !$result->count()
             ? $this->noContent()

@@ -14,14 +14,18 @@ class EmployeeBaseRequest extends BaseRequest
     public function attributes()
     {
         return [
-            'employee_details.first_name' => 'first name',
-            'employee_details.last_name' => 'last name',
-            'employee_details.birth_date' => 'birth date',
-            'role_id' => 'role',
-            'salary_details.currency_id' => 'currency',
-            'salary_details.tax_number' => 'tax number',
-            'salary_details.bank_account_number' => 'bank account number',
-            'salary_details.hired_at' => 'hire date'
+            'employee.first_name' => 'first name',
+            'employee.last_name' => 'last name',
+            'employee.birth_date' => 'birth date',
+            'employee.email' => 'email',
+            'employee.phone' => 'phone',
+            'employee.address' => 'address',
+            'employee.gender' => 'gender',
+            'employee.role_id' => 'position',
+            'salary.currency_id' => 'currency',
+            'salary.tax_number' => 'tax number',
+            'salary.bank_account_number' => 'bank account number',
+            'salary.hired_at' => 'hire date'
         ];
     }
 

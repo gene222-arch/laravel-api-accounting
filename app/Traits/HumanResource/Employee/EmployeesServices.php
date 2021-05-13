@@ -13,29 +13,28 @@ trait EmployeesServices
     /**
      * Create a new record of employee
      *
-     * @param  array $employee_details
-     * @param  integer $role_id
-     * @param  array $salary_details
+     * @param  array $employee
+     * @param  array $salary
      * @param  bool $create_user
      * @return mixed
      */
-    public function createEmployee (array $employee_details, int $role_id, array $salary_details, bool $create_user = false): mixed
+    public function createEmployee (array $employee, array $salary, bool $create_user = false): mixed
     {
         try {
-            DB::transaction(function () use ($employee_details, $role_id, $salary_details, $create_user)
+            DB::transaction(function () use ($employee, $salary, $create_user)
             {
                 $create_user && (
                     (new User())->createUserWithRoles(
-                        $employee_details['first_name'],
-                        $employee_details['last_name'],
-                        $employee_details['email'],
-                        $employee_details['first_name'],
-                        $role_id
+                        $employee['first_name'],
+                        $employee['last_name'],
+                        $employee['email'],
+                        $employee['first_name'],
+                        $employee['role_id']
                 ));
 
-                $employee = Employee::create($employee_details);
+                $employee = Employee::create($employee);
 
-                $employee->salary()->create($salary_details);
+                $employee->salary()->create($salary);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();
@@ -48,16 +47,15 @@ trait EmployeesServices
      * Create a new record of employee
      *
      * @param  Employee $employee
-     * @param  array $employee_details
-     * @param  integer $role_id
-     * @param  array $salary_details
+     * @param  array $employeeDetails
+     * @param  array $salary
      * @param  bool $create_user
      * @return mixed
      */
-    public function updateEmployee (Employee $employee, array $employee_details, int $role_id, array $salary_details, bool $create_user = false): mixed
+    public function updateEmployee (Employee $employee, array $employeeDetails , array $salary, bool $create_user = false): mixed
     {
         try {
-            DB::transaction(function () use ($employee, $employee_details, $role_id, $salary_details, $create_user)
+            DB::transaction(function () use ($employee, $employeeDetails , $salary, $create_user)
             {
                 $user = User::where('email', $employee->email)->first();
 
@@ -67,12 +65,12 @@ trait EmployeesServices
                     if ($create_user)
                     {
                         ((new User())->updateUserWithRolesByEmail(
-                            $employee_details['email'],
-                            $employee_details['first_name'],
-                            $employee_details['last_name'],
-                            $employee_details['email'],
-                            $employee_details['first_name'],
-                            $role_id
+                            $employeeDetails['email'],
+                            $employeeDetails['first_name'],
+                            $employeeDetails['last_name'],
+                            $employeeDetails['email'],
+                            $employeeDetails['first_name'],
+                            $employeeDetails['role_id']
                         ));
                     }
                 }
@@ -81,9 +79,9 @@ trait EmployeesServices
                     if (!$create_user) $user->delete();
                 }
 
-                $employee->update($employee_details);
+                $employee->update($employeeDetails);
 
-                $employee->salary()->update($salary_details);
+                $employee->salary()->update($salary);
             });
         } catch (\Throwable $th) {
             return $th->getMessage();

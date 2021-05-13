@@ -20,6 +20,11 @@ class PayCalendar extends Model
         'type',
         'pay_day_mode'
     ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
     
     /**
      * Define a many-to-many relationship with Employee class
