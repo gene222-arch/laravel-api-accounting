@@ -14,7 +14,7 @@ class DeleteRequest extends BaseRequest
     public function rules()
     {
         return [
-            'ids.*' => ['required', 'integer', 'distinct', 'exists:purchases,id']
+            'ids.*' => ['required', 'integer', 'distinct', 'exists:payments,id']
         ];
     }
 }
