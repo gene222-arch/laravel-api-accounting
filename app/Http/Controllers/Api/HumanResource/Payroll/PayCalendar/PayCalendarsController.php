@@ -65,15 +65,9 @@ class PayCalendarsController extends Controller
      */
     public function show(PayCalendar $payCalendar)
     {
-        $payCalendar = $payCalendar->with([
-            'employees' => fn($q) => $q->selectRaw('
-                employees.id,
-                employees.first_name,
-                employees.last_name,
-                employees.email
-            ')
-        ])
-        ->first();
+        $payCalendar = $this->payCalendar
+            ->with('employees:id')
+            ->find($payCalendar->id);
 
         return !$payCalendar
             ? $this->noContent()
