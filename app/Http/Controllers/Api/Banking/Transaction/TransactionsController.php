@@ -26,13 +26,9 @@ class TransactionsController extends Controller
     public function index()
     {
         $result = $this->transaction
-            ->with([
-                'account',
-                'incomeCategory',
-                'expenseCategory'
-            ])
+            ->with('account:id,name')
             ->latest()
-            ->get(['id', ...$this->transaction->getFillable()]);
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
@@ -71,12 +67,12 @@ class TransactionsController extends Controller
         $result = $this->transaction
             ->where('account_id', $id)
             ->with([
-                'account',
-                'incomeCategory',
-                'expenseCategory'
+                'account:id,name',
+                'incomeCategory:id,name',
+                'expenseCategory:id,name'
             ])
             ->latest()
-            ->get(['id', ...$this->transaction->getFillable()]);
+            ->get();
 
         return !$result->count()
             ? $this->noContent()

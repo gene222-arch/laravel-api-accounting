@@ -144,6 +144,30 @@ trait BillsServices
 
         return true;
     }
+    
+    /**
+     * Mark a bill as received
+     *
+     * @param  App\Models\Bill $bill
+     * @return mixed
+     */
+    public function markAsReceived(Bill $bill): mixed
+    {
+        try {
+            DB::transaction(function () use ($bill)
+            {
+                $bill->update([
+                    'status' => 'Received'
+                ]);
+
+                (new Stock())->receiveIncomingStock($bill->items->map->details->toArray());
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
+    }
 
     /**
      * Create a new record of bill payment
@@ -159,11 +183,11 @@ trait BillsServices
      * @param  string|null $reference
      * @return mixed
      */
-    public function payment (Bill $bill, int $account_id, int $currency_id, int $payment_method_id, int $expense_category_id, string $date, float $amount, ?string $description, ?string $reference): mixed
+    public function payment (Bill $bill, int $account_id, int $currency_id, int $payment_method_id, string $date, float $amount, ?string $description, ?string $reference): mixed
     {
         try {
             DB::transaction(function () use (
-                $bill, $account_id, $currency_id, $payment_method_id, $expense_category_id, 
+                $bill, $account_id, $currency_id, $payment_method_id, 
                 $date, $amount, $description, $reference) 
             {
                 /** Bill payment detail */
@@ -187,7 +211,7 @@ trait BillsServices
                     'number' => $bill->bill_number,
                     'account_id' => $account_id,
                     'vendor_id' => $bill->vendor_id,
-                    'expense_category_id' => $expense_category_id,
+                    'expense_category_id' => $bill->expense_category_id,
                     'payment_method_id' => $payment_method_id,
                     'currency_id' => $currency_id,
                     'date' => $date,
@@ -205,9 +229,9 @@ trait BillsServices
                     $bill->bill_number,
                     $account_id,
                     null,
-                    $expense_category_id,
+                    $bill->expense_category_id,
                     $payment_method_id,
-                    ExpenseCategory::find($expense_category_id)->name,
+                    ExpenseCategory::find($bill->expense_category_id)->name,
                     'Expense',
                     $amount,
                     $amount,
@@ -303,26 +327,39 @@ trait BillsServices
      * @param  string|null $greeting
      * @param  string|null $note
      * @param  string|null $footer
-     * @return void
+     * @return mixed
      */
-    public function email (Bill $bill, Vendor $vendor, ?string $subject, ?string $greeting, ?string $note, ?string $footer): void
+    public function email (Bill $bill, Vendor $vendor, ?string $subject, ?string $greeting, ?string $note, ?string $footer): mixed
     {
-        $bill
-            ->histories()
-            ->create([
-                'status' => 'Sent',
-                'description' => "Bill has been sent!"
-            ]);
-
-        dispatch(new QueueBillNotification(
-            $bill, 
-            $vendor, 
-            $subject, 
-            $greeting, 
-            $note, 
-            $footer
-        ))
-        ->delay(now()->addSeconds(5));
+        try {
+            DB::transaction(function () use ($bill, $vendor, $subject, $greeting, $note, $footer)
+            {
+                $bill->update([
+                    'status' => 'Sent'
+                ]);
+        
+                $bill
+                    ->histories()
+                    ->create([
+                        'status' => 'Sent',
+                        'description' => "Bill has been sent!"
+                    ]);
+        
+                dispatch(new QueueBillNotification(
+                    $bill, 
+                    $vendor, 
+                    $subject, 
+                    $greeting, 
+                    $note, 
+                    $footer
+                ))
+                ->delay(now()->addSeconds(5));
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        
+        return true;
     }
 
     /**

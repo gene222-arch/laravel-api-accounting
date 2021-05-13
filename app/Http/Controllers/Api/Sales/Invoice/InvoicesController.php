@@ -73,16 +73,17 @@ class InvoicesController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice = $invoice->with([
-            'incomeCategory',
-            'customer',
-            'currency',
-            'items',
-            'paymentDetail',
-            'histories',
-            'transactions'
-        ])
-        ->first();
+        $invoice = $this->invoice
+            ->with([
+                'incomeCategory',
+                'customer',
+                'currency',
+                'items',
+                'paymentDetail',
+                'histories',
+                'transactions'
+            ])
+            ->find($invoice->id);
 
         return !$invoice
             ? $this->noContent()

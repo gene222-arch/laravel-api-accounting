@@ -98,6 +98,20 @@ class BillsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
+    /**test */
+    public function user_can_mark_bill_as_received()
+    {
+        $id = 7;
+
+        $response = $this->put(
+            "/api/purchases/bills/${id}/mark-as-received",
+            [],
+            $this->apiHeader()
+        ); 
+
+        $this->assertResponse($response);
+    }
+
     /** test */
     public function user_can_mail_vendor()
     {

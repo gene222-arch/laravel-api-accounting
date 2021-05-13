@@ -141,6 +141,10 @@ trait InvoicesServices
         try {
             DB::transaction(function () use ($invoice, $customer, $subject, $greeting, $note, $footer)
             {
+                $invoice->update([
+                    'status' => 'Sent'
+                ]);
+
                 $isCreated = $invoice
                     ->histories()
                     ->create([

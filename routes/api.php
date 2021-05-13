@@ -439,9 +439,10 @@ Route::middleware(['api'])->group(function ()
                 Route::get('/{bill}', [BillsController::class, 'show']);
                 Route::post('/', [BillsController::class, 'store']);
                 Route::post('/{bill}/vendors/{vendor}/mail', [BillsController::class, 'email']);
-                Route::post('/{bill}/mark-as-paid', [BillsController::class, 'markAsPaid']);
                 Route::post('/{bill}/payment', [BillsController::class, 'payment']);
+                Route::put('/{bill}/mark-as-paid', [BillsController::class, 'markAsPaid']);
                 Route::put('/{bill}', [BillsController::class, 'update']);
+                Route::put('/{bill}/mark-as-received', [BillsController::class, 'markAsReceived']);
                 Route::put('/{bill}/cancel-order', [BillsController::class, 'cancel']);
                 Route::delete('/', [BillsController::class, 'destroy']);
             });

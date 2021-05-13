@@ -15,6 +15,7 @@ class UpdateStoreRequest extends BaseRequest
     public function rules()
     {
         return [
+            'account_id' => ['required', 'integer', 'exists:accounts,id'],
             'started_at' => ['required', 'date'],
             'ended_at' => ['required', 'date'],
             'closing_balance' => ['required', 'numeric', 'min:0'],

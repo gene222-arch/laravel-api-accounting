@@ -35,7 +35,10 @@ class BillsController extends Controller
     public function index()
     {
         $result = $this->bill
-            ->with('paymentDetail')
+            ->with([
+                'paymentDetail',
+                'vendor:id,name'
+            ])
             ->latest()
             ->get();
 
@@ -54,7 +57,7 @@ class BillsController extends Controller
      */
     public function email(MailRequest $request, Bill $bill, Vendor $vendor)
     {
-        $this->bill->email(
+        $result = $this->bill->email(
             $bill,
             $vendor,
             $request->subject,
@@ -63,7 +66,9 @@ class BillsController extends Controller
             $request->footer
         );
 
-        return $this->success(null, 'Vendor mailed successfully.');
+        return $result !== true 
+            ? $this->error(null, 500)
+            : $this->success(null, 'Vendor mailed successfully.');
     }
 
     /**
@@ -89,6 +94,21 @@ class BillsController extends Controller
         return $result !== true
             ? $this->error($result, 500)
             : $this->success(null, 'Bill mark as paid successfully.');
+    }
+    
+    /**
+     * Mark a specified resource in storage as received
+     *
+     * @param  App\Models\Bill $bill
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function markAsReceived(Bill $bill)
+    {
+        $result = $this->bill->markAsReceived($bill);
+
+        return $result !== true
+            ? $this->error($result, 500)
+            : $this->success(null, 'Bill mark as received successfully.');
     }
 
     /**
@@ -119,11 +139,15 @@ class BillsController extends Controller
      */
     public function show(Bill $bill)
     {
-        $bill = $bill->with([
-            'items' => fn($q) => $q->select('name'),
-            'paymentDetail'
-        ])
-            ->first();
+        $bill = $this->bill
+            ->with([
+                'items:id,name',
+                'paymentDetail',
+                'histories',
+                'transactions',
+                'vendor:id,name'
+            ])
+            ->find($bill->id);
 
         return !$bill
             ? $this->noContent()
@@ -144,7 +168,6 @@ class BillsController extends Controller
             $request->account_id,
             $request->currency_id,
             $request->payment_method_id,
-            $request->expense_category_id,
             $request->date,
             $request->amount,
             $request->description,

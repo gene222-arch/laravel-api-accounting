@@ -7,6 +7,7 @@ use App\Models\PaymentMethod;
 use App\Models\IncomeCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Banking\Transaction\HasTransaction;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -34,7 +35,17 @@ class Transaction extends Model
         'description',
         'contact'
     ];
-
+    
+    /**
+     * getCreatedAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
     /**
      * Define an inverse one-to-many relationship with Account class
      *

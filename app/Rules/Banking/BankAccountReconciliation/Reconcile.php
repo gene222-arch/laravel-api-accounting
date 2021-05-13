@@ -28,6 +28,7 @@ class Reconcile implements Rule
     public function passes($attribute, $value)
     {   
         $shouldReconcile = false;
+        $value = (int) $value;
 
         if ($this->status === 'Reconciled' && empty($value))
         {

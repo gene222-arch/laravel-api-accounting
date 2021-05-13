@@ -47,6 +47,7 @@ class CreateBillsTable extends Migration
             $table->foreignId('bill_id');
             $table->foreignId('item_id');
             $table->foreignId('discount_id')->nullable();
+            $table->foreignId('tax_id')->nullable();
             $table->string('item');
             $table->unsignedDecimal('price', 10, 2);
             $table->unsignedInteger('quantity');

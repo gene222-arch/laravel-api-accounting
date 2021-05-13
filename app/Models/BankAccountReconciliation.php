@@ -6,6 +6,7 @@ use App\Models\Account;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\Banking\BankAccountReconciliation\BankAccountReconciliationsServices;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BankAccountReconciliation extends Model
@@ -26,6 +27,40 @@ class BankAccountReconciliation extends Model
         'status'
     ];
     
+    
+    /**
+     * getStartedAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getStartedAtAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+    
+    /**
+     * getEndedAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getEndedAtAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+    
+    /**
+     * getUpdatedAtAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getCreatedAtAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
     /**
      * Define an inverse one-to-one or many relationship with Account class
      *

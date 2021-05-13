@@ -18,7 +18,6 @@ class PaymentRequest extends BaseRequest
             'account_id' => ['required', 'integer', 'exists:accounts,id'],
             'currency_id' => ['required', 'integer', 'exists:currencies,id'],
             'payment_method_id' => ['required', 'integer', 'exists:payment_methods,id'],
-            'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
             'date' => ['required', 'date'],
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
@@ -37,7 +36,6 @@ class PaymentRequest extends BaseRequest
             'account_id' => 'account id',
             'currency_id' => 'currency id',
             'payment_method_id' => 'payment method id',
-            'expense_category_id' => 'expense category id',
         ];
     }
 
@@ -51,8 +49,7 @@ class PaymentRequest extends BaseRequest
         return [
             'account_id.exists' => 'The selected :attribute does not exist.',
             'currency_id.exists' => 'The selected :attribute does not exist.',
-            'payment_method_id.exists' => 'The selected :attribute does not exist.',
-            'expense_category_id.exists' => 'The selected :attribute does not exist.',
+            'payment_method_id.exists' => 'The selected :attribute does not exist.'
         ];
     }
 }

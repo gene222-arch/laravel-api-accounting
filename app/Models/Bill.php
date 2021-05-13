@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Currency;
+use Carbon\Carbon;
 use App\Models\Vendor;
+use App\Models\Currency;
 use App\Models\ExpenseCategory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Purchases\Bill\BillsServices;
@@ -32,6 +33,32 @@ class Bill extends Model
         'status',
         'recurring'
     ];
+
+    protected $hidden = ['created_at', 'updated_at'];
+
+    protected $timeFormat = 'Y-m-d';
+    
+    /**
+     * getDueDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDueDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format($this->timeFormat);
+    }
+
+    /**
+     * getDueDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format($this->timeFormat);
+    }
 
     /**
      * Define a many-to-many relationship with Currency class
@@ -104,4 +131,16 @@ class Bill extends Model
     {
         return $this->hasMany(BillHistory::class);
     }
+
+    /**
+     * transactions
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class, 'model_id')
+            ->where('model_type', get_class($this));
+    }
+
 }

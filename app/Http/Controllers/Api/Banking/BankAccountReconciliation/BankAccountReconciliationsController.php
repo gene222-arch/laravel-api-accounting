@@ -29,9 +29,9 @@ class BankAccountReconciliationsController extends Controller
     public function index()
     {
         $result = $this->reconciliation
-            ->with('account')
+            ->with('account:id,name')
             ->latest()
-            ->get(['id', ...$this->reconciliation->getFillable()]);
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
