@@ -28,11 +28,12 @@ class RevenuesController extends Controller
      */
     public function index()
     {
-        $result = $this->revenue->with([
-            'account',
-            'customer',
-            'incomeCategory',
-        ])
+        $result = $this->revenue
+            ->with([
+                'account:id,name',
+                'customer:id,name',
+                'incomeCategory:id,name',
+            ])
             ->latest()
             ->get();
 

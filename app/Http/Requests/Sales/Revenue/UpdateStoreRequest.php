@@ -25,7 +25,7 @@ class UpdateStoreRequest extends BaseRequest
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
             'income_category_id' => ['required', 'integer', 'exists:income_categories,id'],
             'payment_method_id' => ['required', 'integer', 'exists:payment_methods,id'],
-            // 'currency_id' => ['nullable', 'integer', 'exists:currencies,id'],
+            'currency_id' => ['nullable', 'integer', 'exists:currencies,id'],
         ];
     }
 

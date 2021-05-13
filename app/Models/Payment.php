@@ -8,6 +8,7 @@ use App\Models\Vendor;
 use App\Models\PaymentMethod;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\Purchases\Payment\PaymentsServices;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -34,6 +35,17 @@ class Payment extends Model
         'reference',
         'file',
     ];
+    
+    /**
+     * getDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getDateAttribute($value): string 
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
 
     /**
      * Define an inverse one-to-many relationship with Account

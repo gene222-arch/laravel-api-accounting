@@ -23,7 +23,7 @@ class StoreRequest extends PaymentBaseRequest
             'amount' => ['required', 'numeric', 'min:0'],
             'description' => ['nullable', 'string'],
             'recurring' => ['required', 'string', 'in:No,Daily,Weekly,Monthly,Yearly'],
-            'reference' => ['nullable', 'string', 'exists:'],
+            'reference' => ['nullable', 'string'],
             'file' => ['nullable', 'file'],
         ];
     }

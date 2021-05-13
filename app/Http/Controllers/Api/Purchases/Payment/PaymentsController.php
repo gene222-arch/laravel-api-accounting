@@ -29,8 +29,13 @@ class PaymentsController extends Controller
     public function index()
     {
         $result = $this->payment
+            ->with([
+                'account:id,name',
+                'vendor:id,name',
+                'expenseCategory:id,name',
+            ])
             ->latest()
-            ->get(['id', ...$this->payment->getFillable()]);
+            ->get();
 
         return !$result->count()
             ? $this->noContent()
