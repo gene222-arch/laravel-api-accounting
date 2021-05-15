@@ -13,7 +13,7 @@ class SalaryBenefitsControllerTest extends TestCase
     public function user_can_view_any_salary_benefits()
     {
         $response = $this->get(
-            '/api/human-resources/payrolls/salary-benefits',
+            '/api/settings/salary-benefits',
             $this->apiHeader()
         );
 
@@ -26,7 +26,7 @@ class SalaryBenefitsControllerTest extends TestCase
         $id = 1;
 
         $response = $this->get(
-            "/api/human-resources/payrolls/salary-benefits/${id}",
+            "/api/settings/salary-benefits/${id}",
             $this->apiHeader()
         );
 
@@ -43,7 +43,7 @@ class SalaryBenefitsControllerTest extends TestCase
         ];
 
         $response = $this->post(
-            '/api/human-resources/payrolls/salary-benefits',
+            '/api/settings/salary-benefits',
             $data,
             $this->apiHeader()
         );
@@ -64,7 +64,7 @@ class SalaryBenefitsControllerTest extends TestCase
         ];
 
         $response = $this->put(
-            "/api/human-resources/payrolls/salary-benefits/${id}",
+            "/api/settings/salary-benefits/${id}",
             $data,
             $this->apiHeader()
         );
@@ -82,7 +82,7 @@ class SalaryBenefitsControllerTest extends TestCase
         ];
 
         $response = $this->delete(
-            '/api/human-resources/payrolls/salary-benefits',
+            '/api/settings/salary-benefits',
             $data,
             $this->apiHeader()
         );

@@ -354,18 +354,6 @@ Route::middleware(['api'])->group(function ()
                     Route::delete('/', [PayrollsController::class, 'destroy']);
                 });
 
-                /**
-                 * Salary Benefits
-                */
-                Route::prefix('salary-benefits')->group(function () 
-                {
-                    Route::get('/', [SalaryBenefitsController::class, 'index']);
-                    Route::get('/{salaryBenefit}', [SalaryBenefitsController::class, 'show']);
-                    Route::post('/', [SalaryBenefitsController::class, 'store']);
-                    Route::put('/{salaryBenefit}', [SalaryBenefitsController::class, 'update']);
-                    Route::delete('/', [SalaryBenefitsController::class, 'destroy']);
-                });
-
             });
         });
 
@@ -675,6 +663,18 @@ Route::middleware(['api'])->group(function ()
                 Route::post('/', [TaxController::class, 'store']);
                 Route::put('/{tax}', [TaxController::class, 'update']);
                 Route::delete('/', [TaxController::class, 'destroy']);
+            });
+
+            /**
+             * Salary Benefits
+            */
+            Route::prefix('salary-benefits')->group(function () 
+            {
+                Route::get('/', [SalaryBenefitsController::class, 'index']);
+                Route::get('/{salaryBenefit}', [SalaryBenefitsController::class, 'show']);
+                Route::post('/', [SalaryBenefitsController::class, 'store']);
+                Route::put('/{salaryBenefit}', [SalaryBenefitsController::class, 'update']);
+                Route::delete('/', [SalaryBenefitsController::class, 'destroy']);
             });
         });
 
