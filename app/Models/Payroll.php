@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Models\Tax;
 use App\Models\Contribution;
 use App\Models\SalaryBenefit;
 use App\Models\SalaryDeduction;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Traits\HumanResource\Payroll\Payroll\PayrollsServices;
@@ -30,6 +32,44 @@ class Payroll extends Model
         'status'
     ];
     
+    protected $hidden = [
+        'created_at',
+        'updated_at'
+    ];
+    
+    /**
+     * getFromDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getFromDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    /**
+     * getToDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getToDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    /**
+     * getPaymentDateAttribute
+     *
+     * @param  mixed $value
+     * @return string
+     */
+    public function getPaymentDateAttribute($value): string
+    {
+        return Carbon::parse($value)->format('Y-m-d');
+    }
+
     /**
      * Define a many-to-many relationship with Employee class
      *
@@ -86,5 +126,15 @@ class Payroll extends Model
                 'employee_id',
                 'amount'
             ]);
+    }
+
+    /**
+     * Define a one-to-one relationship with PayCalendar class
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function payCalendar(): BelongsTo
+    {   
+        return $this->belongsTo(PayCalendar::class);
     }
 }

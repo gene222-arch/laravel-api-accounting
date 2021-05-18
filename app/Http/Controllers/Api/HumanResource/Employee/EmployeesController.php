@@ -68,7 +68,10 @@ class EmployeesController extends Controller
     public function show(Employee $employee)
     {
         $employee = $this->employee
-            ->with('salary')
+            ->with([
+                'salary',
+                'role:id,name'
+            ])
             ->find($employee->id);
 
         return !$employee

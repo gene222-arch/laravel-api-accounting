@@ -32,11 +32,13 @@ class PayrollsController extends Controller
 
         $result = $this->payroll
             ->selectRaw('
+                payrolls.id,
+                payrolls.pay_calendar_id,
                 payrolls.name,
                 payrolls.from_date,
                 payrolls.to_date,
                 payrolls.payment_date,
-                COUNT(employee_payroll.employee_id) as employee_count,
+                COUNT(employee_payroll.employee_id) as employees,
                 payrolls.status,
                 SUM(employee_payroll.total_amount) as amount
             ')
@@ -80,13 +82,15 @@ class PayrollsController extends Controller
      */
     public function show(Payroll $payroll)
     {
-        $payroll = $payroll->with([
-            'details',
-            'employeeTaxes',
-            'employeeBenefits',
-            'employeeContributions'
-        ])
-            ->first();
+        $payroll = $this->payroll
+            ->with([
+                'details.salary',
+                'details.role',
+                'employeeTaxes',
+                'employeeBenefits',
+                'employeeContributions'
+            ])
+            ->find($payroll->id);
 
         return !$payroll
             ? $this->noContent()

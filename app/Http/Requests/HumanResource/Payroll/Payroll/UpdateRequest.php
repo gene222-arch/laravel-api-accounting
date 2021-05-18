@@ -16,6 +16,7 @@ class UpdateRequest extends PayrollBaseRequest
     {
         return [
             'id' => ['required', 'integer', 'exists:payrolls,id'],
+            'pay_calendar_id' => ['required', 'integer', 'exists:pay_calendars,id'],
             'name' => ['required', 'string', 'unique:payrolls,name,' . $this->id],
             'account_id' => ['required', 'integer', 'exists:accounts,id'],
             'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],

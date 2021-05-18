@@ -7,6 +7,7 @@ use App\Traits\Upload\UploadServices;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Employee extends Model
@@ -46,12 +47,22 @@ class Employee extends Model
     }
 
     /**
-     * Define a one-to-one relationship with Salary
+     * Define a one-to-one relationship with Salary class
      *
      * @return Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function salary(): HasOne
     {
         return $this->hasOne(Salary::class);
+    }
+    
+    /**
+     * Define a one-to-one relationship with Role class
+     *
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo 
+    {
+        return $this->belongsTo(Role::class);
     }
 }

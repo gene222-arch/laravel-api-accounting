@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\HumanResource\Payroll\PayCalendar\PayCalendarsServices;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\HumanResource\Payroll\PayCalendar\PayCalendarsServices;
 
 class PayCalendar extends Model
 {
@@ -34,5 +35,15 @@ class PayCalendar extends Model
     public function employees(): BelongsToMany
     {
         return $this->belongsToMany(Employee::class);
+    }
+
+    /**
+     * The payrolls that belong to the PayCalendar
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function payroll(): HasOne
+    {
+        return $this->hasOne(Payroll::class);
     }
 }

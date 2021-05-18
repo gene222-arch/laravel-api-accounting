@@ -29,7 +29,10 @@ class PayCalendarsController extends Controller
     public function index()
     {
         $result = $this->payCalendar
-            ->with('employees:id,first_name,last_name,email')
+            ->with([
+                'employees:id,first_name,last_name,email',
+                'payroll'
+            ])
             ->latest()
             ->get();
 
@@ -66,7 +69,11 @@ class PayCalendarsController extends Controller
     public function show(PayCalendar $payCalendar)
     {
         $payCalendar = $this->payCalendar
-            ->with('employees:id')
+            ->with([
+                'employees',
+                'employees.role',
+                'employees.salary'
+            ])
             ->find($payCalendar->id);
 
         return !$payCalendar

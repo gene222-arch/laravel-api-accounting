@@ -61,18 +61,6 @@ class PayrollsControllerTest extends TestCase
                     'total_amount' => 100.00
                 ]
             ],
-            'taxes' => [
-                [
-                    'employee_id' => 1,
-                    'tax_id' => 1,
-                    'amount' => 2000.00
-                ],
-                [
-                    'employee_id' => 2,
-                    'tax_id' => 1,
-                    'amount' => 2000.00
-                ]
-            ],
             'benefits' => [
                 [
                     'employee_id' => 1,
@@ -95,6 +83,18 @@ class PayrollsControllerTest extends TestCase
                     'employee_id' => 2,
                     'contribution_id' => 2,
                     'amount' => 200.00
+                ]
+            ],
+            'taxes' => [
+                [
+                    'employee_id' => 1,
+                    'tax_id' => 1,
+                    'amount' => 2000.00
+                ],
+                [
+                    'employee_id' => 2,
+                    'tax_id' => 1,
+                    'amount' => 2000.00
                 ]
             ],
         ];

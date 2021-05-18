@@ -14,6 +14,7 @@ class StoreRequest extends PayrollBaseRequest
     public function rules()
     {
         return [
+            'pay_calendar_id' => ['required', 'integer', 'exists:pay_calendars,id'],
             'name' => ['required', 'string', 'unique:payrolls,name'],
             'account_id' => ['required', 'integer', 'exists:accounts,id'],
             'expense_category_id' => ['required', 'integer', 'exists:expense_categories,id'],
