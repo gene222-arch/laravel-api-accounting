@@ -379,14 +379,8 @@ trait DoubleEntryDashboardServices
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-        foreach ($monthlyIncome as $month => $income) 
-        {
-            foreach ($monthlyExpense as $expenseMonth => $expense) 
-            {
-                if ($month === $expenseMonth) {
-                    $data[$month] = (float) $income - (float) $expense;
-                }
-            }
+        for ($i = 0; $i < count($data); $i++) { 
+            $data[$i] = $monthlyIncome[$i] - $monthlyExpense[$i];
         }
 
         return $data;

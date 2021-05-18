@@ -58,7 +58,7 @@ trait ExpenseSummaryServices
                 transactions.type = 'Expense'
             $andWhereClause
             GROUP BY 
-                MONTH(transactions.created_at)
+                MONTH(transactions.created_at), expense_categories.id
         ",$bindings);
 
         $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -66,12 +66,19 @@ trait ExpenseSummaryServices
 
         foreach ($query as $expense) 
         {
-            $months = [
-                ...$months,
-                $expense->month => $expense->amount
-            ];
-
-            $data[$expense->category] = $months;
+            if (array_key_exists($expense->category, $data)) 
+            {
+                $data[$expense->category] = [
+                    ...$data[$expense->category],
+                    $expense->month => $expense->amount
+                ];
+            }
+            else {
+                $data[$expense->category] = [
+                    ...$months,
+                    $expense->month => $expense->amount
+                ];
+            }
         }
 
         return $data;

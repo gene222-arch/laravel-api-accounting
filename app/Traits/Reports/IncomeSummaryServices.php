@@ -58,17 +58,23 @@ trait IncomeSummaryServices
         ", $bindings);
 
         $data = [];
-
         $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         foreach ($query as $income) 
         {
-            $months = [
-                ...$months,
-                $income->month => $income->amount
-            ];
-
-            $data[$income->category] = $months;
+            if (array_key_exists($income->category, $data)) 
+            {
+                $data[$income->category] = [
+                    ...$data[$income->category],
+                    $income->month => $income->amount
+                ];
+            }
+            else {
+                $data[$income->category] = [
+                    ...$months,
+                    $income->month => $income->amount
+                ];
+            }
         }
 
         return $data;
