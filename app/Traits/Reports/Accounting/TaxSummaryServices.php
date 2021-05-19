@@ -48,16 +48,29 @@ trait TaxSummaryServices
 
         foreach ($query as $taxSummary) 
         {
-            if(!isset($data[$taxSummary->name][$taxSummary->type])) {
-                $months = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            if(isset($data[$taxSummary->name][$taxSummary->type])) {
+                $data[$taxSummary->name][$taxSummary->type] = [
+                    ...$data[$taxSummary->name][$taxSummary->type],
+                    $taxSummary->month => $taxSummary->amount
+                ];
+            }
+            else {
+                $data[$taxSummary->name][$taxSummary->type] = [
+                    ...$months,
+                    $taxSummary->month => $taxSummary->amount
+                ];
+            }
+        }
+
+        foreach ($data as $taxName => $taxTypes) 
+        {
+            if (!array_key_exists('purchase', $taxTypes)) {
+                $data[$taxName]['purchase'] = $months;
             }
 
-            $months = [
-                ...$months,
-                $taxSummary->month => $taxSummary->amount
-            ];
-
-            $data[$taxSummary->name][$taxSummary->type] = $months;
+            if (!array_key_exists('sales', $taxTypes)) {
+                $data[$taxName]['sales'] = $months;
+            }
         }
 
         return $data;

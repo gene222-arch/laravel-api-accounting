@@ -69,6 +69,7 @@ use App\Http\Controllers\Api\Reports\Accounting\TrialBalanceController;
 use App\Http\Controllers\Api\Reports\ExpenseSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeVsExpenseController;
+use App\Http\Controllers\Api\Reports\ReportsDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -471,6 +472,7 @@ Route::middleware(['api'])->group(function ()
             /**
              * Reports
              */
+            Route::get('/', ReportsDashboardController::class);
             Route::get('/expense-summary', ExpenseSummaryController::class);
             Route::get('/income-summary', IncomeSummaryController::class);
             Route::get('/income-vs-expense', IncomeVsExpenseController::class);
