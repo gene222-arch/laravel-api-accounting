@@ -32,7 +32,8 @@ trait GeneralLedgerServices
 
         $query = DB::select(
             "SELECT 	
-                REPLACE(LOWER(CONCAT(chart_of_accounts.name, ' ', chart_of_account_types.name)), ' ', '_') as name,
+                REPLACE(LOWER(chart_of_account_types.name), ' ', '_') as coat_name,
+                REPLACE(LOWER(chart_of_accounts.name), ' ', '_') as coa_name,
                 DATE_FORMAT(journal_entries.date, '%d %M %Y') as date,
                 journal_entries.description as description,
                 journal_entry_details.debit as debit,
@@ -60,7 +61,7 @@ trait GeneralLedgerServices
 
         foreach ($query as $generalLedger) 
         {
-            $data[$generalLedger->name][] = [
+            $data[$generalLedger->coa_name][] = [
                 'date' => $generalLedger->date,
                 'description' => $generalLedger->description,
                 'debit' => $generalLedger->debit,
