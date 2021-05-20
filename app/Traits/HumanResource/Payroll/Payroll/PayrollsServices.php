@@ -94,9 +94,6 @@ trait PayrollsServices
                 /** Employee contributions */
                 $contributions && ( $payroll->employeeContributions()->attach($contributions) );
 
-                /** Pay Calendars */
-                $payroll->payCalendars()->attach($payroll_details['pay_calendar_id']);
-
                 /** Approve payroll */
                 (strtolower($status) === 'approved') && (  $this->approve($payroll) );
 
@@ -139,9 +136,6 @@ trait PayrollsServices
 
                 /** Employee contributions */
                 $contributions && ( $payroll->employeeContributions()->sync($contributions) );
-
-                /** Pay Calendars */
-                $payroll->payCalendars()->sync($payroll_details['pay_calendar_id']);
 
                 /** Approve payroll */
                 (strtolower($status) === 'approved') && (  $this->approve($payroll) );

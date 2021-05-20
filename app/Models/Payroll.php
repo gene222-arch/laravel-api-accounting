@@ -22,6 +22,7 @@ class Payroll extends Model
     use PayrollsServices;
 
     protected $fillable = [
+        'pay_calendar_id',
         'name',
         'account_id',
         'expense_category_id',
