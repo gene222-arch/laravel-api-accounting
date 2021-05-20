@@ -30,6 +30,7 @@ trait BalanceSheetServices
         $query = DB::select(
             "SELECT 	
                 LOWER(chart_of_account_types.category) as category,
+                REPLACE(LOWER(chart_of_account_types.name), ' ', '_') as name,
                 chart_of_accounts.name as label,
                 SUM(journal_entry_details.debit) as amount
             FROM 
@@ -49,17 +50,35 @@ trait BalanceSheetServices
             WHERE
                 $whereClause
             $andClause
+                AND chart_of_account_types.category in ('Assets', 'Liabilities', 'Equity')
             GROUP BY 
                 chart_of_account_types.id 
         ", $bindings);
 
         $data = [];
 
-        foreach ($query as $balanceSheet) {
-            $data[$balanceSheet->category][] = [
+        foreach ($query as $balanceSheet) 
+        {
+            $data[$balanceSheet->category][$balanceSheet->name][] = [
                 'name' => $balanceSheet->label,
                 'amount' => $balanceSheet->amount
             ];
+
+            if (isset($data[$balanceSheet->category][$balanceSheet->name])) {
+                $total = array_reduce($data[$balanceSheet->category][$balanceSheet->name], function ($totalVal, $curArray) {
+                    return $totalVal + $curArray['amount'];
+                }, 0);
+
+                $data[$balanceSheet->category]["total_$balanceSheet->name"] = $total;
+            }
+
+            if (isset($data[$balanceSheet->category]) && !isset($data["total_$balanceSheet->category"])) {
+                $data["total_$balanceSheet->category"] = 0;
+            }
+
+            if (isset($data["total_$balanceSheet->category"])) {
+                $data["total_$balanceSheet->category"] = $data["total_$balanceSheet->category"] + $balanceSheet->amount;
+            }
         }
 
         return $data;
