@@ -16,7 +16,7 @@ class BillExport implements FromView
         return view('export.excel.purchases.bill', [
             'bills' => Bill::with([
                 'currency',
-                'customer',
+                'vendor',
                 'expenseCategory',
                 'items',
                 'paymentDetail'

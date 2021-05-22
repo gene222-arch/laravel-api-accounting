@@ -37,7 +37,7 @@
                     <td align="center">{{ \Carbon\Carbon::parse($bill->due_date)->format('d F Y') }}</td>
                     <td align="center">{{ $bill->status }}</td>
                     <td align="center">{{ $bill->items()->count() }}</td>
-                    <td align="right">{{ \number_format($bill->items->map->pivot->map->amount->sum(), 2) }}</td>
+                    <td align="right">{{ \number_format($bill->items->map->details->map->amount->sum(), 2) }}</td>
                     <td align="center">{{ $bill->currency->code }}</td>
                     <td align="center">{{ $bill->expenseCategory->name }}</td>
                     <td align="center">{{ $bill->vendor->name }}</td>

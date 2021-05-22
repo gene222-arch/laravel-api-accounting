@@ -29,8 +29,9 @@
                 <tr>
                     <td align="right">{{ $transaction->id }}</td>
                     <td align="center">{{ $transaction->type }}</td>
+                    <td align="center">{{ $transaction->created_at }}</td>
                     <td align="center">{{ $transaction->amount }}</td>
-                    <td align="center">{{ $transaction->currency->code }}</td>
+                    <td align="center">{{ $transaction->account->currency->code }}</td>
                     <td align="center">{{ $transaction->account->name }}</td>
                     <td align="right">{{ $transaction->number }}</td>
                     <td align="center">{{ $transaction->contact }}</td>

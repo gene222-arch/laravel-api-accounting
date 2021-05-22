@@ -70,7 +70,11 @@ class EmployeesController extends Controller
         $employee = $this->employee
             ->with([
                 'salary',
-                'role:id,name'
+                'role:id,name',
+                'payrolls',
+                'benefits',
+                'contributions',
+                'taxes'
             ])
             ->find($employee->id);
 

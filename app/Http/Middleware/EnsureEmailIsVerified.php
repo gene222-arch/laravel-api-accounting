@@ -23,8 +23,7 @@ class EnsureEmailIsVerified extends MiddlewareEnsureEmailIsVerified
      */
     public function handle($request, Closure $next, $redirectToRoute = null)
     {   
-        $user = User::where('email', auth()->user()->email ?? $request->email)->first() 
-        ?? auth()->user();
+        $user = Auth::user() ?? User::where('email', $request->email)->first();
 
         if (!$user || !($user instanceof MustVerifyEmail && $user->hasVerifiedEmail())) {
             return abort(403, 'Your email address is not verified.');

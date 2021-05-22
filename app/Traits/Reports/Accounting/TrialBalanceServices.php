@@ -42,7 +42,7 @@ trait TrialBalanceServices
             ON 
                 chart_of_account_types.id = chart_of_accounts.chart_of_account_type_id
             WHERE 
-                chart_of_account_types.category IN ('Asset', 'Expense', 'Equity')
+                chart_of_account_types.category IN ('Assets', 'Expenses', 'Equity')
             $andDateClause
             $andFilterClause
             GROUP BY 

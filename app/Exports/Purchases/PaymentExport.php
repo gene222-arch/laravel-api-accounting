@@ -17,7 +17,7 @@ class PaymentExport implements FromView
             'payments' => Payment::with([
                 'account',
                 'currency',
-                'customer',
+                'vendor',
                 'expenseCategory',
                 'paymentMethod'
             ])

@@ -15,8 +15,8 @@ class BankAccountTransferExport implements FromView
     {
         return view('export.excel.banking.transfer', [
             'transfers' => BankAccountTransfer::with([
-                'sender',
-                'receiver',
+                'from',
+                'to',
                 'paymentMethod'
             ])
                 ->get()

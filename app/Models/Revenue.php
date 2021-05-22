@@ -38,6 +38,21 @@ class Revenue extends Model
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // auto-sets values on creation
+        static::creating(function ($query) {
+            $query->currency_id = $query->currency_id ?? Currency::where('code', 'PHP')->first()->id;
+        });
+    }
     
     /**
      * getDateAttribute
@@ -61,7 +76,7 @@ class Revenue extends Model
     }
 
     /**
-     * Define a many-to-many relationship with Currency class
+     * Define a one-to-many relationship with Currency class
      *
      * @return BelongsTo
      */

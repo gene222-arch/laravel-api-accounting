@@ -15,9 +15,8 @@ class TransactionExport implements FromView
     {
         return view('export.excel.banking.transaction', [
             'transactions' => Transaction::with([
-                'currency',
                 'account',
-                'payment_method'
+                'paymentMethod'
             ])
                 ->get()
         ]);

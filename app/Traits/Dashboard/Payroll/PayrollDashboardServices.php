@@ -144,6 +144,7 @@ trait PayrollDashboardServices
 
         return DB::select(
             "SELECT 
+                payrolls.name as name,
                 DATE_FORMAT(payrolls.from_date, '%D %M %Y') as from_date,
                 DATE_FORMAT(payrolls.to_date, '%D %M %Y') as to_date,
                 DATE_FORMAT(payrolls.payment_date, '%D %M %Y') as payment_date,
@@ -197,7 +198,7 @@ trait PayrollDashboardServices
                 payrolls.status = 'Approved' 
             $andWhereClause
             GROUP BY 
-                MONTH(payrolls.payment_date)
+                MONTH(payrolls.id)
             ", $bindings);
 
         $data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

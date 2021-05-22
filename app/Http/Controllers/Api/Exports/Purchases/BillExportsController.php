@@ -24,7 +24,7 @@ class BillExportsController extends Controller
     public function csv()
     {
         $fileName = 'bill-' . Carbon::now()->toDateTimeString() . '-.csv';
-
+        
         return $this->bill
             ->download($fileName, Excel::CSV, [
                 'Content-Type' => 'text/xlsx'

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Account extends Model
@@ -22,7 +23,17 @@ class Account extends Model
         'bank_address',
         'enabled'
     ];
-    
+        
+    /**
+     * Define a one-to-many relationship with Currency Class
+     *
+     * @return BelongsTo
+     */
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
+
     /**
      * Define a one-to-many relationship with Revenue Class
      *

@@ -71,7 +71,7 @@ class Bill extends Model
     }
 
     /**
-     * Define a many-to-many relationship with Vendor class
+     * Define a one-to-many relationship with Vendor class
      *
      * @return BelongsTo
      */
