@@ -2,8 +2,9 @@
 
 namespace App\Traits\Dashboard\Main;
 
-use App\Models\Company;
 use App\Models\Model;
+use App\Models\Account;
+use App\Models\Company;
 use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,11 +22,12 @@ trait MainDashboardServices
     public function dashboard (string $dateFrom, string $dateTo, int $year = null): array 
     {
         return [
+            'accountBalances' => Account::all(['id', 'name', 'balance']),
             'generalAnalytics' => $this->generalAnalytics($dateFrom, $dateTo, $year),
             'incomeByCategory' => $this->incomeByCategory($dateFrom, $dateTo, $year),
             'expenseByCategory' => $this->expenseByCategory($dateFrom, $dateTo, $year),
-            'latestIncome' => $this->latestIncome($dateFrom, $dateTo, $year),
-            'latestExpenses' => $this->latestExpenses($dateFrom, $dateTo, $year),
+            'latestIncomeByCategory' => $this->latestIncomeByCategory($dateFrom, $dateTo, $year),
+            'latestExpensesByCategory' => $this->latestExpensesByCategory($dateFrom, $dateTo, $year),
             'currencies' => Currency::all(['id', ...(new Currency())->getFillable()]),
             'cashFlow' => [
                 'monthlyIncome' => $this->monthlyIncome($dateFrom, $dateTo, $year),
@@ -65,24 +67,25 @@ trait MainDashboardServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(payments.date) = :year' : 'payments.date >= :dateFrom && payments.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         return DB::select(
             "SELECT 
                 expense_categories.name,
-                IFNULL(SUM(payments.amount), 0) as expense 
+                IFNULL(SUM(transactions.amount), 0) as expense 
             FROM 
-                payments
+                transactions
             INNER JOIN 	
                 expense_categories
             ON 
-                expense_categories.id = payments.expense_category_id
+                expense_categories.id = transactions.expense_category_id
             WHERE 
-                $whereClause
+                transactions.type = 'Expense'
+            $andWhereClause
             GROUP BY
-                payments.expense_category_id"
+                transactions.expense_category_id"
         ,$bindings);
     }
 
@@ -95,24 +98,25 @@ trait MainDashboardServices
     {
         setSqlModeEmpty();
 
-        $whereClause = $year ? 'YEAR(revenues.date) = :year' : 'revenues.date >= :dateFrom && revenues.date <= :dateTo';
+        $andWhereClause = $year ? 'AND YEAR(transactions.created_at) = :year' : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
 
         $bindings = $year ? ['year' => $year] : [ 'dateFrom' => $dateFrom, 'dateTo' => $dateTo ];
 
         return DB::select(
             "SELECT 
                 income_categories.name,
-                IFNULL(SUM(revenues.amount), 0) as income 
+                IFNULL(SUM(transactions.amount), 0) as income 
             FROM 
-                revenues
+                transactions
             INNER JOIN 	
                 income_categories
             ON 
-                income_categories.id = revenues.income_category_id
+                income_categories.id = transactions.income_category_id
             WHERE
-                $whereClause
+                transactions.type = 'Income'
+            $andWhereClause
             GROUP BY
-                revenues.income_category_id
+                transactions.income_category_id
         ",$bindings);
     }
 
@@ -125,7 +129,7 @@ trait MainDashboardServices
     {
         $andRevenueWhereClause = $year 
             ? 'AND YEAR(transactions.created_at) = :revenueYear' 
-            : 'AND transactions.created_at >= :dateFrom && transactions.created_at <= :dateTo';
+            : 'AND transactions.created_at >= :revenueDateFrom && transactions.created_at <= :revenueDateTo';
 
         $invoiceWhereClause = $year 
             ? 'YEAR(invoices.date) = :invoiceYear' 
@@ -194,7 +198,7 @@ trait MainDashboardServices
                 WHERE 
                     transactions.`type` = 'Income'
                 $andRevenueWhereClause
-            ) as income,
+            ) as totalIncome,
             (
                 SELECT	
                     IFNULL(SUM(invoice_payment_details.amount_due), 0)
@@ -215,7 +219,7 @@ trait MainDashboardServices
                 WHERE 
                     transactions.`type` = 'Expense'
                 $andPaymentWhereClause
-            ) as expense,
+            ) as totalExpense,
             (
                 SELECT	
                     IFNULL(SUM(bill_payment_details.amount_due), 0)
@@ -246,7 +250,7 @@ trait MainDashboardServices
                         transactions.`type` = 'Expense'
                     $paymentProfitWhereClause
                 )
-            ) as profit,
+            ) as totalProfit,
             (
                 SELECT	
                     IFNULL(SUM(bill_payment_details.amount_due), 0)
@@ -281,7 +285,7 @@ trait MainDashboardServices
      *
      * @return array
      */
-    public function latestIncome (string $dateFrom, string $dateTo, int $year = null): array 
+    public function latestIncomeByCategory (string $dateFrom, string $dateTo, int $year = null): array 
     {
         setSqlModeEmpty();
 
@@ -299,7 +303,7 @@ trait MainDashboardServices
                 INNER JOIN 
                     income_categories
                 ON 
-                    income_categories.id = transactions.expense_category_id
+                    income_categories.id = transactions.income_category_id
                 WHERE 
                     transactions.type = 'Income'
                 $andWhereClause
@@ -318,7 +322,7 @@ trait MainDashboardServices
      *
      * @return array
      */
-    public function latestExpenses (string $dateFrom, string $dateTo, int $year = null): array 
+    public function latestExpensesByCategory (string $dateFrom, string $dateTo, int $year = null): array 
     {
         setSqlModeEmpty();
 
