@@ -525,6 +525,7 @@ Route::middleware(['api'])->group(function ()
                 Route::get('/{estimateInvoice}', [EstimateInvoicesController::class, 'show']);
                 Route::post('/', [EstimateInvoicesController::class, 'store']);
                 Route::post('/{estimateInvoice}/customers/{customer}/mail', [EstimateInvoicesController::class, 'mail']);
+                Route::post('/{estimateInvoice}', [EstimateInvoicesController::class, 'convertToInvoice']);
                 Route::put('/{estimateInvoice}/mark-as-approved', [EstimateInvoicesController::class, 'markAsApproved']);
                 Route::put('/{estimateInvoice}/mark-as-refused', [EstimateInvoicesController::class, 'markAsRefused']);
                 Route::put('/{estimateInvoice}', [EstimateInvoicesController::class, 'update']);

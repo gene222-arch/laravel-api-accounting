@@ -96,7 +96,7 @@ class CreateBillsTable extends Migration
         Schema::create('bill_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('bill_id')->index();
-            $table->string('status');
+            $table->string('status')->default('Draft');
             $table->text('description');
             $table->timestamps();
 

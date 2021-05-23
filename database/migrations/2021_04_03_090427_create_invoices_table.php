@@ -100,7 +100,7 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoice_histories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('invoice_id')->index();
-            $table->string('status');
+            $table->string('status')->default('Draft');
             $table->text('description');
             $table->timestamps();
 

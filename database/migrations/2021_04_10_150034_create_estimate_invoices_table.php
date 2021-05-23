@@ -43,6 +43,7 @@ class CreateEstimateInvoicesTable extends Migration
             $table->id();
             $table->foreignId('estimate_invoice_id');
             $table->foreignId('item_id');
+            $table->foreignId('tax_id')->nullable();
             $table->foreignId('discount_id')->nullable();
             $table->string('item');
             $table->unsignedDecimal('price', 10, 2);
@@ -50,7 +51,6 @@ class CreateEstimateInvoicesTable extends Migration
             $table->unsignedDecimal('amount', 10, 2);
             $table->unsignedDecimal('discount', 10, 2)->default(0.00);
             $table->unsignedDecimal('tax', 10, 2)->default(0.00);
-            $table->timestamps();
 
             $table->unique([
                 'estimate_invoice_id',
@@ -70,6 +70,11 @@ class CreateEstimateInvoicesTable extends Migration
             $table->foreign('discount_id')
                 ->references('id')
                 ->on('discounts')
+                ->nullOnDelete();
+
+            $table->foreign('tax_id')
+                ->references('id')
+                ->on('taxes')
                 ->nullOnDelete();
         });
 

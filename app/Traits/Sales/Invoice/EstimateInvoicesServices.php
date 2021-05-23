@@ -4,7 +4,9 @@ namespace App\Traits\Sales\Invoice;
 
 use App\Jobs\QueueEstimateInvoiceNotification;
 use App\Models\Customer;
+use App\Models\DefaultSetting;
 use App\Models\EstimateInvoice;
+use App\Models\Invoice;
 use App\Traits\Reports\Accounting\TaxSummaryServices;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Collection;
@@ -49,6 +51,70 @@ trait EstimateInvoicesServices
         }
         return true;
     }
+
+        
+    /**
+     * Convert the estimate to invoice
+     *
+     * @param  App\Models\EstimateInvoice $estimateInvoice
+     * @param  string $invoiceNumber
+     * @param  integer $orderNo
+     * @param  string $date
+     * @param  string $dueDate
+     * @return mixed
+     */
+    public function toInvoice (EstimateInvoice $estimateInvoice, string $invoiceNumber, int $orderNo, string $date, string $dueDate): mixed
+    {
+        try {
+            DB::transaction(function () use ($estimateInvoice, $invoiceNumber, $orderNo, $date, $dueDate)
+            {   
+                $defaultSettings = DefaultSetting::first();
+
+                $invoice = Invoice::create([
+                    'customer_id' => $estimateInvoice->customer_id,
+                    'currency_id' => $estimateInvoice->currency_id,
+                    'income_category_id' => $defaultSettings->income_category_id,
+                    'invoice_number' => $invoiceNumber,
+                    'order_no' => $orderNo,
+                    'date' => $date,
+                    'due_date' => $dueDate
+                ]);
+
+                $estimateInvoiceItems = $estimateInvoice->items
+                    ->map
+                    ->pivot
+                    ->map(function ($item) {
+                        unset($item['estimate_invoice_id']);
+
+                        return $item;
+                    })
+                    ->toArray();
+
+                $invoice->items()->attach($estimateInvoiceItems);
+
+                $invoice->paymentDetail()->create($estimateInvoice->paymentDetail->toArray());
+
+                $this->createManyTaxSummary(
+                    get_class($estimateInvoice),
+                    $estimateInvoice->id,
+                    'Sales',
+                    $estimateInvoiceItems
+                );
+
+                $estimateInvoice->histories()->create([
+                    'status' => 'invoiced',
+                    'description' => "{$estimateInvoice->estimate_number} INVOICED!"
+                ]);
+
+                $invoice->histories()->create([
+                    'description' => "${invoiceNumber} added!"
+                ]);
+            });
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+        return true;
+    }
     
     /**
      * Send a mail to a specified customer.
@@ -68,7 +134,7 @@ trait EstimateInvoicesServices
             {
                 $isCreated = $estimateInvoice->histories()
                     ->create([
-                        'status' => 'Mailed',
+                        'status' => 'Sent',
                         'description' => "Invoice marked as sent!"
                     ]);
 

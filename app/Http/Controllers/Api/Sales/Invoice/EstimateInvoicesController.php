@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\EstimateInvoice;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Sales\EstimateInvoice\ConvertToInvoiceRequest;
 use App\Http\Requests\Sales\EstimateInvoice\MailRequest;
 use App\Http\Requests\Sales\EstimateInvoice\StoreRequest;
 use App\Http\Requests\Sales\EstimateInvoice\DeleteRequest;
@@ -31,7 +32,10 @@ class EstimateInvoicesController extends Controller
     public function index()
     {
         $result = $this->estimateInvoice
-            ->with('paymentDetail')
+            ->with([
+                'paymentDetail',
+                'customer:id,name'
+            ])
             ->latest()
             ->get();
 
@@ -48,10 +52,10 @@ class EstimateInvoicesController extends Controller
      * @param Customer $customer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function mail(MailRequest $request, EstimateInvoice $estimate_invoice, Customer $customer)
+    public function mail(MailRequest $request, EstimateInvoice $estimateInvoice, Customer $customer)
     {
         $result = $this->estimateInvoice->mail(
-            $estimate_invoice,
+            $estimateInvoice,
             $customer,
             $request->subject,
             $request->greeting,
@@ -99,7 +103,7 @@ class EstimateInvoicesController extends Controller
     public function store(StoreRequest $request)
     {
         $result = $this->estimateInvoice->createEstimateInvoice(
-            $request->except('items', 'paymentDetail'),
+            $request->except('items', 'payment_details'),
             $request->estimate_number,
             $request->items,
             $request->payment_details
@@ -111,6 +115,28 @@ class EstimateInvoicesController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param ConvertToInvoiceRequest $request
+     * @param EstimateInvoice $estimateInvoice
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function convertToInvoice(ConvertToInvoiceRequest $request, EstimateInvoice $estimateInvoice)
+    {
+        $result = $this->estimateInvoice->toInvoice(
+            $estimateInvoice,
+            $request->invoice_number,
+            $request->order_no,
+            $request->date,
+            $request->due_date
+        );
+
+        return $result !== true 
+            ? $this->error($result, 500)
+            : $this->success(null, 'Converted to invoice successfully.');
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param EstimateInvoice $estimateInvoice
@@ -118,11 +144,14 @@ class EstimateInvoicesController extends Controller
      */
     public function show(EstimateInvoice $estimateInvoice)
     {
-        $estimateInvoice = $estimateInvoice->with([
-                'items' => fn($q) => $q->select('name'),
-                'paymentDetail'
+        $estimateInvoice = $this->estimateInvoice
+            ->with([
+                'items:id,name',
+                'paymentDetail',
+                'customer:id,name',
+                'histories'
             ])
-            ->first();
+            ->find($estimateInvoice->id);
 
         return !$estimateInvoice
             ? $this->noContent()
@@ -140,7 +169,7 @@ class EstimateInvoicesController extends Controller
     {
         $result = $this->estimateInvoice->updateEstimateInvoice(
             $estimateInvoice,
-            $request->except('id', 'items', 'paymentDetail'),
+            $request->except('id', 'items', 'payment_details'),
             $request->estimate_number,
             $request->items,
             $request->payment_details

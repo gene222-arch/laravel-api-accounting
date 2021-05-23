@@ -10,10 +10,17 @@ class EstimateInvoicePaymentDetail extends Model
     use HasFactory;
 
     protected $fillable = [
+        'discount_id',
+        'tax_id',
         'estimate_invoice_id',
         'total_discounts',
         'total_taxes',
         'sub_total',
         'total',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 }

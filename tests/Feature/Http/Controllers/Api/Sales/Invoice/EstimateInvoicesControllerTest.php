@@ -58,6 +58,8 @@ class EstimateInvoicesControllerTest extends TestCase
                 ],
             ],
             'payment_details' => [
+                'tax_id' => 1,
+                'discount_id' => 1,
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 90.00,
@@ -67,6 +69,30 @@ class EstimateInvoicesControllerTest extends TestCase
 
         $response = $this->post(
             '/api/sales/estimate-invoices',
+            $data,
+            $this->apiHeader()
+        );
+
+        dd(json_decode($response->getContent()));
+        
+        $this->assertResponse($response);
+    }
+
+    /** @test */
+    public function user_can_convert_estimate_invoice_to_invoice()
+    {
+        $id = 6;
+
+        $data = [
+            'id' => 6,
+            'invoice_number' => 'INV-00012',
+            'order_no' => 100,
+            'date' => '2021-09-09',
+            'due_date' => '2021-09-09'
+        ];
+
+        $response = $this->post(
+            "/api/sales/estimate-invoices/${id}",
             $data,
             $this->apiHeader()
         );
@@ -153,6 +179,8 @@ class EstimateInvoicesControllerTest extends TestCase
                 ],
             ],
             'payment_details' => [
+                'tax_id' => 1,
+                'discount_id' => 1,
                 'total_discounts' => 0.00,
                 'total_taxes' => 40.00,
                 'sub_total' => 50.00,
