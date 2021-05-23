@@ -70,6 +70,7 @@ use App\Http\Controllers\Api\Reports\ExpenseSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeSummaryController;
 use App\Http\Controllers\Api\Reports\IncomeVsExpenseController;
 use App\Http\Controllers\Api\Reports\ReportsDashboardController;
+use App\Http\Controllers\Api\Settings\DefaultSettings\DefaultSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -617,6 +618,15 @@ Route::middleware(['api'])->group(function ()
                 Route::post('/', [CurrenciesController::class, 'store']);
                 Route::put('/{currency}', [CurrenciesController::class, 'update']);
                 Route::delete('/', [CurrenciesController::class, 'destroy']);
+            });
+
+            /**
+             * Default Settings
+            */
+            Route::prefix('default-settings')->group(function () 
+            {
+                Route::get('/', [DefaultSettingsController::class, 'show']);
+                Route::put('/', [DefaultSettingsController::class, 'update']);
             });
 
             /**

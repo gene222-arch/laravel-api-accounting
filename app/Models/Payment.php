@@ -36,6 +36,22 @@ class Payment extends Model
         'file',
     ];
     
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // auto-sets values on creation
+        static::creating(function ($query) {
+            $query->currency_id = $query->currency_id ?? Currency::where('code', 'PHP')->first()->id;
+        });
+    }
+
     /**
      * getDateAttribute
      *
