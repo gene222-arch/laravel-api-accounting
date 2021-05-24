@@ -69,6 +69,8 @@ trait EstimateInvoicesServices
             DB::transaction(function () use ($estimateInvoice, $invoiceNumber, $orderNo, $date, $dueDate)
             {   
                 $defaultSettings = DefaultSetting::first();
+                $estimateInvoiceItems = $estimateInvoice->items->map->pivot;
+                $estimateInvoicePaymentDetail = $estimateInvoice->paymentDetail->toArray();
 
                 $invoice = Invoice::create([
                     'customer_id' => $estimateInvoice->customer_id,
@@ -80,19 +82,19 @@ trait EstimateInvoicesServices
                     'due_date' => $dueDate
                 ]);
 
-                $estimateInvoiceItems = $estimateInvoice->items
-                    ->map
-                    ->pivot
-                    ->map(function ($item) {
-                        unset($item['estimate_invoice_id']);
+                $estimateInvoiceItems = $estimateInvoiceItems->map(function ($item) {
+                    unset($item['estimate_invoice_id']);
+                    return $item;
+                })
+                ->toArray();
 
-                        return $item;
-                    })
-                    ->toArray();
+                $estimateInvoicePaymentDetail = array_merge(
+                    $estimateInvoicePaymentDetail,
+                    [ 'amount_due' => $estimateInvoicePaymentDetail['total'] ]);
 
                 $invoice->items()->attach($estimateInvoiceItems);
 
-                $invoice->paymentDetail()->create($estimateInvoice->paymentDetail->toArray());
+                $invoice->paymentDetail()->create($estimateInvoicePaymentDetail);
 
                 $this->createManyTaxSummary(
                     get_class($estimateInvoice),
@@ -100,6 +102,10 @@ trait EstimateInvoicesServices
                     'Sales',
                     $estimateInvoiceItems
                 );
+
+                $estimateInvoice->update([
+                    'status' => 'Invoiced'
+                ]);
 
                 $estimateInvoice->histories()->create([
                     'status' => 'invoiced',
