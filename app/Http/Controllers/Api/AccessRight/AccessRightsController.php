@@ -6,10 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AccessRight\DestroyRequest;
 use App\Http\Requests\AccessRight\StoreRequest;
 use App\Http\Requests\AccessRight\UpdateRequest;
-use App\Models\Role as ModelsRole;
+use App\Models\Role;
 use App\Traits\AccessRight\AccessRightServices;
 use App\Traits\Api\ApiResponser;
-use Spatie\Permission\Models\Role;
 
 class AccessRightsController extends Controller
 {
@@ -21,19 +20,28 @@ class AccessRightsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource access rights.
      *
      * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $roles = Role::latest()->get(['id', 'name', 'enabled']);
+        setSqlModeEmpty();
+
+        $roles = Role::selectRaw(
+            'roles.id,
+            roles.name,
+            COUNT(model_has_roles.role_id) as employees'
+        )
+        ->leftJoin('model_has_roles', 'model_has_roles.role_id', '=', 'roles.id')
+        ->groupBy('roles.id')
+        ->get();
 
         return !$roles->count()
             ? $this->noContent()
             : $this->success($roles);
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -56,17 +64,16 @@ class AccessRightsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param ModelsRole $role
+     * @param Role $role
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(ModelsRole $role)
+    public function show(Role $role)
     {
-        return !$role
+        $result = Role::with('permissions')->find($role->id);
+
+        return !$result
             ? $this->noContent()
-            : $this->success([
-                'role' => $role->name,
-                'permissions' => $role->permissions->map->name
-            ]);
+            : $this->success($result);
     }
 
     /**
@@ -76,18 +83,18 @@ class AccessRightsController extends Controller
      * @param Role $role
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(UpdateRequest $request, Role $role)
+    public function update(UpdateRequest $request, Role $roleModel)
     {
         $result = $this->updateAccessRight(
-            $role,
-            $request->role_name,
+            $roleModel,
+            $request->role,
             $request->permissions,
             $request->enabled
         );
 
         return $result !== true 
             ? $this->error($result, 500)
-            : $this->success(null, 'Access right created successfully.');
+            : $this->success(null, 'Access right updated successfully.');
     }
 
     /**

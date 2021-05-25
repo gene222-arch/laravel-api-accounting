@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api\AccessRight;
 use Illuminate\Http\Request;
 use App\Traits\Api\ApiResponser;
 use App\Http\Controllers\Controller;
+use App\Traits\Cache\CacheServices;
 use Illuminate\Support\Facades\Cache;
-use Spatie\Permission\Models\Permission;
+use App\Models\Permission;
 
 class PermissionController extends Controller
 {
-    use ApiResponser;
+    use ApiResponser, CacheServices;
 
     public function __construct()
     {
@@ -23,13 +24,26 @@ class PermissionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function __invoke()
-    {
-        $result = Cache::remember('permissions', 1, function () {
-            return Permission::all('id', 'name');
-        });
+    {   
+        $key = $this->cacheKey('permissions');
 
-        return !$result->count()
-            ? $this->noContent()
-            : $this->success($result);
+        $result = Cache::store('redis')
+            ->remember($key, 15, function () 
+            {
+                $permissions = Permission::all('id', 'name', 'batch_name');
+                $groupedData = [];
+
+                foreach ($permissions as $permission) {
+                    $groupedData[$permission->batch_name][] = $permission;
+                }
+
+                uasort($groupedData, function ($permissionOne, $permissionTwo) {
+                    return count($permissionOne) <=> count($permissionTwo);
+                });
+
+                return $groupedData;
+            });
+
+        return $this->success($result);
     }
 }

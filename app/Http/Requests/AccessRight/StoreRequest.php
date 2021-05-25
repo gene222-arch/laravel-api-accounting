@@ -15,7 +15,7 @@ class StoreRequest extends BaseRequest
     {
         return [
             'role' => ['required', 'string', 'unique:roles,name'],
-            'permissions.*' => ['required', 'distinct', 'exists:permissions,name'],
+            'permissions.*' => ['required', 'distinct', 'exists:permissions,id'],
             'enabled' => ['required', 'boolean']
         ];
     }

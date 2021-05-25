@@ -108,7 +108,7 @@ trait EstimateInvoicesServices
                 ]);
 
                 $estimateInvoice->histories()->create([
-                    'status' => 'invoiced',
+                    'status' => 'Invoiced',
                     'description' => "{$estimateInvoice->estimate_number} INVOICED!"
                 ]);
 

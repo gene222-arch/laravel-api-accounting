@@ -6,13 +6,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class PermissionControllerTest extends TestCase
+class RolesControllerTest extends TestCase
 {
+
     /** @test */
-    public function user_can_view_any_permissions()
+    public function user_can_view_any_roles()
     {
         $response = $this->get(
-            '/api/access-rights/permissions',
+            '/api/access-rights/roles',
             $this->apiHeader()
         );
 
@@ -20,4 +21,5 @@ class PermissionControllerTest extends TestCase
         
         $this->assertResponse($response);
     }
+
 }

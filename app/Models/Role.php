@@ -14,4 +14,9 @@ class Role extends ModelsRole
         'enabled'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'guard_name'
+    ];
 }
