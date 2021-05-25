@@ -40,6 +40,7 @@ use App\Http\Controllers\Api\HumanResource\Payroll\PayCalendar\PayCalendarsContr
 use App\Http\Controllers\Api\Banking\BankAccountTransfer\BankAccountTransfersController;
 use App\Http\Controllers\Api\HumanResource\Payroll\SalaryBenefit\SalaryBenefitsController;
 use App\Http\Controllers\Api\Banking\BankAccountReconciliation\BankAccountReconciliationsController;
+use App\Http\Controllers\Api\CRM\Contact\ContactsController;
 use App\Http\Controllers\Api\Dashboard\DoubleEntry\DoubleEntryDashboardController;
 use App\Http\Controllers\Api\Dashboard\Main\MainDashboardController;
 use App\Http\Controllers\Api\Dashboard\Payroll\PayrollDashboardController;
@@ -197,6 +198,20 @@ Route::middleware(['api'])->group(function ()
             });
         });
 
+        /**
+         * * CRM
+         */
+        Route::prefix('crm')->group(function () 
+        {   
+            Route::prefix('contacts')->group(function () 
+            {
+                Route::get('/', [ContactsController::class, 'index']);
+                Route::get('/{contact}', [ContactsController::class, 'show']);
+                Route::post('/', [ContactsController::class, 'store']);
+                Route::put('/{contact}', [ContactsController::class, 'update']);
+                Route::delete('/', [ContactsController::class, 'destroy']);
+            });
+        });
 
         /**
          * * Dashboards

@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class AccessRightsControllerTest extends TestCase
 {
-    /** @test */
+    /** test */
     public function user_can_view_any_access_rights()
     {
         $response = $this->get(
@@ -27,7 +27,7 @@ class AccessRightsControllerTest extends TestCase
         $id = 12;
 
         $response = $this->get(
-            "/api/access-rights/${id}",
+            "/api/access-rights/${id}/show",
             $this->apiHeader()
         );
 
@@ -39,9 +39,7 @@ class AccessRightsControllerTest extends TestCase
     {
         $data = [
             'role' => 'Manager',
-            'permissions' => [
-                'View Dashboard'
-            ],
+            'permissions' => [1],
             'enabled' => true
         ];
 
@@ -54,18 +52,15 @@ class AccessRightsControllerTest extends TestCase
         $this->assertResponse($response);
     }
 
-    /** test */
+    /** @test */
     public function user_can_update_access_right()
     {
-        $id = 4;
+        $id = 5;
 
         $data = [
-            'id' => 4,
+            'id' => 5,
             'role' => 'Super Duper Manager',
-            'permissions' => [
-                'View Dashboard',
-                'View Transactions'
-            ],
+            'permissions' => [1, 2],
             'enabled' => true
         ];
 
