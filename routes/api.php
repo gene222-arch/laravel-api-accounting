@@ -236,6 +236,40 @@ Route::middleware(['api'])->group(function ()
                 Route::put('/{contact}/tasks', [ContactsController::class, 'updateTask']);
                 Route::delete('/{contact}/tasks', [ContactsController::class, 'destroyTasks']);
             });
+
+            Route::prefix('companies')->group(function () 
+            {
+                Route::get('/', [ContactsController::class, 'index']);
+                Route::get('/{company}', [ContactsController::class, 'show']);
+                Route::post('/', [ContactsController::class, 'store']);
+                Route::post('/{company}/mail', [ContactsController::class, 'mailContact']);
+                Route::put('/{company}', [ContactsController::class, 'update']);
+                Route::delete('/', [ContactsController::class, 'destroy']);
+
+                /** Notes */
+                Route::get('/{company}/notes', [ContactsController::class, 'showNotes']);
+                Route::post('/{company}/notes', [ContactsController::class, 'storeNote']);
+                Route::put('/{company}/notes', [ContactsController::class, 'updateNote']);
+                Route::delete('/{company}/notes', [ContactsController::class, 'destroyNotes']);
+
+                /** Logs */
+                Route::get('/{company}/logs', [ContactsController::class, 'showLogs']);
+                Route::post('/{company}/logs', [ContactsController::class, 'storeLog']);
+                Route::put('/{company}/logs', [ContactsController::class, 'updateLog']);
+                Route::delete('/{company}/logs', [ContactsController::class, 'destroyLogs']);
+
+                /** Schedules */
+                Route::get('/{company}/schedules', [ContactsController::class, 'showSchedules']);
+                Route::post('/{company}/schedules', [ContactsController::class, 'storeSchedule']);
+                Route::put('/{company}/schedules', [ContactsController::class, 'updateSchedule']);
+                Route::delete('/{company}/schedules', [ContactsController::class, 'destroySchedules']);
+
+                /** Tasks */
+                Route::get('/{company}/tasks', [ContactsController::class, 'showTasks']);
+                Route::post('/{company}/tasks', [ContactsController::class, 'storeTask']);
+                Route::put('/{company}/tasks', [ContactsController::class, 'updateTask']);
+                Route::delete('/{company}/tasks', [ContactsController::class, 'destroyTasks']);
+            });
         });
 
         /**

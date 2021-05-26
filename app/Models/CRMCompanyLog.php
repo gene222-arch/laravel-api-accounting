@@ -3,20 +3,19 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\CRMCompany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ContactTask extends Model
+class CRMCompanyLog extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'contact_id',
-        'user_id',
-        'name',
-        'started_at',
-        'time_started',
+        'date', 
+        'time',
+        'log',
         'description'
     ];
 
@@ -26,23 +25,23 @@ class ContactTask extends Model
     ];
     
     /**
-     * getStartedAtAttribute
+     * getDateAttribute
      *
      * @param  mixed $value
      * @return string
      */
-    public function getStartedAtAttribute($value): string 
+    public function getDateAttribute($value): string 
     {
         return Carbon::parse($value)->format('Y-m-d');
     }
     
     /**
-     * Define an inverse one-to-one or many relationship Contact Task class
+     * Define an inverse one-to-one or many relationship with CRMCompany class
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function contact(): BelongsTo
+    public function crmCompany(): BelongsTo
     {
-        return $this->belongsTo(Contact::class);
+        return $this->belongsTo(CRMCompany::class);
     }
 }
