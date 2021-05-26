@@ -22,10 +22,11 @@ class CreateContactsTable extends Migration
             $table->string('stage');
             $table->string('mobile');
             $table->string('website');
-            $table->string('fax_number');
+            $table->string('fax_number')->nullable();
             $table->string('source');
             $table->string('address');
             $table->timestamp('born_at')->default(now());
+            $table->boolean('enabled')->default(false);
             $table->timestamps();
 
             $table->unique([

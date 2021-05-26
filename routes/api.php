@@ -208,8 +208,33 @@ Route::middleware(['api'])->group(function ()
                 Route::get('/', [ContactsController::class, 'index']);
                 Route::get('/{contact}', [ContactsController::class, 'show']);
                 Route::post('/', [ContactsController::class, 'store']);
+                Route::post('/{contact}/mail', [ContactsController::class, 'mailContact']);
                 Route::put('/{contact}', [ContactsController::class, 'update']);
                 Route::delete('/', [ContactsController::class, 'destroy']);
+
+                /** Notes */
+                Route::get('/{contact}/notes', [ContactsController::class, 'showNotes']);
+                Route::post('/{contact}/notes', [ContactsController::class, 'storeNote']);
+                Route::put('/{contact}/notes', [ContactsController::class, 'updateNote']);
+                Route::delete('/{contact}/notes', [ContactsController::class, 'destroyNotes']);
+
+                /** Logs */
+                Route::get('/{contact}/logs', [ContactsController::class, 'showLogs']);
+                Route::post('/{contact}/logs', [ContactsController::class, 'storeLog']);
+                Route::put('/{contact}/logs', [ContactsController::class, 'updateLog']);
+                Route::delete('/{contact}/logs', [ContactsController::class, 'destroyLogs']);
+
+                /** Schedules */
+                Route::get('/{contact}/schedules', [ContactsController::class, 'showSchedules']);
+                Route::post('/{contact}/schedules', [ContactsController::class, 'storeSchedule']);
+                Route::put('/{contact}/schedules', [ContactsController::class, 'updateSchedule']);
+                Route::delete('/{contact}/schedules', [ContactsController::class, 'destroySchedules']);
+
+                /** Tasks */
+                Route::get('/{contact}/tasks', [ContactsController::class, 'showTasks']);
+                Route::post('/{contact}/tasks', [ContactsController::class, 'storeTask']);
+                Route::put('/{contact}/tasks', [ContactsController::class, 'updateTask']);
+                Route::delete('/{contact}/tasks', [ContactsController::class, 'destroyTasks']);
             });
         });
 

@@ -25,7 +25,8 @@ class UpdateRequest extends BaseRequest
             'fax_number' => ['required', 'string', 'unique:contacts,fax_number,' . $this->id],
             'source' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'born_at' => ['required', 'string']
+            'born_at' => ['required', 'string'],
+            'enabled' => ['required', 'boolean']
         ];
     }
 }
